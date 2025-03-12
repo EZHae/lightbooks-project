@@ -32,16 +32,19 @@ public class Comment extends BaseTimeEntity {
 	private Long id;
 	
 	//관계매핑
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
 	//관계매핑
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id", nullable = false)
 	private Novel novel;
 	
 	//관계매핑
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "episode_id")
 	private Episode episode;
