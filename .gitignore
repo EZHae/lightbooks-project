@@ -17,8 +17,14 @@ local.properties
 *.project
 *.git
 *.git/*
+
+# ezhae add
+Servers
 Servers/
+RemoteSystemsTempFiles
 RemoteSystemsTempFiles/
+.vscode
+.vscode/
 
 # External tool builders
 .externalToolBuilders/
