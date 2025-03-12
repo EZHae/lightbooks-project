@@ -1,0 +1,102 @@
+buildscript {
+    ext {
+        querydslVersion = '5.1.0'
+    }
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.itwill'
+version = '0.1'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	
+    compileOnly 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	// Querydsl 의존성:
+    // 작은따옴표(''): 문자열. ${변수이름} 템플릿을 사용할 수 없음.
+    // 큰따옴표(""): 문자열. ${변수이름} 템플릿을 사용할 수 있음.
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// Querydsl 관련 빌드 옵션들:
+// Gradle task에서 자동으로 생성되는 자바 코드들이 저장되는 폴더 위치 설정.
+def querydslDir = "$buildDir/generated/querydsl"
+
+// 소스 폴더를 빌드 패스에 추가.
+sourceSets {
+    main.java.srcDirs += [ querydslDir ]
+}
+
+// Gradle task 중에서 자바 컴파일(빌드) 작업 구성 - 자동 생성된 폴더를 컴파일.
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+// Gradle task 중에서 클린(clean) 작업 구성 - 자동 생성된 폴더를 지움.
+clean.doLast {
+    file(querydslDir).deleteDir()
+}
+
+// 프로젝트에서 Querydsl을 사용하기위한 설정
+// 1. build.gradle 파일에서 의존성과 빌드 옵션들을 구성.
+//  (1) Lombok
+//  (2) Querydsl
+//  (3) 빌드 옵션들
+// 2. 프로젝트 이름 오른쪽 클릭 -> Gradle -> Refresh Gradle Project 실행
+// 3. 이클립스 메뉴 window -> show view -> other -> gradle -> gradle tasks 선택
+// 4. 이클립스 메뉴 window -> show view -> other -> gradle -> gradle executions 선택
+// 5. gradle tasks 창 -> 프로젝트(springboot4) -> clean 우 클릭 -> run gradle tasks 실행
+// 6. gradle tasks 창 -> 프로젝트 -> build -> build 우 클릭 -> run gradle tasks 실행
+// 7. 프로젝트 우 클릭 -> gradle -> refresh gradle project 실행
+//      - build/generated/querydsl 폴더 생성
+//      - 자동 생성된 폴더 밑에 com.itwill.springboot4.domain 패키지 생성
+//      - 패키지 밑에 Q클래스(엔터티 클래스 래퍼)들이 자동으로 생성
+// 8. Querydsl을 사용하기 위한 인터페이스 선언(예: PostQuerydsl)
+// 9. 인터페이스를 구현하는 클래스를 작성(예: PostQuerydslImpl)
+//  (1) QuerydslRepositorySupport 클래스 상송
+//      - 상위 클래스의 아규먼트를 갖는 생성자를 명시적으로 호출해야만 함.
+//  (2) PostQuerydsl 인터페이스 메서드의 몸통(body)를 구현.
+// 10. JpaRepository를 상속하는 인터페이스(PostRepository)에서 PostQuerydsl 인터페이스를 상속.
