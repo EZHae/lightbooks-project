@@ -51,9 +51,6 @@ public class Comment extends BaseTimeEntity {
 	
     @Column(nullable = false)
     private String nickname;
-
-    @Column(name = "nickname", nullable = false)
-    private String usernickname;
 	
 	@Column(name = "like_count", nullable = false)
 	private int likeCount = 0;
