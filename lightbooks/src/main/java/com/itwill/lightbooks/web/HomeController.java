@@ -18,6 +18,8 @@ public class HomeController {
 		session.setAttribute("signedInLoginId", "admin");
 		session.setAttribute("signedInNickname", "어드민");
 		
+		// 그냥 주석달았음: 이지해
+		
 		return "home";
 	}
 }
