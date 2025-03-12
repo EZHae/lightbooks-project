@@ -22,7 +22,7 @@ import lombok.ToString;
 public class BaseTimeEntity {
 	
 	@CreatedDate
-	protected LocalDateTime createdTime;
+	private LocalDateTime createdTime;
 	
 	@LastModifiedDate
 	protected LocalDateTime modifiedTime;
