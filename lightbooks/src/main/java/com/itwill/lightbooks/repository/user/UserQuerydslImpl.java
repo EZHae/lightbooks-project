@@ -2,6 +2,7 @@ package com.itwill.lightbooks.repository.user;
 
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import com.itwill.lightbooks.domain.QUser;
 import com.itwill.lightbooks.domain.User;
 import com.querydsl.jpa.JPQLQuery;
 
