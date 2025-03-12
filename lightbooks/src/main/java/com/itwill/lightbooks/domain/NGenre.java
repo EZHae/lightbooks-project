@@ -1,6 +1,7 @@
 package com.itwill.lightbooks.domain;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "NOVEL_GENRES")
+@Table(name = "NOVEL_GENRE")
 public class NGenre {
 	
 	@Id
@@ -42,6 +43,7 @@ public class NGenre {
 	private Genre genre;
 	
 	@Basic(optional = false)
+	@Column(name = "is_main")
 	private int isMain;
 	
 }
