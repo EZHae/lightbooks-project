@@ -2,6 +2,8 @@ package com.itwill.lightbooks.domain;
 
 import java.util.List;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@DynamicInsert
 @NoArgsConstructor
 @Builder
 @Getter
@@ -47,15 +50,14 @@ public class Novel extends BaseTimeEntity{
 	@Basic(optional = false)
 	private String writer; // 작성자
 	
-	@Column(name = "like_count" ,nullable = false)
-	private Integer likeCount = 0; // 좋아요 수
+	@Column(name = "like_count")
+	private Integer likeCount; // 좋아요 수
 	
 	@Column(name = "cover_src")
 	@Basic(optional = false)
 	private String coverSrc; // 표지 이미지 URL
 	
-	@Column(nullable = false)
-	private Integer grade = 0;// 작품 등급 (예: 1~5점)
+	private Integer grade;// 작품 등급 (예: 1~5점)
 	
 	@Column(name = "age_limit")
 	@Basic(optional = false)
@@ -64,8 +66,7 @@ public class Novel extends BaseTimeEntity{
 	@Basic(optional = false)
 	private String days; // 연재 요일 (예: "월, 수, 금")
 	
-	@Column(nullable = false)
-	private Integer state = 1; // 연재 상태 (1: 연재중, 0: 완결)
+	private Integer state; // 연재 상태 (1: 연재중, 0: 완결)
 	
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id")
