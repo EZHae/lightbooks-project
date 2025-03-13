@@ -19,7 +19,7 @@
 				            
 				            <div class="">
 				                <label class="form-label" for="writer">작성자</label>
-				                <input type="text" name="writer" class="form-control">
+				                <input type="text" name="writer" class="form-control" th:value="test">
 				            </div>
 				            
 				            <div>
@@ -42,23 +42,23 @@
 									<label class="form-check-label" >월요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일">
 									<label class="form-check-label" >화요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일">
 									<label class="form-check-label">수요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일">
 									<label class="form-check-label" >목요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일">
 									<label class="form-check-label" >금요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일">
 									<label class="form-check-label" >토요일</label>
 								</div>
 								<div class="form-check form-check-inline">
@@ -91,7 +91,7 @@
 				            <div>
 				                <label class="form-label">북커버 표지(400x600)</label>
 								<br/>
-				                <button >파일선택</button>
+								<input type="button" value="파일선택" />
 				            </div>
 				            <div>
 								<input class="btn btn-success form-control mt-2" type="submit" value="작성완료" />

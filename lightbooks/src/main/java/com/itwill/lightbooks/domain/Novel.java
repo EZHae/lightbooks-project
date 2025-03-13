@@ -47,15 +47,18 @@ public class Novel extends BaseTimeEntity{
 	@Basic(optional = false)
 	private String writer; // 작성자
 	
+	@Column(name = "like_count")
 	@Basic(optional = false)
 	private Integer likeCount; // 좋아요 수
 	
+	@Column(name = "cover_src")
 	@Basic(optional = false)
 	private String coverSrc; // 표지 이미지 URL
 	
 	@Basic(optional = false)
 	private Integer grade; // 작품 등급 (예: 1~5점)
 	
+	@Column(name = "age_limit")
 	@Basic(optional = false)
 	private Integer ageLimit; // 연령 제한 (0: 전체이용가, 1: 성인)
 	
