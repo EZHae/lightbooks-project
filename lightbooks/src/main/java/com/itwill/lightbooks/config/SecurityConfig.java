@@ -121,5 +121,4 @@ public class SecurityConfig {
         log.info("로그아웃 후 이동할 페이지: {}", referer);
         response.sendRedirect(referer);
     }
-    
 }

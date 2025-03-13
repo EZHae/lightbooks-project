@@ -7,4 +7,6 @@ public interface NovelQuerydsl {
 	Novel searchById(Integer id);
 	
 	Novel searchByIdWithGenre(Integer id);
+	
+	
 }
