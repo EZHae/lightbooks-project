@@ -11,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 public class HomeController {
 
 	@GetMapping("/")
-	public String home(HttpSession session) {
+	public String home() {
 		log.info("home()");
 		
-		session.setAttribute("signedInUserId", 1);
-		session.setAttribute("signedInLoginId", "admin");
-		session.setAttribute("signedInNickname", "어드민");
+		// session.setAttribute("signedInUserId", 1);
+		// session.setAttribute("signedInLoginId", "admin");
+		// session.setAttribute("signedInNickname", "어드민");
 		
 		// 그냥 주석달았음: 이지해
 		
