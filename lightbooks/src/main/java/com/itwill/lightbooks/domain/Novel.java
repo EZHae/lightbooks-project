@@ -47,29 +47,27 @@ public class Novel extends BaseTimeEntity{
 	@Basic(optional = false)
 	private String writer; // 작성자
 	
-	@Column(name = "like_count")
-	@Basic(optional = false)
-	private Integer likeCount; // 좋아요 수
+	@Column(name = "like_count" ,nullable = false)
+	private Integer likeCount = 0; // 좋아요 수
 	
 	@Column(name = "cover_src")
 	@Basic(optional = false)
 	private String coverSrc; // 표지 이미지 URL
 	
-	@Basic(optional = false)
-	private Integer grade; // 작품 등급 (예: 1~5점)
+	@Column(nullable = false)
+	private Integer grade = 0;// 작품 등급 (예: 1~5점)
 	
 	@Column(name = "age_limit")
 	@Basic(optional = false)
-	private Integer ageLimit; // 연령 제한 (0: 전체이용가, 1: 성인)
+	private Integer ageLimit; // 연령 제한 (0: 전체이용가, 1: 15세이상 2: 19세이상)
 	
 	@Basic(optional = false)
 	private String days; // 연재 요일 (예: "월, 수, 금")
 	
-	@Basic(optional = false)
-	private Integer state; // 연재 상태 (1: 연재중, 0: 완결)
+	@Column(nullable = false)
+	private Integer state = 1; // 연재 상태 (1: 연재중, 0: 완결)
 	
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id")
-	@Basic(optional = false)
 	private List<NGenre> novelGenre;
 }

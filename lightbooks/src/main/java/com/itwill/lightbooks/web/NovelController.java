@@ -1,10 +1,14 @@
 package com.itwill.lightbooks.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.itwill.lightbooks.domain.Genre;
+import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.dto.NovelCreateDto;
 import com.itwill.lightbooks.service.NovelService;
 
@@ -26,11 +30,12 @@ public class NovelController {
     }
     
     @PostMapping("/new")
-    public String novelCreate(NovelCreateDto dto) {
+    public String novelCreate(@ModelAttribute NovelCreateDto dto, Model model) {
+    	Novel novel = novelService.create(dto);
+
+    	model.addAttribute("novel", novel);
     	
-    	novelService.create(dto);
-    	
-    	return "redirect:/novel/";
+    	return "redirect:/";
     }
     
 }

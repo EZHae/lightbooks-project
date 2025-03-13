@@ -54,6 +54,8 @@ public class SecurityConfig {
         // 위처럼 기본을 사용하면 요청주소가 "/login"인 것을 아래처럼 바꿈. ("/login"은 시큐리티를 사용하면 기본제공됨)
         http.formLogin(t -> t.loginPage("/user/signin"));
         
+//        http.authorizeHttpRequests(t ->
+//        t.anyRequest().hasRole("USER"));
         /*
          * 페이지 접근 권한, 인증 구성:
          *  - 컨트롤러 메서드에서 애너테이션으로 설정.

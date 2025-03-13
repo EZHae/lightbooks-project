@@ -30,20 +30,23 @@ public class NGenre {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id")
-	@Basic(optional = false)
 	private Novel novel;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "genre_id")
-	@Basic
 	private Genre genre;
 	
-	@Basic(optional = false)
 	@Column(name = "is_main")
 	private int isMain;
+	
+	public NGenre(Novel novel, Genre genre, int isMain) {
+		this.novel = novel;
+		this.genre = genre;
+		this.isMain = isMain;
+	}
 	
 }
