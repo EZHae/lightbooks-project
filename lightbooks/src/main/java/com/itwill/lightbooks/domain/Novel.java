@@ -2,7 +2,6 @@ package com.itwill.lightbooks.domain;
 
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.Basic;
@@ -23,8 +22,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@NoArgsConstructor
 @DynamicInsert
+@NoArgsConstructor
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

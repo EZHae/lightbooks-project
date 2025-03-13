@@ -5,6 +5,7 @@
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
 		<a th:href="@{/novel/new}">작품작성</a>
+<<<<<<< HEAD
 		
 		<p th:text="${#lists.isEmpty(novels)} ? '소설이 없습니다.' : '소설이 존재함'"></p>
 		
@@ -16,6 +17,9 @@
 		    </li>
 		</ul>
 
+=======
+		<a th:href="@{/novel/1/episode/create}">회차작성</a> <!--나중에 1을 {novelId}로 바꾸기 -->
+>>>>>>> 904ae420f7690363ef9fbed3bedb2cb01d533506
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>

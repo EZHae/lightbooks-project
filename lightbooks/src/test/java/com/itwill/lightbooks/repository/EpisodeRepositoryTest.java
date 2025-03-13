@@ -24,7 +24,7 @@ public class EpisodeRepositoryTest {
 	
 //	@Test
 	@Transactional
-	void testFindAll() {
+	public void testFindAll() {
 		
 		List<Episode> list = epiRepo.findAll();
 		list.forEach(System.out::println);
@@ -33,10 +33,28 @@ public class EpisodeRepositoryTest {
 	}
 	
 //	@Test
-	void testFindById() {
+	public void testFindById() {
 		
 		Optional<Episode> list = epiRepo.findById(1L);
 		System.out.println(list);
+	}
+	
+//	@Test
+//	void testSave() {
+//		Episode episode = Episode.builder().novel(null)
+//	}
+	
+//	@Test
+	public void testUpdate() {
+		Episode episode = epiRepo.findById(5L).orElseThrow();
+		log.info("findById 결과 = {}", episode);
+		
+		episode.update(4, "4화", "4화 내용", 2);
+		log.info("update메서드 호출 = {}", episode);
+		
+		epiRepo.save(episode);
+		log.info("save메서드 호출 후 = {}", episode);
+		
 	}
 
 }

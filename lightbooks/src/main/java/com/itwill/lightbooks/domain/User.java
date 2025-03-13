@@ -54,7 +54,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String imgSrc;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, optional = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private UserWallet userWallet;
 
 	@Override

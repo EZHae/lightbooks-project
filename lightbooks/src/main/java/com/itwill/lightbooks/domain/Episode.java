@@ -2,6 +2,8 @@ package com.itwill.lightbooks.domain;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@DynamicInsert
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @NoArgsConstructor
@@ -50,15 +53,40 @@ public class Episode extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String content;
 	
-	@Column(nullable = false)
-	private Integer views = 0;
+	private Integer views;
 	
 	@Column(nullable = false)
 	private Integer category; // 구분(0: 공지, 1:무료, 2:유료)
+	
+	@Column(name = "reservation_time")
+	private LocalDateTime reservationTime;
 	
 	//조회수 증가 메서드
 	public void increaseViews() {
 		this.views++;
 	}
+	
+	//에피소드에서 회차 숫자, 제목, 내용, 카테고리만 수정하는 메서드
+	public Episode update(Integer episodeNum, String title, String content, Integer category) {
+		this.episodeNum = episodeNum;
+		this.title = title;
+		this.content = content;
+		this.category = category;
+		
+		return this;
+	}
+	
+	//dto -> entity
+	public Episode toEntity(Novel novel) {
+    	
+        return Episode.builder()
+                .novel(novel)
+                .episodeNum(episodeNum)
+                .title(title)
+                .content(content)
+                .category(category)
+                .reservationTime(reservationTime) // LocalDateTime
+                .build();
+    }
 	
 }
