@@ -35,6 +35,7 @@ public class Episode extends BaseTimeEntity {
 	private Long id;
 	
 	//관계 매핑
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id", nullable = false)
 	private Novel novel;

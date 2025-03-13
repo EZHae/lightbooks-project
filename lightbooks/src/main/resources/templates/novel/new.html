@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스')}"></head>
+	<body>
+<!-- 		<th:block th:replace="~{/layout/fragments :: pageHeader('작품 설정 페이지')}"></th:block> -->
+
+		<main>
+            <div>
+                <label class="form-label">작품명</label>
+                <input type="text" class="form-control">
+            </div>
+            <div>
+                <label class="form-label"></label>
+                <input type="text" class="form-control">
+            </div>
+            <div>
+                <label class="form-label"></label>
+                <input type="text" class="form-control">
+            </div>
+            <div>
+                <label class="form-label"></label>
+                <input type="text" class="form-control">
+            </div>
+            <div>
+                <label class="form-label"></label>
+                <input type="text" class="form-control">
+            </div>
+            
+
+            연재요일
+            작품소개
+            북커버
+            표지선택
+            연령제한
+            작품등급
+            좋아요수
+            소개개
+        </main>
+		
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>
