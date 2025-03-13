@@ -1,5 +1,7 @@
 package com.itwill.lightbooks.domain;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@DynamicInsert
 @Getter
 @ToString
 @NoArgsConstructor
@@ -34,6 +37,7 @@ public class NGenre {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id")
+	@ToString.Exclude
 	private Novel novel;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,11 +46,5 @@ public class NGenre {
 	
 	@Column(name = "is_main")
 	private int isMain;
-	
-	public NGenre(Novel novel, Genre genre, int isMain) {
-		this.novel = novel;
-		this.genre = genre;
-		this.isMain = isMain;
-	}
 	
 }

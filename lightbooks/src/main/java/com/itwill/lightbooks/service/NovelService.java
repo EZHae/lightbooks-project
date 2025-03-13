@@ -26,6 +26,22 @@ public class NovelService {
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
 	
+	public Novel searchById(Integer id) {
+		log.info("searchId()");
+		Novel novel = novelRepo.findById(id).orElseThrow();
+		
+		return novel;
+	}
+	
+	public List<Novel> searchAll() {
+		log.info("searchAll()");
+		List<Novel> list = novelRepo.findAll();
+		
+		log.info("search list = {}", list);
+		
+		return list;
+	}
+	
 	@Transactional
 	public Novel create(NovelCreateDto dto) {
 		
@@ -33,22 +49,21 @@ public class NovelService {
 		Novel novel = novelRepo.save(dto.toEntity());
 		log.info("저장되는 소설 = {}", novel);
 		
+		log.info("받은 장르 ID 목록 = {}", dto.getGenre()); // 입력 확인
 		// 장르 정보 가져오기
-		List<Genre> genres = genreRepo.findAllById(dto.getNovelGenreIds());
-		log.info("총 장르 genres = {}",genres);
+		List<Genre> selectedGenres = genreRepo.findAllById(dto.getGenre());
+		log.info("총 장르 genres = {}",selectedGenres);
 		
 		// 소설 장르 저장
-		List<NGenre> novelGenres = genres.stream()
+		List<NGenre> novelGenres = selectedGenres.stream()
 				.map(genre -> NGenre.builder()
 						.novel(novel)
 						.genre(genre)
-						.isMain(dto.getMainGenreId())
 						.build())
 				.collect(Collectors.toList());
 		
 		ngenreRepo.saveAll(novelGenres);
 		log.info("해당 소설 장르 = {}", novelGenres);
-		
 		
 		return novel;
 	}

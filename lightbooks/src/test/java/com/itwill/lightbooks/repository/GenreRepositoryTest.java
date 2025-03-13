@@ -21,6 +21,8 @@ public class GenreRepositoryTest {
 	public void testFindByAll() {
 		List<Genre> genre = genreRepo.findAll();
 		log.info("genre={}", genre);
+		
+		
 	}
 	
 }

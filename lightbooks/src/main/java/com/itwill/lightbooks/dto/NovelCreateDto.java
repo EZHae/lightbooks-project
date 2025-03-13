@@ -18,17 +18,14 @@ public class NovelCreateDto {
 	private String coverSrc;
 	private Integer ageLimit;
 	private List<String> days;
-	private Integer grade = 0;
-	private Integer likeCount = 0;
-	private Integer state = 1;
+
 	
-	private Integer mainGenreId;
-	private List<Integer> novelGenreIds = new ArrayList<>();
+	private List<Integer> genre;
 	
 	public Novel toEntity() {
 		return Novel.builder()
 				.userId(userId)
-				.title(title).intro(intro).writer(writer).coverSrc(coverSrc).ageLimit(ageLimit).grade(grade).likeCount(likeCount).state(state)
+				.title(title).intro(intro).writer(writer).coverSrc(coverSrc).ageLimit(ageLimit)
 				.days(days != null ? String.join(",", days) : "비정기")
 				.build();
 	}

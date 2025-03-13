@@ -8,24 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.NGenre;
-import com.itwill.lightbooks.domain.Novel;
-import com.itwill.lightbooks.repository.novel.NovelRepository;
+import com.itwill.lightbooks.repository.novel.NGenreRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
-public class NovelRepositoryTest {
+public class NGenreRepositoryTest {
 	
 	@Autowired
-	private NovelRepository novelRepo;
-
-//	@Test
-//	@Transactional
+	private NGenreRepository ngenreRepo;
+	
+	@Test
+	@Transactional
 	public void testFindAll() {
-		List<Novel> list = novelRepo.findAll();
-		list.forEach(System.out::println);
+		List<NGenre> savedGenres = ngenreRepo.findAll();
+		log.info("저장된 소설 장르 리스트 = {}", savedGenres);
 		
 	}
-	
+
 }
