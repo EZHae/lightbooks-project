@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +36,51 @@ public class UserService implements UserDetailsService {
 			return user.get();
 		} else {
 			throw new UsernameNotFoundException(loginId + "과 일치하는 사용자 없음");
+		}
+	}
+	
+	public List<User> read() {
+		List<User> users = userRepo.findAll();
+		return users;
+	}
+	
+	public User searchByLoginId(String loginId) {
+		
+		Optional<User> user = userRepo.findByLoginId(loginId);
+		if (user.isEmpty()) {
+			return null;
+		} else {
+			return user.get();
+		}
+	}
+	
+	public User searchByNickname(String nickname) {
+		
+		Optional<User> user = userRepo.findByNickname(nickname);
+		if (user.isEmpty()) {
+			return null;
+		} else {
+			return user.get();
+		}
+	}
+	
+	public User searchByPhonenumber(String phonenumber) {
+		
+		Optional<User> user = userRepo.findByPhonenumber(phonenumber);
+		if (user.isEmpty()) {
+			return null;
+		} else {
+			return user.get();
+		}
+	}
+	
+	public User searchByEmail(String email) {
+		
+		Optional<User> user = userRepo.findByEmail(email);
+		if (user.isEmpty()) {
+			return null;
+		} else {
+			return user.get();
 		}
 	}
 	

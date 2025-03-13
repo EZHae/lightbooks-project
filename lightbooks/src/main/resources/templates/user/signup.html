@@ -4,47 +4,54 @@
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
-        <main>
-            <div class="card card-body">
+        <main class="container-sm">
+            <div class="card card-body w-50 mx-auto">
                 <form method="post">
                     <div class="mt-2">
                         <label for="loginId" class="form-label">아이디</label>
-                        <input id="loginId" class="form-control" type="text" name="loginId" required autofocus>
+                        <input id="loginId" class="form-control" type="text" name="loginId" maxlength="20" required autofocus>
+                        <div id="checkLoginIdResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
                         <label for="password" class="form-label">비밀번호</label>
-                        <input id="password" class="form-control" type="password" name="password" required>
+                        <input id="password" class="form-control" type="password" name="password" maxlength="20" required>
+                        <div id="checkPassworddResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
                         <label for="nickname" class="form-label">닉네임</label>
-                        <input id="nickname" class="form-control" type="text" name="nickname" required>
+                        <input id="nickname" class="form-control" type="text" name="nickname" maxlength="20" required>
+                        <div id="checkNicknameResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
                         <label for="username" class="form-label">이름</label>
-                        <input id="username" class="form-control" type="text" name="username" required>
+                        <input id="username" class="form-control" type="text" name="username" maxlength="10" required>
                     </div>
                     <div class="mt-2">
-                        <label for="gender" class="form-label">성별</label>
-                        <input id="gender" class="form-control" type="number" name="gender" required>
+                        <label class="form-label">성별</label><br>
+                        <input id="male" name="gender" type="radio" value="0" checked> <label for="male">남성</label> 
+                        <input id="female" name="gender" type="radio" value="1"> <label for="female">여성</label>
                     </div>
                     <div class="mt-2">
                         <label for="age" class="form-label">나이</label>
-                        <input id="age" class="form-control" type="number" name="age" required>
+                        <input id="age" class="form-control" type="number" name="age" min="1" max="99" required>
                     </div>
                     <div class="mt-2">
                         <label for="phonenumber" class="form-label">전화번호</label>
-                        <input id="phonenumber" class="form-control" type="text" name="phonenumber" required>
+                        <input id="phonenumber" class="form-control" type="text" name="phonenumber" maxlength="13" required>
+                        <div id="checkPhonenumberResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
                         <label for="email" class="form-label">이메일</label>
-                        <input id="email" class="form-control" type="email" name="email" required>
+                        <input id="email" class="form-control" type="email" name="email" maxlength="20" required>
+                        <div id="checkEmailResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
                         <label for="imgSrc" class="form-label">프로필</label>
                         <input id="imgSrc" class="form-control" type="text" name="imgSrc" required>
+                        <div id="checkEmailResult" class="check-result"></div>
                     </div>                    
                     <div class="mt-2">
-                        <input type="submit" class="btn btn-success form-control" value="가입">
+                        <input type="submit" id="btnSignUp" class="btn btn-success form-control disabled" value="가입">
                     </div>
                 </form>
             </div>
@@ -52,5 +59,6 @@
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/user-signup.js}"></script>
 	</body>
 </html>
