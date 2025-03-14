@@ -1,23 +1,23 @@
 package com.itwill.lightbooks.dto;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.itwill.lightbooks.domain.User;
 
 import lombok.Data;
 
 @Data
-public class UserUpdateDto {
+public class UserUpdateProfileDto {
 
-    private String password;
+	private Long id;
+	private String username;
     private String nickname;
     private String phonenumber;
     private String email;
     private String imgSrc;
     
-    public User toEntity(PasswordEncoder passwordEncoder) {
+    public User toEntity() {
     	return User.builder()
-    			.password(passwordEncoder.encode(password))
+    			.id(id)
+    			.username(username)
     			.nickname(nickname)
     			.phonenumber(phonenumber)
     			.email(email)
