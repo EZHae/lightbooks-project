@@ -8,45 +8,18 @@
             <div class="card card-body w-50 mx-auto">
                 <form method="post">
                     <div class="mt-2">
-                        <label for="loginId" class="form-label">아이디</label>
-                        <input id="loginId" class="form-control" type="text" name="loginId" maxlength="20" required autofocus>
-                        <div id="checkLoginIdResult" class="check-result"></div>
-                    </div>
-                    <div class="mt-2">
-                        <label for="password" class="form-label">비밀번호</label>
-                        <input id="password" class="form-control" type="password" name="password" maxlength="20" required>
-                        <div id="checkPasswordResult" class="check-result"></div>
-                    </div>
-                    <div class="mt-2">
                         <label for="nickname" class="form-label">닉네임</label>
-                        <input id="nickname" class="form-control" type="text" name="nickname" maxlength="20" required>
+                        <input id="nickname" class="form-control" type="text" name="nickname" th:value="${user.nickname}" maxlength="20" required>
                         <div id="checkNicknameResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
-                        <label for="username" class="form-label">이름</label>
-                        <input id="username" class="form-control" type="text" name="username" maxlength="10" required>
-                    </div>
-                    <div class="row mt-2">
-	                    <div class="col-6">
-	                        <label class="form-label">성별</label><br>
-	                        <input id="male" name="gender" type="radio" value="0" checked> <label for="male">남성</label> 
-	                        <input id="female" name="gender" type="radio" value="1"> <label for="female">여성</label>
-	                    </div>
-	                    <div class="col-6">
-	                        <label for="year" class="form-label">태어난 연도</label>
-	                        <select id="year" name="year" class="form-control">
-	                        </select>
-	                    </div>
-                    </div>
-
-                    <div class="mt-2">
                         <label for="phonenumber" class="form-label">전화번호</label>
-                        <input id="phonenumber" class="form-control" type="text" name="phonenumber" maxlength="13" required>
+                        <input id="phonenumber" class="form-control" type="text" name="phonenumber" th:value="${user.phonenumber}" maxlength="13" required>
                         <div id="checkPhonenumberResult" class="check-result"></div>
                     </div>
                     <div class="mt-2">
                         <label for="email" class="form-label">이메일</label>
-                        <input id="email" class="form-control" type="email" name="email" maxlength="20" required>
+                        <input id="email" class="form-control" type="email" name="email" maxlength="20" th:value="${user.email}" required>
                         <div id="checkEmailResult" class="check-result"></div>
                     </div>
                     <!-- 철거 예정 -->
@@ -54,6 +27,11 @@
                         <label for="imgSrc" class="form-label">프로필</label>
                         <input id="imgSrc" class="form-control" type="text" name="imgSrc" value="value" readonly required>
                         <div id="checkEmailResult" class="check-result"></div>
+                    </div>
+					<div class="mt-2">
+                        <label for="password" class="form-label">현재 비밀번호</label>
+                        <input id="password" class="form-control" type="password" name="password" maxlength="20" required>
+                        <div id="checkPasswordResult" class="check-result"></div>
                     </div>                 
                     <div class="mt-2 row">
 	                    <div class="col-3">
@@ -78,6 +56,5 @@
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-        <script th:src="@{/js/user-signup.js}"></script>
 	</body>
 </html>

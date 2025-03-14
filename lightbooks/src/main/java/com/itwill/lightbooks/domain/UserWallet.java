@@ -30,8 +30,12 @@ public class UserWallet {
     private Long id;
 
     @OneToOne
+    @ToString.Exclude
     @JoinColumn(name = "user_id", unique = true) // USER 테이블의 PK와 연결
-    private User user; 
+    private User user;
+    
+//    @Column(name = "user_id")
+//    private Long userId;
     private Long coin;
     private Long mileage;
 }

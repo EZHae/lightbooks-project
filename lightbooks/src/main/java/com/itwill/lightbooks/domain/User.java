@@ -43,7 +43,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String nickname;
     private String username;
     private Integer gender;
-    private Integer age;
+    private Integer year;
     private String phonenumber;
     private String email;
 
