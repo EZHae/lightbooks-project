@@ -1,6 +1,8 @@
 package com.itwill.lightbooks.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -9,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.lightbooks.domain.Genre;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.NovelCreateDto;
 import com.itwill.lightbooks.repository.genre.GenreRepository;
 import com.itwill.lightbooks.repository.novel.NGenreRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
+import com.itwill.lightbooks.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,18 @@ public class NovelService {
 	private final NovelRepository novelRepo;
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
+	
+	
+	public List<Novel> searchByUserId(Integer userId){
+		return novelRepo.findByUserId(userId);
+	}
+	
+//	public Novel searchById(Long userId) {
+//		log.info("searchId()");
+//		userRepo.searchById(userId);
+//		
+//		return novel;
+//	}
 	
 	public Novel searchById(Integer id) {
 		log.info("searchId()");

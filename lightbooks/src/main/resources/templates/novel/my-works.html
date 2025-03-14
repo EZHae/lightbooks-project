@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	
+	<style>
+	div.container{
+		background: #F08080;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		position: static;
+	}
+	.nav-work {
+		background: white;
+		height:80px;	
+		width: 180px;
+		float:left;
+		border: 1px solid black;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
+	}
+	.nav-link{
+		text-align: center;
+	}
+	</style>
+	
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<main>
+		    <div class="container">
+		        <ul class="mt-3">
+		            <li class="nav-work">
+		                <a class="nav-link active" th:href="@{/novel/my-works}">내 작품</a>
+		            </li>
+		            <li class="nav-work">
+		                <a class="nav-link" th:href="@{/novel/my-works/donation}">후원관리</a>
+		            </li>
+		            <li class="nav-work">
+		                <a class="nav-link" th:href="@{/novel/my-works/stats}">통계</a>
+		            </li>
+		            <li class="nav-work">
+		                <a class="nav-link" th:href="@{/novel/my-works/withdraw}">정산</a>
+		            </li>
+		        </ul>    
+		    </div>
+		    <hr/>
+
+			<div class="my-novel">
+				<table>
+					<tbody>
+						<tr th:each="novel : ${novel}">
+							<td th:text="${novel.id}"></td>
+						</tr>
+					</tbody>
+				</table>
+				<div>
+					<label class="form-label" for="title">작품명</label>
+					<input type="text" name="title" class="form-control" th:value="*{title}" readonly>
+				</div>
+				<div class="">
+					<label class="form-label" for="writer">작성자</label>
+					<input type="text" name="writer" class="form-control" th:value="*{writer}" readonly>
+				</div>
+			</div>
+
+			<div>
+				<div>
+					<label class="form-label" for="intro">댓글</label>
+					<textarea class="form-control" rows="5" name="intro"></textarea>
+				</div>
+			</div>
+		</main>
+		
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

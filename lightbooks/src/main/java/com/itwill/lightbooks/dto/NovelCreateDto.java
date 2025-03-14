@@ -1,9 +1,7 @@
 package com.itwill.lightbooks.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
 
 import lombok.Data;
