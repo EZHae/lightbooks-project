@@ -1,24 +1,26 @@
 package com.itwill.lightbooks.domain;
 
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class CustomUserDetails extends User implements UserDetails{
+@NoArgsConstructor
+@Data
+public class CustomUserDetails implements UserDetails{
 	
 	private Long id;
-	
-	public CustomUserDetails(User user) {
-		super();
-		this.id = user.getId();
-	}
-	public Long getId() {
-		return id;
-	}
+	private String username;
+	private String password;
+	private Collection<? extends GrantedAuthority> authorities;
+
 }

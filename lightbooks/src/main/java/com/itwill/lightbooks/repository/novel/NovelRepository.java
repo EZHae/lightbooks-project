@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.itwill.lightbooks.domain.Novel;
 
-public interface NovelRepository extends JpaRepository<Novel, Integer>, NovelQuerydsl {
+public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQuerydsl {
 	
-	List<Novel> findByUserId(Integer userId);
+	List<Novel> findByUserId(Long userId);
 	
 }

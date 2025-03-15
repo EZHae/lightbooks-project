@@ -21,8 +21,6 @@
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
-		<a th:href="@{/novel/new}">작품작성</a>
-		<a th:href="@{/novel/my-works}">내 작품</a>
 		<a th:href="@{/novel/modify}">작품수정</a>
 		
 		<div class="container">
@@ -32,12 +30,6 @@
 				<a th:href="@{/novel/{id}(id=${novel.id})}" th:text="${novel.title}"></a>
 		    </div>
 		</div>
-<!-- 			<ul> -->
-<!-- 			    <li th:each="novel : ${novels}"> -->
-<!-- 			        <img class="novelImgs" th:src="${novel.coverSrc}"> -->
-<!-- 					<a th:href="@{/novel/{id}(id=${novel.id})}" th:text="${novel.title}"></a> -->
-<!-- 			    </li> -->
-<!-- 			</ul> -->
 
 		<a th:href="@{/novel/1/episode/create}">회차작성</a> <!--나중에 1을 {novelId}로 바꾸기 -->
 		

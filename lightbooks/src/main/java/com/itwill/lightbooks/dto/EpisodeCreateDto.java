@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class EpisodeCreateDto {
 
-	private Integer novelId;
+	private Long novelId;
 	
 	private Integer episodeNum;
 	

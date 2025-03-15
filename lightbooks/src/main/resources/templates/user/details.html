@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+        <main class="container-sm">
+            <div class="w-50 mx-auto">
+            	<table class="card" th:object="${user}">
+            		<thead class="card-header">
+                        <tr class="text-center row">
+                            <th colspan="2" class="col-12">기본 정보</th>
+                        </tr>
+                    </thead>
+                    <tbody class="card-body">
+                        <tr class="row">
+                            <th class="tableColumn col-3">아이디</th>
+                            <td class="tableValue col-9" th:text="*{loginId}"></td>
+                        </tr>
+                        <tr class="row">
+                            <th class="tableColumn col-3">닉네임</th>
+                            <td class="tableValue col-9" th:text="*{nickname}"></td>
+                        </tr>
+                        <tr class="row">
+                            <th class="tableColumn col-3">이름</th>
+                            <td class="tableValue col-9" th:text="*{username}"></td>
+                        </tr>
+                        <tr class="row">
+                            <th class="tableColumn col-3">성별</th>
+                            <td class="tableValue col-9" th:text="*{(gender == 0) ? '남성' : '여성'}"></td>
+                        </tr>
+                        <tr class="row">
+                            <th class="tableColumn col-3">태어난 연도</th>
+                            <td class="tableValue col-9" th:text="*{year}"></td>
+                        </tr>
+                        <tr class="row">
+                            <th class="tableColumn col-3">이메일</th>
+                            <td class="tableValue col-9" th:text="*{email}"></td>
+                        </tr>
+                    </tbody>
+            	</table>
+            	<div class="d-flex justify-content-end">
+            		<a class="btn btn-sm" th:href="@{/user/updateProfile(id=*{id})}">회원 정보 수정</a>
+            		<a class="btn btn-sm">비밀번호 변경</a>
+            		<a class="btn btn-sm">회원 탈퇴</a>
+            	</div>
+            </div>
+        </main>
+		
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

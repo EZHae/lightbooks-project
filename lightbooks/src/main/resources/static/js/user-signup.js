@@ -170,6 +170,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	});
 	
+	// 생년 콤보박스 데이터 생성
+	const currentYear = new Date().getFullYear();
+	const selectYear = document.querySelector('select#year');
+
+	// 현재년도부터 1900까지 추가
+	for (let year = currentYear; year >= 1900; year--) {
+	    const option = document.createElement('option');
+	    option.value = year;
+	    option.textContent = year;
+	    selectYear.appendChild(option);
+	}
+	
 	
 	// 버튼 활성화 상태 변경
 	const inputSignUp = document.querySelector('input#btnSignUp');

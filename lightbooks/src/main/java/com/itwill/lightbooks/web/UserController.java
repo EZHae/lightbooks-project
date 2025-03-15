@@ -2,6 +2,7 @@ package com.itwill.lightbooks.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.service.UserService;
 
@@ -38,6 +40,17 @@ public class UserController {
     	return "redirect:/";
     }
     
+    @GetMapping("/details")
+    public void details(@RequestParam(name = "id") Long id, Model model) {
+    	log.info("GET details");
+    	
+    	User user = userService.searchById(id);
+    	
+    	model.addAttribute("user", user);
+    }
+    
+    
+    /* ResponseBody */
     @ResponseBody
     @GetMapping("/checkLoginId")
     public ResponseEntity<Boolean> checkLoginId(@RequestParam(name = "loginId") String loginId) {
@@ -88,5 +101,22 @@ public class UserController {
     	Boolean result = (user == null) ? false : true;
     	log.info("reuslt={}", result);
     	return ResponseEntity.ok(result);
+    }
+    
+    @ResponseBody
+    @GetMapping("/getUserWallet")
+    public ResponseEntity<Long> getUserWallet(@RequestParam(name = "userId") Long userId,
+    												@RequestParam(name = "type") String type) {
+    	log.info("getUserWallet?userId");
+    	log.info("userId={}", userId);
+    	
+    	UserWallet userWallet = userService.SearchUserWalletByUserId(userId);
+    	log.info("userWallet={}", userWallet);
+    	
+    	if (type.equals("c")) {
+    		return ResponseEntity.ok(userWallet.getCoin());
+    	} else {
+    		return ResponseEntity.ok(userWallet.getMileage());
+    	}
     }
 }

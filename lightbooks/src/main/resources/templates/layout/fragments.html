@@ -126,6 +126,7 @@
                             id="profileDropdown"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
+                            data-bs-auto-close="outside"
                         >
                             <img th:src="@{/images/profile_icon_example.jpg}" alt="Profile" class="profile-img me-2"
                             	style="width: 30px; height: 30px;" />
@@ -136,8 +137,9 @@
                                     <img th:src="@{/images/profile_icon_example.jpg}" alt="Profile" class="profile-img" />
                                     <div class="ms-3">
                                         <h6 class="mb-0" sec:authentication="principal.nickname"></h6>
-                                        <a th:href="@{#}">
-                                            <small class="text-muted">정보 수정</small>
+                                        <span class="d-none" id="userId" sec:authentication="principal.id"></span>
+                                        <a th:href="@{/user/details(id=${#authentication.principal.id})}">
+                                            <small class="text-muted">내 정보</small>
                                         </a>
                                     </div>
                                 </div>
@@ -147,23 +149,25 @@
                                 <div class="row">
                                     <div class="d-flex align-items-center col-12 text-start border rounded-3 py-2 wallet">
                                         <span>코인</span>
-                                        <strong class="flex-grow-1 text-end" sec:authentication="principal.userWallet.coin"></strong>
+                                        <button class="border-0" id="coinRefresh"><i class="bi bi-repeat"></i></button>
+                                        <strong id="nowCoin" class="flex-grow-1 text-end">0</strong>
                                         <a th:href="@{#}">
-                                            <button class="p-2 ms-2 text-center border rounded-3 wallet-now">코인 충전</button>
+                                            <button class="p-2 ms-2 text-center border rounded-3 wallet-now">충전</button>
                                         </a>
                                     </div>
                                     <div class="d-flex align-items-center col-12 mt-2 text-start border rounded-3 py-2 wallet">
                                         <span>마일리지</span>
-                                        <strong class="flex-grow-1 text-end" sec:authentication="principal.userWallet.mileage"></strong>
+                                        <button class="border-0" id="mileageRefresh"><i class="bi bi-repeat"></i></button>
+                                        <strong id="nowMileage" class="flex-grow-1 text-end">0</strong>
                                         <a th:href="@{#}">
-                                            <button class="p-2 ms-2 text-center border rounded-3 wallet-now">마일리지 교환</button>
+                                            <button class="p-2 ms-2 text-center border rounded-3 wallet-now">교환</button>
                                         </a>
                                     </div>
                                 </div>
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
-                                <a class="dropdown-item text-center fw-bold" th:href="@{#}">
+                                <a class="dropdown-item text-center fw-bold" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">
                                     작품 관리하기
                                 </a>
                             </li>
@@ -217,6 +221,7 @@
                     </div>
                 </div>
             </div>
+            <script th:src="@{/js/fragments.js}"></script>
         </nav>
 
         <!-- 부트스트랩 -->
@@ -232,5 +237,6 @@
         <th:block th:fragment="axiosJS">
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         </th:block>
+        
     </body>
 </html>

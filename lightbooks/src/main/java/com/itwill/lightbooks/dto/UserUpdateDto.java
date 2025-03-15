@@ -7,26 +7,18 @@ import com.itwill.lightbooks.domain.User;
 import lombok.Data;
 
 @Data
-public class UserSignUpDto {
+public class UserUpdateDto {
 
-	private String loginId;
     private String password;
     private String nickname;
-    private String username;
-    private Integer gender;
-    private Integer year;
     private String phonenumber;
     private String email;
     private String imgSrc;
     
     public User toEntity(PasswordEncoder passwordEncoder) {
     	return User.builder()
-    			.loginId(loginId)
     			.password(passwordEncoder.encode(password))
     			.nickname(nickname)
-    			.username(username)
-    			.gender(gender)
-    			.year(year)
     			.phonenumber(phonenumber)
     			.email(email)
     			.imgSrc(imgSrc)

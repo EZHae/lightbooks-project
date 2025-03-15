@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
@@ -42,6 +43,16 @@ public class UserService implements UserDetailsService {
 	public List<User> read() {
 		List<User> users = userRepo.findAll();
 		return users;
+	}
+	
+	public User searchById(Long id) {
+		
+		Optional<User> user = userRepo.findById(id);
+		if (user.isEmpty()) {
+			return null;
+		} else {
+			return user.get();
+		}
 	}
 	
 	public User searchByLoginId(String loginId) {
@@ -82,6 +93,14 @@ public class UserService implements UserDetailsService {
 		} else {
 			return user.get();
 		}
+	}
+	
+	public UserWallet SearchUserWalletByUserId(Long id) {
+		
+		User user = userRepo.findById(id).orElseThrow();
+		UserWallet userWallet = user.getUserWallet();
+		
+		return userWallet;
 	}
 	
 	@Transactional

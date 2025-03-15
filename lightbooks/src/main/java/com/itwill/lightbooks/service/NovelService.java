@@ -13,11 +13,13 @@ import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.repository.genre.GenreRepository;
 import com.itwill.lightbooks.repository.novel.NGenreRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,18 +33,28 @@ public class NovelService {
 	private final NGenreRepository ngenreRepo;
 	
 	
-	public List<Novel> searchByUserId(Integer userId){
-		return novelRepo.findByUserId(userId);
+	public List<NovelResponseDto> getNovelByUserId(Long userId) {
+		List<Novel> novels = novelRepo.searchByUserIdWithGenre(userId);
+		
+		log.info("해당 유저 소설 : {}", novels);
+		
+		return novels.stream().map(novel -> new NovelResponseDto(
+				novel.getId(),
+				novel.getTitle(),
+				novel.getIntro(),
+				novel.getWriter(),
+				novel.getCoverSrc(),
+				novel.getLikeCount(),
+				novel.getState(),
+				novel.getNovelGenre()
+				.stream().map(novelGenre -> novelGenre.getGenre().getName())
+				.collect(Collectors.toList())
+				))
+				.collect(Collectors.toList());
 	}
 	
-//	public Novel searchById(Long userId) {
-//		log.info("searchId()");
-//		userRepo.searchById(userId);
-//		
-//		return novel;
-//	}
 	
-	public Novel searchById(Integer id) {
+	public Novel searchById(Long id) {
 		log.info("searchId()");
 		Novel novel = novelRepo.findById(id).orElseThrow();
 		

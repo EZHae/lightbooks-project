@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.itwill.lightbooks.domain.NGenre;
 
-public interface NGenreRepository extends JpaRepository<NGenre, Integer> {
+public interface NGenreRepository extends JpaRepository<NGenre, Long> {
 
 }

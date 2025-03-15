@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class NovelCreateDto {
 	
-	private Integer userId;
+	private Long userId;
 	private String title;
 	private String intro;
 	private String writer;
