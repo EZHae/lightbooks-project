@@ -32,7 +32,7 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 	}
 
 	@Override
-	public List<Novel> searchByIdWithGenre(Long id) {
+	public Novel searchByIdWithGenre(Long id) {
 		QNovel novel = QNovel.novel;
 		QNGenre novelGenre = QNGenre.nGenre;
 		QGenre genre = QGenre.genre;
@@ -41,7 +41,16 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 				.leftJoin(novel.novelGenre, novelGenre).fetchJoin()
 				.leftJoin(novelGenre.genre, genre).fetchJoin()
 				.where(novel.id.eq(id));
-		List<Novel> entity = query.fetch();
+		Novel entity = query.fetchOne();
+		
+	    if (entity == null) {
+	        log.error("소설을 찾을 수 없습니다! ID: " + id);
+	    } else if (entity.getNovelGenre() == null || entity.getNovelGenre().isEmpty()) {
+	        log.warn("소설은 찾았지만 장르가 없습니다! ID: " + id);
+	    } else {
+	        log.info("소설 ID: " + id + ", 장르 개수: " + entity.getNovelGenre().size());
+	    }
+		
 		
 		return entity;
 	}
@@ -56,7 +65,8 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 		JPQLQuery<Novel> query = from(novel)
 				.leftJoin(novel.novelGenre, novelGenre).fetchJoin()
 				.leftJoin(novelGenre.genre, genre).fetchJoin()
-				.where(novel.userId.eq(id));
+				.where(novel.userId.eq(id))
+				.orderBy(novel.id.desc());
 		List<Novel> entity = query.fetch();
 		
 		return entity;

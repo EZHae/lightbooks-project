@@ -16,34 +16,37 @@
 
 		<main class="card">
 			<div class="card-body">
-				<form method="post" th:action="@{/novel/modify}">
-					<div class="row mg-b-25">
+				<form id="novelUpdateForm" method="post" th:action="@{/novel/update}">
+					<div class="row mg-b-25" th:object="${novel}">
 						<div class="col-4">
 							<img th:src="@{/images/testimg.jpg}" style="width: 90%">
 						</div>
 						<div class="col-lg-8">
 							<div class="d-none">
-								<input type="text" name="userId" class="form-control" th:value="${#authentication.principal.id}">
+								<input type="text" name="id" id="id" th:value="*{id}">
+							</div>
+							<div class="d-none">
+								<input type="text" name="userId" id="userId" class="form-control" th:value="${#authentication.principal.id}">
 							</div>
 				            <div>
 				                <label class="form-label" for="title" >작품명</label>
-				                <input type="text" name="title" class="form-control">
+				                <input type="text" name="title" class="form-control" th:value="*{title}">
 				            </div>
 				            
-				            <div class="">
+				            <div class="d-none">
 				                <label class="form-label" for="writer">작성자</label>
 				                <input type="text" name="writer" class="form-control" th:value="${#authentication.principal.nickname}" readonly>
 				            </div>
 				            
 				            <div>
 				                <label class="form-label">메인장르</label>
-				                <select class="form-select" name="genre">
-				            		<option value="1">판타지</option>
-				            		<option value="2">로맨스</option>
-				            		<option value="3">무협</option>
-				            		<option value="4">로판</option>
-				            		<option value="5">현판</option>
-				            		<option value="6">드라마</option>
+				                <select class="form-select" name="novelGenre">
+				            		<option value="1" th:selected="${novelGenre != null && novelGenre.genre.id == 1}">판타지</option>
+				            		<option value="2" th:selected="${novelGenre != null && novelGenre.genre.id == 2}">로맨스</option>
+				            		<option value="3" th:selected="${novelGenre != null && novelGenre.genre.id == 3}">무협</option>
+				            		<option value="4" th:selected="${novelGenre != null && novelGenre.genre.id == 4}">로판</option>
+				            		<option value="5" th:selected="${novelGenre != null && novelGenre.genre.id == 5}">현판</option>
+				            		<option value="6" th:selected="${novelGenre != null && novelGenre.genre.id == 6}">드라마</option>
 				            	</select>
 				            </div>
 				            
@@ -51,49 +54,57 @@
 				                <label class="form-label">연재요일</label>
 				                <br/>
 				                <div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox1" value="월요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox1" value="월요일" 
+										th:checked="*{days.contains('월요일')}">
 									<label class="form-check-label" for="inlineCheckbox1">월요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일" 
+										th:checked="*{days.contains('화요일')}">
 									<label class="form-check-label" for="inlineCheckbox2">화요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일" 
+										th:checked="*{days.contains('수요일')}">
 									<label class="form-check-label" for="inlineCheckbox3">수요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일" 
+										th:checked="*{days.contains('목요일')}">
 									<label class="form-check-label" for="inlineCheckbox4">목요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일" 
+										th:checked="*{days.contains('금요일')}">
 									<label class="form-check-label" for="inlineCheckbox5">금요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일" 
+										th:checked="*{days.contains('토요일')}">
 									<label class="form-check-label" for="inlineCheckbox6">토요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox7" value="일요일">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox7" value="일요일" 
+										th:checked="*{days.contains('일요일')}">
 									<label class="form-check-label" for="inlineCheckbox7">일요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox0" value="비정기">
+									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox0" value="비정기" 
+										th:checked="*{days.contains('비정기')}">
 									<label class="form-check-label" for="inlineCheckbox0">비정기</label>
 								</div>
 				            </div>
 				            <div>	
 				            	<label class="form-label" for="ageLimit">연령</label>
 				            	<select class="form-select" name="ageLimit">
-				            		<option value="0" autofocus>전 연령</option>
-				            		<option value="1">15세 연령가</option>
-				            		<option value="2">19세 연령가</option>
+				            		<option value="0" th:selected="*{ageLimit == 0}">전 연령</option>
+				            		<option value="1" th:selected="*{ageLimit == 1}">15세 연령가</option>
+				            		<option value="2" th:selected="*{ageLimit == 2}">19세 연령가</option>
 				            	</select>
 				            </div>
 				            <div>
 				                <label class="form-label" for="intro">작품소개</label>
-				                <textarea class="form-control" rows="5" name="intro"></textarea>
+				                <textarea class="form-control" rows="5" name="intro" th:text="*{intro}"></textarea>
 				            </div>
 				            <div>
 				                <label class="form-label">북커버 표지(400x600)</label>
@@ -101,8 +112,10 @@
 								<input type="file" value="파일선택"/>
 								<input type="hidden" name="coverSrc" id="coverSrc" th:value="@{/images/testimg.jpg}">
 				            </div>
-				            <div>
-								<input class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
+				            
+				            <div class="mt-2">
+				            	<button id="btnDelete" class="mx-1 btn btn-danger">삭제</button>
+   								<button id="btnUpdate" class="mx-1 btn btn-primary">업데이트</button>
 				            </div>
 						</div>
 					</div>
@@ -114,5 +127,6 @@
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/novel-modify.js}"></script>
 	</body>
 </html>

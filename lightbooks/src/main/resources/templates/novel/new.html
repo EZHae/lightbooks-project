@@ -6,7 +6,7 @@
 
 		<main class="card">
 			<div class="card-body">
-				<form method="post" th:action="@{/novel/new}">
+				<form id="novelForm" method="post" th:action="@{/novel/new}">
 					<div class="row mg-b-25">
 						<div class="col-4">
 							<img th:src="@{/images/testimg.jpg}" style="width: 90%">
@@ -17,17 +17,17 @@
 							</div>
 				            <div>
 				                <label class="form-label" for="title" >작품명</label>
-				                <input type="text" name="title" class="form-control">
+				                <input type="text" name="title" class="form-control" required>
 				            </div>
 				            
-				            <div class="">
+				            <div class="d-none">
 				                <label class="form-label" for="writer">작성자</label>
 				                <input type="text" name="writer" class="form-control" th:value="${#authentication.principal.nickname}" readonly>
 				            </div>
 				            
 				            <div>
 				                <label class="form-label">메인장르</label>
-				                <select class="form-select" name="genre">
+				                <select class="form-select" name="genre" required>
 				            		<option value="1">판타지</option>
 				            		<option value="2">로맨스</option>
 				            		<option value="3">무협</option>
@@ -83,7 +83,7 @@
 				            </div>
 				            <div>
 				                <label class="form-label" for="intro">작품소개</label>
-				                <textarea class="form-control" rows="5" name="intro"></textarea>
+				                <textarea class="form-control" rows="5" name="intro" required></textarea>
 				            </div>
 				            <div>
 				                <label class="form-label">북커버 표지(400x600)</label>
@@ -103,5 +103,6 @@
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/novel-new.js}"></script>
 	</body>
 </html>

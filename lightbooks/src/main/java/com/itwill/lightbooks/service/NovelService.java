@@ -32,7 +32,14 @@ public class NovelService {
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
 	
+	// 작품 수정 페이지
+	public Novel searchByIdWithGenre(Long id) {
+		Novel novel = novelRepo.searchByIdWithGenre(id);
+		return novel;
+	}
 	
+	
+	// 내 작품 페이지에 유저 아이디로 데이터를 가져옴
 	public List<NovelResponseDto> getNovelByUserId(Long userId) {
 		List<Novel> novels = novelRepo.searchByUserIdWithGenre(userId);
 		
@@ -94,6 +101,11 @@ public class NovelService {
 		log.info("해당 소설 장르 = {}", novelGenres);
 		
 		return novel;
+	}
+
+	@Transactional
+	public void deleteById(Long id) {
+		novelRepo.deleteById(id);
 	}
 
 }

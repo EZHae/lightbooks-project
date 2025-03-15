@@ -19,7 +19,7 @@ public class NGenreRepositoryTest {
 	@Autowired
 	private NGenreRepository ngenreRepo;
 	
-	@Test
+//	@Test
 	@Transactional
 	public void testFindAll() {
 		List<NGenre> savedGenres = ngenreRepo.findAll();

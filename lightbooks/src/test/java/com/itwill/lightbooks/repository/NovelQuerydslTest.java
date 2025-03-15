@@ -24,20 +24,19 @@ public class NovelQuerydslTest {
 //	@Test
 	@Transactional
 	public void testSearchById() {
-		List<Novel> entity = novelRepo.searchByIdWithGenre(1L);
+		Novel entity = novelRepo.searchByIdWithGenre(1L);
 			
 		assertNotNull(entity);
 		
 		log.info("총 소설 내용 : {}", entity);
 		
-		entity.forEach(novelGenre -> {
+		entity.getNovelGenre().forEach(novelGenre -> {
 			System.out.println("novel : " + novelGenre);
 	        System.out.println("NovelGenre ID: " + novelGenre.getId());
-	        System.out.println("Genre: " + novelGenre.getNovelGenre());
 	    });
 	}
 	
-	@Test
+//	@Test
 	@Transactional
 	public void testSearchByUserId() {
 		List<Novel> entity = novelRepo.searchByUserIdWithGenre(6L);

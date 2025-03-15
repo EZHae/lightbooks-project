@@ -8,7 +8,7 @@ public interface NovelQuerydsl {
 	
 	Novel searchById(Long id);
 	
-	List<Novel> searchByIdWithGenre(Long id);
+	Novel searchByIdWithGenre(Long id);
 
 	List<Novel> searchByUserIdWithGenre(Long userId);
 	

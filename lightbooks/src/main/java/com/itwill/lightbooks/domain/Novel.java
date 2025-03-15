@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -68,8 +69,8 @@ public class Novel extends BaseTimeEntity{
 	
 	private Integer state; // 연재 상태 (1: 연재중, 0: 완결)
 	
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "novel_id")
+	@OneToMany(mappedBy = "novel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//	@JoinColumn(name = "novel_id")
 	@ToString.Exclude
 	private List<NGenre> novelGenre;
 }

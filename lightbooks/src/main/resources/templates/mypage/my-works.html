@@ -116,11 +116,11 @@
 							
 						</div>
 						<div class="novelModifyBtn">
-			                <a th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
+			                <a class="btn btn-secondary " th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
 			                <br/>
-			                <a th:href="@{/novel/delete}">작품삭제</a>
+			                <a class="btn btn-secondary mt-2" th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
 			                <br/>
-			                <a th:href="@{/novel/view}">작품보기</a>
+			                <a class="btn btn-secondary mt-2" th:href="@{/novel/view}">작품보기</a>
 			                <br/>
 						</div>
 					</div>
