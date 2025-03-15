@@ -34,21 +34,155 @@
                             <td class="tableValue col-9" th:text="*{year}"></td>
                         </tr>
                         <tr class="row">
+                            <th class="tableColumn col-3">전화번호</th>
+                            <td class="tableValue col-9" th:text="*{phonenumber}"></td>
+                        </tr>
+                        <tr class="row">
                             <th class="tableColumn col-3">이메일</th>
                             <td class="tableValue col-9" th:text="*{email}"></td>
                         </tr>
                     </tbody>
             	</table>
-            	<div class="d-flex justify-content-end">
-            		<a class="btn btn-sm" th:href="@{/user/updateProfile(id=*{id})}">회원 정보 수정</a>
-            		<a class="btn btn-sm">비밀번호 변경</a>
-            		<a class="btn btn-sm">회원 탈퇴</a>
+            	<div class="mt-2 d-flex justify-content-end" th:object="${user}">
+                    <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
+                            회원 정보 수정
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updatePasswordModal">
+                            비밀번호 변경
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                            회원 탈퇴
+                        </button>
+                    </div>
             	</div>
             </div>
         </main>
-		
+
+
+        <!-- 회원 정보 수정 모달-->
+        <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">회원 정보 수정</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" th:object="${user}">
+                        <form method="post" th:action="@{/user/updateProfile}">
+                        	<input id="id" name="id" class="d-none" th:value="*{id}">
+                            <div class="row">
+                                <div class="col-3">이름</div>
+                                <div class="col-9">
+                                    <input id="username" class="form-control" type="text" th:value="*{username}" name="username" maxlength="10" required>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">닉네임</div>
+                                <div class="col-9">
+                                    <input id="nickname" class="form-control" type="text" th:value="*{nickname}" name="nickname" maxlength="20" required>
+                                    <div id="checkNicknameResult"></div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">전화번호</div>
+                                <div class="col-9">
+                                    <input id="phonenumber" class="form-control" type="text" th:value="*{phonenumber}" name="phonenumber" maxlength="13" required>
+                                    <div id="checkPhonenumberResult"></div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">이메일</div>
+                                <div class="col-9">
+                                    <input id="email" class="form-control" type="text" th:value="*{email}" name="email" maxlength="20" required>
+                                    <div id="checkEmailResult"></div>
+                                </div>
+                            </div>
+                            <div>
+
+                            </div>
+                            <div class="mt-2">
+                                <input id="btnUpdateProfile" type="submit" class="btn btn-primary form-control disabled" value="수정">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 비밀번호 변경 모달-->
+        <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">비밀번호 변경</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" th:object="${user}">
+                        <form method="post" th:action="@{/user/updatePassword}">
+                        	<input id="id" name="id" class="d-none" th:value="*{id}">
+                            <div>
+                                <div class="row">
+                                    <div class="col-3">현재<br>비밀번호</div>
+                                    <div class="col-9">
+                                        <input id="oldPassword" class="form-control" type="text" name="oldPassword" maxlength="20" required>
+                                        <div id="checkOldPasswordResult"></div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-3">변경할<br>비밀번호</div>
+                                    <div class="col-9">
+                                        <input id="newPassword" class="form-control" type="text" name="newPassword" maxlength="20" required>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-3">비밀번호<br>확인</div>
+                                    <div class="col-9">
+                                        <input id="newPasswordCheck" class="form-control" type="text" name="newPasswordCheck" maxlength="20" required>
+                                        <div id="checkPasswordResult"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <input id="btnUpdatePassword" type="submit" class="btn btn-primary form-control disabled" value="변경">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 회원 탈퇴 모달-->
+        <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">회원 탈퇴</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" th:object="${user}">
+                        <input id="id" name="id" class="d-none" th:value="*{id}">
+                        <div>
+                            <strong class="fs-5 text-danger">정말로 탈퇴하시겠습니까?</strong> <br>
+                            <span>회원 탈퇴 시 회원님이 작성하신 모든 작품과 댓글은 삭제됩니다.</span> <br> <br>
+                            <strong class="fs-5">탈퇴를 원하시면 아래와 동일하게 입력해주세요.</strong> <br>
+                            <div class="text-center text-danger">
+                                <strong id="deleteUserText">계정을 삭제하겠습니다.</strong>
+                            </div>
+                            <div class="text-center">
+                                <input id="inputDeleteUserText" type="text" class="form-control text-center">
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button id="btnDeleteUser" class="btn btn-danger form-control disabled">탈퇴</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/user-details-update.js}"></script>
 	</body>
 </html>

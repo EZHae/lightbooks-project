@@ -56,19 +56,15 @@ public class SecurityConfig {
 
 		// 커스텀 로그인 페이지 HTML 사용
 		// 위처럼 기본을 사용하면 요청주소가 "/login"인 것을 아래처럼 바꿈. ("/login"은 시큐리티를 사용하면 기본제공됨)
-        http.formLogin(t -> t
-                .loginProcessingUrl("/user/signin") // 로그인 요청을 처리할 URL
-                .successHandler(this::handleSuccess)
-                .failureHandler(this::handleFailure)
-            );
-        
-        // 로그아웃 설정 (현재 페이지 유지)
-        http.logout(t -> t
-            .logoutUrl("/user/signout") // 로그아웃 요청 URL
-            .logoutSuccessHandler(this::handleLogout) // 로그아웃 후 현재 페이지로 이동
-            .invalidateHttpSession(true) // 세션 무효화
-            .deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
-        );
+		http.formLogin(t -> t.loginProcessingUrl("/user/signin") // 로그인 요청을 처리할 URL
+				.successHandler(this::handleSuccess).failureHandler(this::handleFailure));
+
+		// 로그아웃 설정 (현재 페이지 유지)
+		http.logout(t -> t.logoutUrl("/user/signout") // 로그아웃 요청 URL
+				.logoutSuccessHandler(this::handleLogout) // 로그아웃 후 현재 페이지로 이동
+				.invalidateHttpSession(true) // 세션 무효화
+				.deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
+		);
 
 		/*
 		 * 페이지 접근 권한, 인증 구성: - 컨트롤러 메서드에서 애너테이션으로 설정. (1) SecurityConfig
@@ -79,46 +75,50 @@ public class SecurityConfig {
 
 		return http.build();
 	}
-	
+
 	// 로그인 성공 핸들러: 로그인 요청을 보낸 페이지로 이동
-	private void handleSuccess(HttpServletRequest request, HttpServletResponse response,
-	                           Authentication authentication) throws IOException {
-	    log.info("로그인 성공: {}", authentication.getName());
+	private void handleSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+			throws IOException {
+		log.info("로그인 성공: {}", authentication.getName());
+		
+		request.getSession().removeAttribute("errorMessage");
 
-	    // 이전 페이지(로그인 요청을 보낸 페이지) URL 가져오기
-	    String referer = request.getHeader("Referer");
-	    if (referer == null || referer.isEmpty()) {
-	        referer = "/"; // Referer가 없으면 홈으로 이동
-	    }
+		// 이전 페이지(로그인 요청을 보낸 페이지) URL 가져오기
+		String referer = request.getHeader("Referer");
+		if (referer == null || referer.isEmpty()) {
+			referer = "/"; // Referer가 없으면 홈으로 이동
+		}
 
-	    // 로그인 성공 후 이전 페이지로 리다이렉트
-	    response.sendRedirect(referer);
+		// 로그인 성공 후 이전 페이지로 리다이렉트
+		response.sendRedirect(referer);
 	}
 
 	// 로그인 실패 핸들러: 홈("/")으로 이동하며 오류 메시지 전달
-	private void handleFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-	    log.info("로그인 실패: {}", exception.getMessage());
+	private void handleFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException {
+		log.info("로그인 실패: {}", exception.getMessage());
 
-	    // 이전 페이지(로그인 요청을 보낸 페이지) URL 가져오기
-	    String referer = request.getHeader("Referer");
-	    if (referer == null || referer.isEmpty()) {
-	        referer = "/"; // Referer가 없으면 홈으로 이동
-	    }
+		// 이전 페이지(로그인 요청을 보낸 페이지) URL 가져오기
+		String referer = request.getHeader("Referer");
+		if (referer == null || referer.isEmpty()) {
+			referer = "/"; // Referer가 없으면 홈으로 이동
+		}
 
-	    // 세션에 에러 메시지 저장
-	    request.getSession().setAttribute("errorMessage", "아이디 또는 비밀번호를 확인하세요.");
+		// 세션에 에러 메시지 저장
+		request.getSession().setAttribute("errorMessage", "아이디 또는 비밀번호를 확인하세요.");
 
-	    // 로그인 실패 후 이전 페이지로 리다이렉트
-	    response.sendRedirect(referer);
+		// 로그인 실패 후 이전 페이지로 리다이렉트
+		response.sendRedirect(referer);
 	}
-    
-    // 로그아웃 핸들러: 로그아웃 후 원래 페이지로 이동
-    private void handleLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String referer = request.getHeader("Referer"); // 이전 페이지 URL 가져오기
-        if (referer == null || referer.isEmpty()) {
-            referer = "/"; // 이전 페이지 정보가 없으면 홈으로 이동
-        }
-        log.info("로그아웃 후 이동할 페이지: {}", referer);
-        response.sendRedirect(referer);
-    }
+
+	// 로그아웃 핸들러: 로그아웃 후 원래 페이지로 이동
+	private void handleLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+			throws IOException {
+//        String referer = request.getHeader("Referer"); // 이전 페이지 URL 가져오기
+//        if (referer == null || referer.isEmpty()) {
+//            referer = "/"; // 이전 페이지 정보가 없으면 홈으로 이동
+//        }
+//        log.info("로그아웃 후 이동할 페이지: {}", referer);
+		response.sendRedirect("/");
+	}
 }

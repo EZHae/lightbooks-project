@@ -221,6 +221,9 @@
                     </div>
                 </div>
             </div>
+
+            <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
+
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
 
@@ -237,6 +240,7 @@
         <th:block th:fragment="axiosJS">
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         </th:block>
+
         
     </body>
 </html>

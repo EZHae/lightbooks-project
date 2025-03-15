@@ -21,8 +21,6 @@
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
-		<a th:href="@{/novel/modify}">작품수정</a>
-		
 		<div class="container">
 		    <div th:each="novel : ${novels}">
 		        <img class="novelImgs" th:src="${novel.coverSrc}">

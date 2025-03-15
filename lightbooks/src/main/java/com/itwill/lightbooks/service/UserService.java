@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.UserSignUpDto;
+import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
+import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -110,5 +112,36 @@ public class UserService implements UserDetailsService {
 		User savedUser = userRepo.save(dto.toEntity(passwordEncoder));
 		
 		return savedUser;
+	}
+	
+	public void updateProfile(UserUpdateProfileDto dto) {
+		User user = userRepo.findById(dto.getId()).orElseThrow();
+		
+		user.updateProfile(dto.getUsername(), dto.getNickname(), dto.getPhonenumber(), dto.getEmail());
+		
+		userRepo.save(user);
+	}
+	
+	public Boolean checkPassword(UserUpdatePasswordDto dto) {
+		User user = userRepo.findById(dto.getId()).orElseThrow();
+		
+		if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void updatePassword(UserUpdatePasswordDto dto) {
+		User user = userRepo.findById(dto.getId()).orElseThrow();
+		
+		String encodedNewPassword = passwordEncoder.encode(dto.getNewPassword());
+		user.updatePassword(encodedNewPassword);
+		
+		userRepo.save(user);
+	}
+	
+	public void deleteUser(Long id) {
+		userRepo.deleteById(id);
 	}
 }
