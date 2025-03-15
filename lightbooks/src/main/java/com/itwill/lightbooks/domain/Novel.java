@@ -35,7 +35,7 @@ public class Novel extends BaseTimeEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	
 	@Basic(optional = false)
 	private String title; // 소설 제목
@@ -45,7 +45,7 @@ public class Novel extends BaseTimeEntity{
 	
 	@Column(name = "user_id")
 	@Basic(optional = false)
-	private Integer userId; // 유저 아이디
+	private Long userId; // 유저 아이디
 	
 	@Basic(optional = false)
 	private String writer; // 작성자

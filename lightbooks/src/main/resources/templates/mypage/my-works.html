@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	
+	<style>
+	
+	.novelList{
+		display: flex;
+		width: 100%;
+		flex-direction: column;
+		padding: 0 30px;
+	}
+	
+	.my-novel{
+	    background: beige;
+	    display: flex; /* grid에서 flex로 변경 */
+	    flex-direction: row; /* 가로 정렬 유지 */
+	    align-items: center;
+	    justify-content: space-evenly;
+	    width: 100%; /* 한 줄에 하나씩 */
+	    padding: 10px;
+	}
+	
+	.novelContent {
+		width: 800px;
+	
+	}
+	
+	img.coverImg{
+		height:180px;
+	}
+	
+	.novelWriter{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		padding: 5px;
+	}
+	
+	div.container{
+		background: #F08080;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		margin-top: 5px;
+	}
+	.nav-work {
+		background: white;
+		height:80px;	
+		width: 180px;
+		float:left;
+		border: 1px solid black;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
+	}
+	.nav-link{
+		text-align: center;
+	}
+	
+	
+	</style>
+	
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<main>
+		    <div class="container">
+		        <ul>
+		            <li class="nav-work">
+		                <a class="nav-link active" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">내 작품</a>
+		            </li>
+		            <li class="nav-work">
+		                <a class="nav-link" th:href="@{/novel/my-works/donation}">후원관리</a>
+		            </li>
+		            <li class="nav-work">
+		                <a class="nav-link" th:href="@{/novel/my-works/stats}">통계</a>
+		            </li>
+		            <li class="nav-work">
+		                <a class="nav-link" th:href="@{/novel/my-works/withdraw}">정산</a>
+		            </li>
+		        </ul>    
+		    </div>
+		    
+		    <div class="novelWriter">
+				<a class="btn btn-secondary" th:href="@{/novel/new}">작품작성</a>	    	
+		    </div>
+			
+			<hr/>
+			<div class="novelList">
+				<div th:each="novel : ${novels}">
+					<div class="my-novel" >
+						<div class="novelCoverImg">
+							<img class="coverImg" th:src="@{{novel.coverSrc}(novel.coverSrc=${novel.coverSrc})}">
+						</div>
+						<div class="novelContent">
+							<a th:href="@{/novel/{id}(id=${novel.id})}">
+								<b th:text="${novel.title}"></b>
+							</a>
+							
+							<span th:text="${novel.writer}"></span>
+							<br/>
+							
+							<span th:text="${novel.intro}"></span>
+							
+							<br/>
+							<span>
+								<img th:src="@{/images/count_view.png}" />
+								<span th:text="${novel.state}"></span>
+								<img th:src="@{/images/count_good.png}" />
+								<span th:text="${novel.likeCount}"></span>
+							</span>
+							
+						</div>
+						<div class="novelModifyBtn">
+			                <a th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
+			                <br/>
+			                <a th:href="@{/novel/delete}">작품삭제</a>
+			                <br/>
+			                <a th:href="@{/novel/view}">작품보기</a>
+			                <br/>
+						</div>
+					</div>
+					<hr/>
+				</div>
+			</div>
+		</main>
+		
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

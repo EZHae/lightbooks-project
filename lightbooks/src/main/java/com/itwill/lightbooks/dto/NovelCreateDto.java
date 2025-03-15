@@ -1,9 +1,7 @@
 package com.itwill.lightbooks.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
 
 import lombok.Data;
@@ -11,7 +9,7 @@ import lombok.Data;
 @Data
 public class NovelCreateDto {
 	
-	private Integer userId;
+	private Long userId;
 	private String title;
 	private String intro;
 	private String writer;

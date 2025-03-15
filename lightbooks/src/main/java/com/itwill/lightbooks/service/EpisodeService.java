@@ -21,7 +21,7 @@ public class EpisodeService {
 	private final NovelRepository novelRepo;
 
 	@Transactional
-	public Episode createEpisode(Integer noverId, EpisodeCreateDto dto) {
+	public Episode createEpisode(Long noverId, EpisodeCreateDto dto) {
         Novel novel = novelRepo.findById(dto.getNovelId())
                .orElseThrow();
 

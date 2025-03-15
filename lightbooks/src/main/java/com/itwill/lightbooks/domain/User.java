@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -54,12 +55,27 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String imgSrc;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserWallet userWallet;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public User updateProfile(String username, String nickname, String phonenumber, String email) {
+		this.username = username;
+		this.nickname = nickname;
+		this.phonenumber = phonenumber;
+		this.email = email;
+		
+		return this;
+	}
+	
+	public User updatePassword(String password) {
+		this.password = password;
+		
+		return this;
 	}
 }

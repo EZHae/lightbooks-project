@@ -167,7 +167,7 @@
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
-                                <a class="dropdown-item text-center fw-bold" th:href="@{#}">
+                                <a class="dropdown-item text-center fw-bold" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">
                                     작품 관리하기
                                 </a>
                             </li>
@@ -221,6 +221,9 @@
                     </div>
                 </div>
             </div>
+
+            <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
+
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
 
@@ -237,6 +240,7 @@
         <th:block th:fragment="axiosJS">
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         </th:block>
+
         
     </body>
 </html>

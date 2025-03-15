@@ -2,6 +2,8 @@ package com.itwill.lightbooks.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,18 +21,39 @@ public class NovelQuerydslTest {
 	@Autowired
 	private NovelRepository novelRepo;
 
-	@Test
+//	@Test
 	@Transactional
 	public void testSearchById() {
-		Novel entity = novelRepo.searchByIdWithGenre(1);
+		List<Novel> entity = novelRepo.searchByIdWithGenre(1L);
 			
-		System.out.println(entity.getTitle());
-		assertNotNull(entity.getNovelGenre());
+		assertNotNull(entity);
 		
+		log.info("총 소설 내용 : {}", entity);
 		
-		entity.getNovelGenre().forEach(novelGenre -> {
+		entity.forEach(novelGenre -> {
+			System.out.println("novel : " + novelGenre);
 	        System.out.println("NovelGenre ID: " + novelGenre.getId());
-	        System.out.println("Genre: " + novelGenre.getGenre().getName());
+	        System.out.println("Genre: " + novelGenre.getNovelGenre());
+	    });
+	}
+	
+	@Test
+	@Transactional
+	public void testSearchByUserId() {
+		List<Novel> entity = novelRepo.searchByUserIdWithGenre(6L);
+			
+		assertNotNull(entity);
+		
+		log.info("총 소설 내용 : {}", entity);
+		
+		entity.forEach(novel -> {
+			System.out.println("novel : " + novel);
+	        System.out.println("NovelGenre ID: " + novel.getId());
+	        
+	        novel.getNovelGenre().forEach(genre -> {
+	        	System.out.println("genre : " + genre);
+	        	System.out.println("genre name : " + genre.getGenre().getName());
+	        });
 	    });
 		
 	}

@@ -37,7 +37,7 @@ public class EpisodeController {
 	}
 	
 	@PostMapping("/create")
-	public String create(@PathVariable Integer novelId,  EpisodeCreateDto dto) {
+	public String create(@PathVariable Long novelId,  EpisodeCreateDto dto) {
 		log.info("POST create(dto={})", dto);
 		
 		Episode episode = epiService.createEpisode(novelId, dto);

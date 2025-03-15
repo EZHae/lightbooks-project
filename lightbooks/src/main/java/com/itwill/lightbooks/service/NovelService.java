@@ -1,6 +1,8 @@
 package com.itwill.lightbooks.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -9,11 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.lightbooks.domain.Genre;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.repository.genre.GenreRepository;
 import com.itwill.lightbooks.repository.novel.NGenreRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
+import com.itwill.lightbooks.repository.user.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +32,29 @@ public class NovelService {
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
 	
-	public Novel searchById(Integer id) {
+	
+	public List<NovelResponseDto> getNovelByUserId(Long userId) {
+		List<Novel> novels = novelRepo.searchByUserIdWithGenre(userId);
+		
+		log.info("해당 유저 소설 : {}", novels);
+		
+		return novels.stream().map(novel -> new NovelResponseDto(
+				novel.getId(),
+				novel.getTitle(),
+				novel.getIntro(),
+				novel.getWriter(),
+				novel.getCoverSrc(),
+				novel.getLikeCount(),
+				novel.getState(),
+				novel.getNovelGenre()
+				.stream().map(novelGenre -> novelGenre.getGenre().getName())
+				.collect(Collectors.toList())
+				))
+				.collect(Collectors.toList());
+	}
+	
+	
+	public Novel searchById(Long id) {
 		log.info("searchId()");
 		Novel novel = novelRepo.findById(id).orElseThrow();
 		

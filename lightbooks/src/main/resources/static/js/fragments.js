@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('fragments.js');
+
+	// 페이지가 로드된 후 실행되는 코드
+	// 오류메세지 alert 한 후 세션 지우는 요청보냄.
+	window.onload = function() {
+		const errorMessage = document.querySelector('span#errorMessage').textContent;
+		if (errorMessage === '아이디 또는 비밀번호를 확인하세요.') {
+			alert(`${errorMessage}`);
+			axios.post('../user/removeSession').then().catch(error);
+		}
+	};
+
 	
 	if (document.querySelector('button#profileDropdown')) {
 		let userId = document.querySelector('span#userId').textContent;
