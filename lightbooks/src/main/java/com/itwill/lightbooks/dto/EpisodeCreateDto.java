@@ -33,4 +33,12 @@ public class EpisodeCreateDto {
 				.reservationTime(reservationTime)
 				.build();
 	}
+	
+	// category setter(episodeNum null로 설정)
+    public void setCategory(Integer category){
+        this.category = category;
+        if(category != null && category == 0){ //공지 선택 시
+            this.episodeNum = null;
+        }
+    }
 }

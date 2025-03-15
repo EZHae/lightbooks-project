@@ -66,12 +66,10 @@ public class Episode extends BaseTimeEntity {
 		this.views++;
 	}
 	
-	//에피소드에서 회차 숫자, 제목, 내용, 카테고리만 수정하는 메서드
-	public Episode update(Integer episodeNum, String title, String content, Integer category) {
-		this.episodeNum = episodeNum;
+	//에피소드에서 제목, 내용만 수정하는 메서드
+	public Episode update(String title, String content) {
 		this.title = title;
 		this.content = content;
-		this.category = category;
 		
 		return this;
 	}
