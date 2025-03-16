@@ -1,11 +1,22 @@
 package com.itwill.lightbooks.service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.dto.EpisodeCreateDto;
+import com.itwill.lightbooks.dto.EpisodeListDto;
 import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
@@ -81,5 +92,100 @@ public class EpisodeService {
 
         return episode;
     }
+	
+	//소설 상세보기에서 회차 리스트 
+	@Transactional(readOnly = true)
+    public Page<EpisodeListDto> getEpisodesByNovelAndCategory(Long novelId, Integer category, String sortOrder, Pageable pageable) {
+        log.info("getEpisodesByNovelAndCategory(novelId={}, category={}, sortOrder={}, pageable={})",
+                novelId, category, sortOrder, pageable);
+
+        Novel novel = novelRepo.findById(novelId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid novel ID: " + novelId));
+
+        Page<Episode> episodesPage;
+
+        if (category == null) {
+            // 카테고리가 지정되지 않은 경우: 공지 제외, episodeNum 정렬
+            if ("episodeNum,desc".equals(sortOrder)) {
+                episodesPage = episodeRepo.findByNovelAndCategoryNotOrderByEpisodeNumDesc(novel, 0, pageable);
+            } else {
+                episodesPage = episodeRepo.findByNovelAndCategoryNotOrderByEpisodeNumAsc(novel, 0, pageable);
+            }
+        } else if (category == 0) {
+            // 카테고리가 공지인 경우: createdTime 정렬
+            if ("createdTime,desc".equals(sortOrder)) {
+                episodesPage = episodeRepo.findByNovelAndCategoryOrderByCreatedTimeDesc(novel, category, pageable);
+            } else {
+                //  "첫 화 부터" 버튼은 눌릴일이 없지만, 혹시 모르니..
+                episodesPage = episodeRepo.findByNovelAndCategoryOrderByCreatedTimeAsc(novel, category, pageable); //메서드 추가해야함.
+            }
+
+        }
+        else {
+            // category가 공지가 아닌 경우 (일반 회차): episodeNum 정렬
+            if ("episodeNum,desc".equals(sortOrder)) {
+              episodesPage = episodeRepo.findByNovelAndCategoryOrderByEpisodeNumDesc(novel, category, pageable);
+            } else {
+              episodesPage = episodeRepo.findByNovelAndCategoryOrderByEpisodeNumAsc(novel, category, pageable);
+            }
+        }
+
+        // Page<Episode> -> Page<EpisodeListDto> 변환
+        return episodesPage.map(this::convertToDto);
+    }
+      
+	// Episode 엔티티를 EpisodeListDto로 변환하는 메서드 (private)
+    private EpisodeListDto convertToDto(Episode episode) {
+        return new EpisodeListDto(
+                episode.getId(),
+                episode.getNovel().getId(),
+                episode.getEpisodeNum(),
+                episode.getTitle(),
+                episode.getViews(),
+                episode.getCategory(),
+                episode.getCreatedTime()
+        );
+    }
+    
+	// 소설 상세페이지에서 첫화 보기
+	public Optional<Episode> findFirstEpisodeByNovel(Long novelId) {
+        Novel novel = novelRepo.findById(novelId).orElseThrow();
+        return episodeRepo.findFirstByNovelOrderByEpisodeNumAsc(novel);
+    }
+	
+	 // 조회수 증가 메서드
+    @Transactional
+    public void increaseViewCount(Long episodeId) {
+        log.info("increaseViewCount(episodeId={})", episodeId);
+        Episode episode = episodeRepo.findById(episodeId).orElseThrow();
+        episode.increaseViews();
+        // episodeRepository.save(episode);  //필요 없음(JPA dirty checking)
+    }
+    
+    //회차 삭제 메서드
+    @Transactional
+    public void deleteEpisode(Long episodeId) {
+        log.info("deleteEpisode(episodeId={})", episodeId);
+
+        // 삭제 전에 해당 ID의 에피소드가 존재하는지 확인 (선택 사항)
+        if (!episodeRepo.existsById(episodeId)) {
+            throw new NoSuchElementException("Episode not found with ID: " + episodeId);
+        }
+
+        episodeRepo.deleteById(episodeId);
+    }
+    
+//    //소유자 확인 메서드(필요시 사용하려고....)
+//    public boolean isOwner(Long episodeId, Long userId) {
+//        // 에피소드 조회
+//        Episode episode = episodeRepo.findById(episodeId)
+//                .orElseThrow(() -> new NoSuchElementException("해당 에피소드가 존재하지 않습니다. (ID: " + episodeId + ")"));
+//
+//        //소유자 확인 (Novel을 거쳐 User의 ID 비교)
+//        if (episode.getNovel() == null || episode.getNovel().getUserId() == null) {
+//            return false; // Novel 또는 User 정보가 없으면 false 반환
+//        }
+//        return episode.getNovel().getUserId().equals(userId);
+//    }
 	
 }
