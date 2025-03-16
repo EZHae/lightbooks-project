@@ -36,4 +36,10 @@ public class HomeController {
 		return "home";
 	}
 	
+	@GetMapping("/coinshop")
+	public void coinshop() {
+		log.info("coinshop()");
+		
+	}
+	
 }
