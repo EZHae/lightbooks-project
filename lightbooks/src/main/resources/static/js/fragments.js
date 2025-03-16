@@ -67,4 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 	
+	
+	// 검색창에 공백 입력할 때 
+	const btnSearch = document.querySelector('button#btnSearch')
+		
+	btnSearch.addEventListener('click', validateSearch)
+	// 검색 버튼 클릭 시 공백만 입력된 경우 검색 방지
+	function validateSearch(event) {
+	    let keyword = document.getElementById("searchKeyword").value.trim();
+	    if (keyword.length === 0) {
+	        alert("검색어를 입력해주세요!"); // 사용자에게 알림
+			event.preventDefault(); // 🔹 폼 전송 막기 (필수)
+	        return false; // 검색 요청 차단
+	    }
+	    return true;
+	}
 });

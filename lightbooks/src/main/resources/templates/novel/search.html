@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<body>
+	
+	    <h2 th:text="'검색 결과: ' + ${keyword}"></h2>
+
+	    <div th:if="${page.totalElements > 0}">
+	        <ul>
+	            <li th:each="novel : ${page.content}">
+	                <a th:href="@{/novel/{id}(id=${novel.id})}">
+	                    <img th:src="${novel.coverSrc}" alt="표지 이미지" width="100">
+	                    <span th:text="${novel.title}"></span> - 
+	                    <span th:text="${novel.writer}"></span>
+	                </a>
+	            </li>
+	        </ul>
+	        <div class="card-body">
+                    <table class="mt-2 table table-hover">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>수정시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="novel : ${page}" th:object="${novel}">
+                                <td th:text="*{id}"></td>
+                                <td>
+                                    <a th:href="@{/novel/details(id=*{id})}"
+                                        th:text="*{title}"></a>
+                                </td>
+                                <td>
+                                    <a th:text="*{writer}"></a>
+                                </td>
+                                <td th:text="*{#temporals.format(modifiedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+	    </div>
+	
+	    <div th:if="${page.totalElements == 0}">
+	        <p>검색 결과가 없습니다.</p>
+	    </div>
+	
+		<div>
+	        <a th:if="${page.hasPrevious()}" 
+	           th:href="@{${baseUrl}(keyword=${keyword}, p=${page.number - 1})}">이전</a>
+	
+	        <span th:text="${page.number + 1}"></span> / <span th:text="${page.totalPages}"></span>
+	
+	        <a th:if="${page.hasNext()}" 
+	           th:href="@{${baseUrl}(keyword=${keyword}, p=${page.number + 1})}">다음</a>
+	    </div>
+		
+	    <a href="/">홈으로</a>
+				
+		
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

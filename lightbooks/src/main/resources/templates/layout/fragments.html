@@ -36,7 +36,6 @@
                     /* !important를 붙여야 Bootstrap 기본 스타일보다 우선 적용됨. */
                 }
             </style>
-
             <div class="container-fluid">
                 <a class="navbar-brand" th:href="@{/}">
                     <img th:src="@{#}" />
@@ -74,10 +73,11 @@
                             </a>
                         </li>
                     </ul>
-                    <form class="d-flex me-3 flex-grow-1" method="get" th:action="@{#}">
+                    <form class="d-flex me-3 flex-grow-1" method="get" th:action="@{/novel/search/result}" onsubmit="return validateSearch(event)">
                         <div class="input-group">
-                            <input class="form-control" type="search" placeholder="제목, 작가를 입력하세요." aria-label="Search" />
-                            <button class="btn btn-outline-primary" type="submit">
+                            <input class="form-control" type="search" name="keyword" id="searchKeyword" placeholder="제목, 작가를 입력하세요." aria-label="Search" 
+                            	th:value="${param.keyword}" />
+                            <button class="btn btn-outline-primary" id="btnSearch" type="submit">
                                 <i class="bi bi-search"></i>
                             </button>
                         </div>
@@ -91,7 +91,7 @@
                     </div>
 
                     <!-- 로그인/회원가입 모달-->
-                    <div class="modal fade" id="signModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="signModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -221,9 +221,8 @@
                     </div>
                 </div>
             </div>
-
+			
             <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
-
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
 

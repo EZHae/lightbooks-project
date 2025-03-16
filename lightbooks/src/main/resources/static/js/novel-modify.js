@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	// 체크박스 '비정기' 선택 시 나머지 체크박스 disabled
 	const checkBox = document.getElementById("inlineCheckbox0");
-	const otherCheckboxes = document.querySelectorAll(".form-check-input:not(#inlineCheckbox0)");
+	const otherCheckboxes = document.querySelectorAll(".days:not(#inlineCheckbox0)");
 	
 	
 	const btnDelete = document.querySelector('button#btnDelete');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if(secondCheck) {
 			const id = document.querySelector('input#id').value;
 			const userId = document.querySelector('input#userId').value;
-			console.log("id value: ",id)
+			console.log("id value: ",id)	
 			
 			const url = `/novel/delete?id=${id}&userId=${userId}`;
 			
@@ -49,8 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 	
 	checkBox.addEventListener('change', function () {
-		
-		
 		
 		if(this.checked) {
 			// 비정기가 체크되면 다른 체크들 비활성화하고 해제

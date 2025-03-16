@@ -1,25 +1,29 @@
 package com.itwill.lightbooks.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.Genre;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
-import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
+import com.itwill.lightbooks.dto.NovelSearchDto;
+import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.repository.genre.GenreRepository;
 import com.itwill.lightbooks.repository.novel.NGenreRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
-import com.itwill.lightbooks.repository.user.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,12 +36,11 @@ public class NovelService {
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
 	
-	// 작품 수정 페이지
+	// 작품 수정 페이지에 데이터를 가져옴
 	public Novel searchByIdWithGenre(Long id) {
 		Novel novel = novelRepo.searchByIdWithGenre(id);
 		return novel;
 	}
-	
 	
 	// 내 작품 페이지에 유저 아이디로 데이터를 가져옴
 	public List<NovelResponseDto> getNovelByUserId(Long userId) {
@@ -106,6 +109,21 @@ public class NovelService {
 	@Transactional
 	public void deleteById(Long id) {
 		novelRepo.deleteById(id);
+	}
+
+	public void updateNovel(NovelUpdateDto dto) {
+		novelRepo.updateNovel(dto.getId(), dto.getTitle(), dto.getIntro(), dto.getCoverSrc(), dto.getAgeLimit(),
+				dto.getState(), dto.getDays(), dto.getGenreId());
+		
+		log.info("genreID : {}", dto.getGenreId());
+	}
+
+	public Page<NovelListItemDto> search(NovelSearchDto dto, Sort sort) {
+		
+		Pageable pageable = PageRequest.of(dto.getP(), 10, sort);
+		Page<Novel> result = novelRepo.searchByKeyword(dto , pageable);
+		
+		return result.map(NovelListItemDto::fromEntity);
 	}
 
 }

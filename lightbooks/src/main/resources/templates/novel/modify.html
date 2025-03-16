@@ -32,15 +32,9 @@
 				                <label class="form-label" for="title" >작품명</label>
 				                <input type="text" name="title" class="form-control" th:value="*{title}">
 				            </div>
-				            
-				            <div class="d-none">
-				                <label class="form-label" for="writer">작성자</label>
-				                <input type="text" name="writer" class="form-control" th:value="${#authentication.principal.nickname}" readonly>
-				            </div>
-				            
 				            <div>
 				                <label class="form-label">메인장르</label>
-				                <select class="form-select" name="novelGenre">
+				                <select class="form-select" name="genreId">
 				            		<option value="1" th:selected="${novelGenre != null && novelGenre.genre.id == 1}">판타지</option>
 				            		<option value="2" th:selected="${novelGenre != null && novelGenre.genre.id == 2}">로맨스</option>
 				            		<option value="3" th:selected="${novelGenre != null && novelGenre.genre.id == 3}">무협</option>
@@ -49,51 +43,60 @@
 				            		<option value="6" th:selected="${novelGenre != null && novelGenre.genre.id == 6}">드라마</option>
 				            	</select>
 				            </div>
-				            
+				            <div>
+							    <label for="novelState" class="form-label">연재 정보</label>
+							    <select class="form-select" name="state" id="state">
+							        <option value="1" th:selected="*{state == 1}">연재중</option>
+							        <option value="0" th:selected="*{state == 0}">완결</option>
+							        <option value="2" th:selected="*{state == 2}">휴재</option>
+							        <option value="3" th:selected="*{state == 3}">완결예정</option>
+							    </select>
+							</div>
 				            <div>
 				                <label class="form-label">연재요일</label>
 				                <br/>
 				                <div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox1" value="월요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox1" value="월요일" 
 										th:checked="*{days.contains('월요일')}">
 									<label class="form-check-label" for="inlineCheckbox1">월요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox2" value="화요일" 
 										th:checked="*{days.contains('화요일')}">
 									<label class="form-check-label" for="inlineCheckbox2">화요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox3" value="수요일" 
 										th:checked="*{days.contains('수요일')}">
 									<label class="form-check-label" for="inlineCheckbox3">수요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox4" value="목요일" 
 										th:checked="*{days.contains('목요일')}">
 									<label class="form-check-label" for="inlineCheckbox4">목요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox5" value="금요일" 
 										th:checked="*{days.contains('금요일')}">
 									<label class="form-check-label" for="inlineCheckbox5">금요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox6" value="토요일" 
 										th:checked="*{days.contains('토요일')}">
 									<label class="form-check-label" for="inlineCheckbox6">토요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox7" value="일요일" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox7" value="일요일" 
 										th:checked="*{days.contains('일요일')}">
 									<label class="form-check-label" for="inlineCheckbox7">일요일</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox0" value="비정기" 
+									<input class="form-check-input days" type="checkbox" name="days" id="inlineCheckbox0" value="비정기" 
 										th:checked="*{days.contains('비정기')}">
 									<label class="form-check-label" for="inlineCheckbox0">비정기</label>
 								</div>
 				            </div>
+				            
 				            <div>	
 				            	<label class="form-label" for="ageLimit">연령</label>
 				            	<select class="form-select" name="ageLimit">

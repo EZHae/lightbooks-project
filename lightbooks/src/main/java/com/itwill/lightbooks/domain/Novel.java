@@ -3,6 +3,7 @@ package com.itwill.lightbooks.domain;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -58,7 +59,7 @@ public class Novel extends BaseTimeEntity{
 	@Basic(optional = false)
 	private String coverSrc; // 표지 이미지 URL
 	
-	private Integer grade;// 작품 등급 (예: 1~5점)
+	private Integer grade;
 	
 	@Column(name = "age_limit")
 	@Basic(optional = false)
@@ -73,4 +74,19 @@ public class Novel extends BaseTimeEntity{
 //	@JoinColumn(name = "novel_id")
 	@ToString.Exclude
 	private List<NGenre> novelGenre;
+
+	public Novel update(String title, String intro, String coverSrc, Integer ageLimit, String days, Integer state) {
+	    this.title = title;
+	    this.intro = intro;
+	    this.coverSrc = coverSrc;
+	    this.ageLimit = ageLimit;
+	    this.days = days;
+	    this.state = state;
+	    
+	    return this;
+	}
+	
+	public void setNovelGenre(List<NGenre> novelGenre) {
+		this.novelGenre = novelGenre;
+	}
 }

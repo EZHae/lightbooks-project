@@ -20,7 +20,6 @@ public class UserQuerydslImpl extends QuerydslRepositorySupport implements UserQ
     @Override
     public User searchById(Long id) {
         log.info("searchById(id={})", id);
-
         QUser user = QUser.user;
         JPQLQuery<User> query = from(user)
             .where(user.id.eq(id));

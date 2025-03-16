@@ -3,35 +3,171 @@
 	<head th:replace="~{/layout/fragments :: htmlHead('Home')}"></head>
 	
 	<style>
-	.container{
+	.wrapper {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh; /* 전체 화면을 차지하도록 설정 */
+	}
+	
+	.container {
+		width: 100%; /* 전체 너비를 동일하게 설정 */
+		max-width: 1200px; /* 원하는 최대 너비 지정 가능 */
+		margin: 0 auto; /* 중앙 정렬 */
+	}
+	
+	.novel-container {
 		background: beige;
 		height: 100%;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: space-evenly;
-		position: static;
 	}
+	
 	.novelImgs {
-		height:300px;	
-		float:left;
+		height: 300px;
+		float: left;
 	}
+	
+	.footer {
+		background: #e9e9ff;
+		height: 250px;
+		display: flex;
+		justify-content: center;
+		color: white;
+		margin-top: 2px;
+	}
+	
+	.navbar {
+		max-width: 1200px;
+		width: 100%; /* 전체 너비를 동일하게 설정 */
+		margin: 0 auto; /* 중앙 정렬 */
+		top: 0;
+		background: white;
+		padding: 10px;
+	}
+	
+	.navbar-category {
+		top: 60px; /* navbar 높이만큼 조정 */
+		background: white;
+		padding: 10px;
+		width: 100%;
+	}
+	
+	
+	/* 이미지 슬라이드 */
+	.carousel {
+		background: white;
+		object-fit: cover;
+		
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	
+	.carousel-item img {
+		width: 100%;
+	    height: 460px;
+	    object-fit: cover;
+	}
+	/* --------------- */
+	
+	/* 카테고리 장르 */
+	.navbar-category div {
+		display: inline-block;
+		margin: 5px;
+	}
+	
+	.navbar-category a {
+		border: 1px solid gray;
+		border-radius: 20px;
+		padding: 10px;
+		font-size: 14px;
+	}
+	/* -------------- */
+	
+	.notice{
+		background-color: #dfdeff;
+		border: 0px solid gray;
+		border-radius: 10px;
+		padding: 10px;
+		width: 100%;
+		margin: 0 auto;
+	}
+	
 	</style>
 	
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
-		
-		<div class="container">
-		    <div th:each="novel : ${novels}">
-		        <img class="novelImgs" th:src="${novel.coverSrc}">
-		        <br/>
-				<a th:href="@{/novel/{id}(id=${novel.id})}" th:text="${novel.title}"></a>
-		    </div>
-		</div>
-
-		<a th:href="@{/novel/1/episode/create}">회차작성</a> <!--나중에 1을 {novelId}로 바꾸기 -->
-		
+			<div class="wrapper">
+				<div class="container">
+					<div class="navbar-category">
+						<div>		
+							<div>
+								<a th:text="오늘신작" th:href="@{/}"></a>
+							</div>
+							<div>
+								<a th:text="오늘신작" th:href="@{/}"></a>
+							</div>
+						</div>
+					</div>
+					
+					<div class="notice" data-target-obj="/notice/1">
+						<div>		
+							<div>
+								<span>오늘의 공지 사항</span>
+							</div>
+						</div>
+					</div>
+					
+					<div>
+						<div id="carouselExampleAutoplaying" class="carousel slide"
+							data-bs-ride="carousel">
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<img src="/images/test1.jpg" class="d-block w-100" alt="...">
+								</div>
+								<div class="carousel-item">
+									<img src="/images/test2.jpg" class="d-block w-100" alt="...">
+								</div>
+								<div class="carousel-item">
+									<img src="/images/test3.jpg" class="d-block w-100" alt="...">
+								</div>
+							</div>
+							<button class="carousel-control-prev" type="button"
+								data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Previous</span>
+							</button>
+							<button class="carousel-control-next" type="button"
+								data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Next</span>
+							</button>
+						</div>
+					</div>
+					<div class="novel-container">
+					    <div th:each="novel : ${novels}">
+					        <img class="novelImgs" th:src="${novel.coverSrc}">
+					        <br/>
+							<a th:href="@{/novel/{id}(id=${novel.id})}" th:text="${novel.title}"></a>
+					    </div>
+			
+					</div>
+					<footer class="footer">
+						<div>
+							<div>
+								<div>
+									<div>
+									</div>
+								</div>					
+							</div>
+						</div>
+					</footer>
+				
+				</div>
+			</div>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	</body>
+	
 </html>

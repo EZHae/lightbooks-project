@@ -5,9 +5,9 @@
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
 		<main class="card">
-			<div class="card-body" th:object="${novel}">
+			<div class="card-body" >
 				<div class="row mg-b-25">
-					<div class="col-4 card">
+					<div class="col-4 card" th:object="${novel}">
 						<img th:src="@{/images/testimg.jpg}" style="width: 90%">
 
 						<div>
@@ -21,9 +21,17 @@
 						<div>
 							<button>첫 화 보기</button>
 						</div>
-						<div>
-							<a th:href="@{/novel/{id}/episode/create(id=${id})}">회차 작성</a>
+						
+						
+						<div th:if="*{userId eq #authentication.principal.id}">
+							<div>
+								<a th:href="@{/novel/modify/{id}(id=${novel.id})}">작품 수정</a>
+							</div>
+							<div>
+								<a th:href="@{/novel/{id}/episode/create(id=${id})}">회차 작성</a>
+							</div>
 						</div>
+						
 					</div>
 					
 					<div class="col-lg-8 card">

@@ -2,6 +2,8 @@ package com.itwill.lightbooks.web;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
+import com.itwill.lightbooks.dto.NovelSearchDto;
+import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.service.NovelService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,14 +39,13 @@ public class NovelController {
 	
     @GetMapping("/new")
     public void novelCreate() {
-    	log.info("novelCreate()");
+    	log.info("소설 생성 페이지");
     }
     
     // 작품 생성
     @PostMapping("/new")
     public String novelCreate(@ModelAttribute NovelCreateDto dto, Model model) {
     	Novel novel = novelService.create(dto);
-
     	model.addAttribute("novel", novel);
     	
     	return "redirect:/";
@@ -55,13 +59,9 @@ public class NovelController {
     	Novel novel = novelService.searchById(id);
     	log.info("nove id = {}",novel);
     	
-    	
-    	
     	model.addAttribute("novel",novel);
     	
-    	
     	return "novel/details";
-    	
     }
     
     // 내 작품 페이지
@@ -92,10 +92,10 @@ public class NovelController {
     	
     	model.addAttribute("novel",novel);
     	model.addAttribute("novelGenre", novelGenre);
-    	
     	return "novel/modify";
     }    
     
+    // 작품 삭제
     @PostMapping("/delete")
     public String novelDeleteById(@RequestParam(name = "id") Long id,
     							@RequestParam(name= "userId") Long userId) {
@@ -106,4 +106,29 @@ public class NovelController {
     	return "redirect:/novel/my-works?id=" + userId;
     }
     
+    // 작품 업데이트
+    @PostMapping("/update")
+    public String novelUpdateById(NovelUpdateDto dto) {
+    	novelService.updateNovel(dto);
+    	log.info("작품 업데이트 : {}", dto);
+    	
+    	return "redirect:/novel/" + dto.getId();
+    }
+    
+    // 검색 페이지
+    @GetMapping("/search/result")
+    public String novelSearch(@RequestParam(name="keyword", required=false) String keyword,NovelSearchDto dto, Model model) {
+    	
+    	dto.setKeyword(keyword);
+    	dto.setCategory("tw");
+    	
+    	Page<NovelListItemDto> page = novelService.search(dto, Sort.by("id").descending());
+    	model.addAttribute("page", page);
+    	
+    	// pagination 프래그먼트의 링크(버튼)의 요청 주소로 사용할 문자열을 모델 속성으로 저장.
+        model.addAttribute("baseUrl", "/search/result");
+        model.addAttribute("keyword", dto.getKeyword());
+    	
+    	return "novel/search";
+    }
 }
