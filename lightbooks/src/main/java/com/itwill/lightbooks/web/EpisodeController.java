@@ -1,7 +1,14 @@
 package com.itwill.lightbooks.web;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +24,7 @@ import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +59,7 @@ public class EpisodeController {
         //최대 episodeNum 조회(회차 새글 작성시 episodeNum 입력창에서 조건 부여하기 위해)
         Integer maxEpisodeNum = epiService.findMaxEpisodeNumByNovelId(novelId);
         model.addAttribute("maxEpisodeNum", maxEpisodeNum);
-        
+     
 		model.addAttribute("novelId", novelId);
 		
 		return "episode/create";
@@ -59,8 +67,12 @@ public class EpisodeController {
 	
 	@PostMapping("/create")
 	public String createEpisode(@PathVariable Long novelId, EpisodeCreateDto dto,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, BindingResult bindingResult) {
 		log.info("POST create(dto={})", dto);
+		
+		//TODO 회차num 중복체크 검사
+		Novel novel = novelService.searchById(novelId);
+		
 		
 		Episode episode = epiService.createEpisode(novelId, dto);
 		log.info("저장된 엔터티 = {}", episode);
@@ -73,8 +85,28 @@ public class EpisodeController {
 
 	//회차 상세보기
 	@GetMapping("/{id}")
-    public String episodeDetails(@PathVariable Long id, Model model) {
-        Episode episode = epiService.getEpisodeById(id);
+    public String episodeDetails(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, 
+    		Model model, HttpSession session) {
+        Episode episode = epiService.getEpisodeById(episodeId);
+        
+        //조회수 증가(로그인 사용자만 조회수 올릴 수 있음, 세션 만료될때까지는 조회수 중복 불가능)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser")) {
+
+            // 세션에서 조회한 에피소드 ID 목록을 가져옴(없으면 새로 생성)
+            Set<Long> viewedEpisodes = (Set<Long>) session.getAttribute("viewedEpisodes");
+            if (viewedEpisodes == null) {
+                viewedEpisodes = new HashSet<>();
+                session.setAttribute("viewedEpisodes", viewedEpisodes);
+            }
+
+            // 현재 에피소드 ID가 목록에 없으면 조회수 증가 + 목록에 추가
+            if (!viewedEpisodes.contains(episodeId)) {
+                epiService.increaseViewCount(episodeId);
+                viewedEpisodes.add(episodeId);
+            }
+        }
 
         // 이전/다음 회차 ID 가져오기
         Long previousEpisodeId = epiService.findPreviousEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
@@ -83,6 +115,7 @@ public class EpisodeController {
         model.addAttribute("episode", episode);
         model.addAttribute("previousEpisodeId", previousEpisodeId); //이전 회차
         model.addAttribute("nextEpisodeId", nextEpisodeId); // 다음 회차
+        model.addAttribute("novelId", novelId);
 
         return "episode/details";
     }
@@ -107,7 +140,8 @@ public class EpisodeController {
 	}
 	
 	@PostMapping("/{id}/update")
-	public String updateEpisode(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, @ModelAttribute("episode") EpisodeUpdateDto dto) {
+	public String updateEpisode(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, 
+			@ModelAttribute("episode") EpisodeUpdateDto dto) {
 	    log.info("POST updateEpisode(episodeId={}, dto={})", episodeId, dto);
 	    
 	    dto.setId(episodeId);
@@ -118,5 +152,16 @@ public class EpisodeController {
         
 	    return "redirect:/novel/" + episode.getNovel().getId() + "/episode/" + episode.getId();
 	}
+	
+	@PostMapping("/{id}/delete")
+    public String deleteEpisode(@PathVariable("novelId") Long novelId,
+                                @PathVariable("id") Long episodeId) {
+        log.info("POST deleteEpisode(novelId={}, episodeId={})", novelId, episodeId);
+        
+		epiService.deleteEpisode(episodeId);
+
+		return "redirect:/novel/" + novelId;
+
+    }
 	
 }

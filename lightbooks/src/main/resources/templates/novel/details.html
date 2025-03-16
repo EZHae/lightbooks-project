@@ -5,9 +5,9 @@
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
 		<main class="card">
-			<div class="card-body" th:object="${novel}">
+			<div class="card-body">
 				<div class="row mg-b-25">
-					<div class="col-4 card">
+					<div class="col-4 card" th:object="${novel}">
 						<img th:src="@{/images/testimg.jpg}" style="width: 90%">
 
 						<div>
@@ -18,27 +18,19 @@
 							<label class="form-label" for="writer">작성자</label>
 							<input type="text" name="writer" class="form-control" th:value="*{writer}" readonly>
 						</div>
-						<div>
-							<button>첫 화 보기</button>
-						</div>
-						<div>
-							<a th:href="@{/novel/{id}/episode/create(id=${id})}">회차 작성</a>
+						<div th:if="*{userId eq #authentication.principal.id}">
+							<div>
+								<a th:href="@{/novel/modify/{id}(id=${novel.id})}">작품 수정</a>
+							</div>
+							<div>
+								<a th:href="@{/novel/{id}/episode/create(id=${id})}">회차 작성</a>
+							</div>
 						</div>
 					</div>
 					
+					<!------ 회차 리스트 ------->
 					<div class="col-lg-8 card">
-					<!-- 회차 작성 -->
-						<div>
-							<label class="form-label" for="intro">회차</label>
-						</div>
-					
-					
-					
-					
-					
-					
-					
-					<!-- -------------------------------- -->	
+						<th:block th:replace="~{episode/listOfNovelDetails :: episodeListOfNovelDetails}"></th:block>
 					</div>
 					<div>
 						<div>
@@ -53,4 +45,5 @@
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	</body>
+	<script th:src="@{/js/episode-listOfNovelDetails.js}"></script>
 </html>

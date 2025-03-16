@@ -69,7 +69,7 @@
 			    class="btn btn-secondary">다음 화</a>
         </div>
         <!-- TODO : 수정버튼 작성자만 보이게  -->
-        <div>
+        <div th:if="${episode.novel.userId eq #authentication.principal.id}">
 			<a th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">수정</a>
         </div>
     </div>
