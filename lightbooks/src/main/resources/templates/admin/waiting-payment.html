@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main class="container-md">
+			<div class="d-flex justify-content-center">
+				<table class="table table-bordered table-striped table-hover table-responsive">
+					<thead class="table-dark">
+						<tr>
+							<th>아이디</th>
+							<th>유저아이디</th>
+							<th>유저이름</th>
+							<th>구분</th>
+							<th>코인</th>
+							<th>현금</th>
+							<th>신청일</th>
+							<th>상태</th>
+							<th>결제확인</th>
+						</tr>
+					</thead>
+					<tbody th:each="waiting : ${waitings}" th:object="${waiting}">
+						<tr>
+							<td th:text="*{id}"></td>
+							<td th:text="*{user.loginId}"></td>
+							<td th:text="*{user.username}"></td>
+							<td th:text="*{type == 0 ? '코인 충전' : type == 1 ? '코인 사용' : type == 2 ? '코인 환불/환전' : type == 3 ? '작품후원' : ''}"></td>
+							<td th:text="*{coin}"></td>
+							<td th:text="*{cash}"></td>
+							<td th:text="*{createdTime}"></td>
+							<td th:text="*{con == 0 ? '대기 중' : '완료'}"></td>
+							<td class="text-center">
+								<button th:if="*{con == 0}" th:attr="data-id=*{id}" id="btnCheck" class="btn btn-primary btn-sm">확인</button>
+								<span th:if="*{con == 1}" class="text-success">완료</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<script th:src="@{/js/waiting-payment.js}"></script>
+	</body>
+</html>
