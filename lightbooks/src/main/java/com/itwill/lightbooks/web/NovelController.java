@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -156,7 +158,7 @@ public class NovelController {
     	return "redirect:/novel/" + dto.getId();
     }
     
-    // 검색 페이지
+    // 작품 검색 페이지
     @GetMapping("/search/result")
     public String novelSearch(@RequestParam(name="keyword", required=false) String keyword,NovelSearchDto dto, Model model) {
     	
@@ -172,4 +174,8 @@ public class NovelController {
     	
     	return "novel/search";
     }
+    
+
+    
+ 
 }

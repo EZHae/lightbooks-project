@@ -19,6 +19,16 @@
         <!-- Page 헤더 -->
         <nav th:fragment="pageHeader" class="navbar navbar-expand-lg">
             <style>
+           		.navbar {
+					max-width: 1200px;
+					width: 100%; /* 전체 너비를 동일하게 설정 */
+					margin: 0 auto; /* 중앙 정렬 */
+					top: 0;
+					background: white;
+					padding: 10px;
+				}
+				
+            	
                 .custom-dropdown {
                     min-width: 300px; /* 원하는 크기로 조절 */
                     max-width: 500px; /* 최대 크기 제한 */
@@ -85,7 +95,7 @@
 
                     <!-- 로그인/회원가입 모달 생성 버튼 -->
                     <div sec:authorize="isAnonymous()">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signModal">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signModal" ma>
                             <i class="bi bi-person-fill"></i>
                         </button>
                     </div>

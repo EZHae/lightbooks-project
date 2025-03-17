@@ -66,7 +66,7 @@
 			                        </span>
 			                    </span>
 			                    <!-- 수정/삭제 버튼은 소설 작성자만 보임 -->
-			                    <div th:if="${novel.userId eq #authentication.principal.id}">
+			                    <div th:if="${#authorization.expression('isAuthenticated()') and novel.userId eq #authentication.principal.id}">
 								    <span style="float: right; margin-left: 10px;">
 								        <a class="btn btn-primary btn-sm"
 								           th:href="@{/novel/{novelId}/episode/{episodeId}/modify(novelId=${episode.novelId}, episodeId=${episode.id})}">
