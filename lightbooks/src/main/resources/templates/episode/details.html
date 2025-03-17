@@ -52,7 +52,7 @@
 <div class="container">
     <div class="episode-container">
         <h1 class="episode-title-main" th:text="${episode.novel.title}">소설 제목</h1>
-        <h2 class="episode-title-sub" th:text="${episode.episodeNum} + '화'"></h2>
+        <h2 class="episode-title-sub" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></h2>
         <h3 class="episode-stage-sub" th:text="${episode.title}"></h3>
 
         <hr>
@@ -68,9 +68,13 @@
 			    th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
 			    class="btn btn-secondary">다음 화</a>
         </div>
-        <!-- TODO : 수정버튼 작성자만 보이게  -->
+        <!-- 수정버튼 작성자만 보이게  -->
         <div th:if="${episode.novel.userId eq #authentication.principal.id}">
-			<a th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">수정</a>
+			<a class="btn btn-primary btn-sm" th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">수정</a>
+        </div>
+        
+        <div>
+			<a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}">뒤로가기</a>
         </div>
     </div>
 </div>
@@ -78,5 +82,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/js/episode-listOfNovelDetails.js"></script>
 </body>
 </html>

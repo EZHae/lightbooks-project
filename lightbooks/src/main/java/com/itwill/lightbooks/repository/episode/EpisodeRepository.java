@@ -56,6 +56,7 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 
 	Page<EpisodeListDto> getEpisodesByNovelAndCategory(Long novelId, Integer category, String sortOrder, Pageable pageable);
 	
+	boolean existsByNovelIdAndEpisodeNum(Long novelId, int episodeNum);
 	
 	
 	

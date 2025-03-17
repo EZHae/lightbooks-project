@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.web;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.NGenre;
@@ -30,6 +32,8 @@ import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,18 +64,18 @@ public class NovelController {
     // 작품 상세보기
     @GetMapping({"/{id}", "/{id}/episodes"})
     public String novelDetail(@PathVariable Long id, Model model,
-    		@RequestParam(name = "category", required = false) Integer category,
-    		@RequestParam(name = "sort", defaultValue = "episodeNum,asc") String sortStr,
+          @RequestParam(name = "category", required = false) Integer category,
+          @RequestParam(name = "sort", defaultValue = "episodeNum,asc") String sortStr,
             @RequestParam(name = "page", defaultValue = "0") int pageNo) {
-    	log.info("소설 상세정보 페이지: {}",id);
-    	
-    	Novel novel = novelService.searchById(id);
-    	log.info("nove id = {}",novel);
-    	
-    	model.addAttribute("novel",novel);
-    	
-    	// 정렬 객체 생성 (기본값: episodeNum 오름차순) + category가 0(공지)이면 createdTime 내림차순
-    	Sort sort = Sort.by(Sort.Direction.ASC, "episodeNum"); //기본 정렬
+       log.info("소설 상세정보 페이지: {}",id);
+       
+       Novel novel = novelService.searchById(id);
+       log.info("nove id = {}",novel);
+       
+       model.addAttribute("novel",novel);
+       
+       // 정렬 객체 생성 (기본값: episodeNum 오름차순) + category가 0(공지)이면 createdTime 내림차순
+       Sort sort = Sort.by(Sort.Direction.ASC, "episodeNum"); //기본 정렬
         if(category != null && category == 0){
             sort = Sort.by(Sort.Direction.DESC, "createdTime");
         }
@@ -101,9 +105,10 @@ public class NovelController {
         model.addAttribute("sort", sortStr.toString());         // 현재 정렬 방식 (문자열)
         model.addAttribute("firstEpisodeId", firstEpisodeId); // 첫 번째 에피소드의 ID
         model.addAttribute("novelId", id);
-    	
-    	return "novel/details";
+       
+       return "novel/details";
     }
+
     
     // 내 작품 페이지
     @GetMapping("/my-works")

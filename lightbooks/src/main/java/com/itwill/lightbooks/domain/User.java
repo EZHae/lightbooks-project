@@ -78,4 +78,9 @@ public class User extends BaseTimeEntity implements UserDetails {
 		
 		return this;
 	}
+	
+	@Override// User 엔티티의 username(로그인 ID) 대신 id(사용자 PK) 를 반환
+	public String getUsername() { //회차 조회수 관련해서 소설의 작성자가 본인인지 확인하여 본인이면 조회수 증가를 막기 위해 필요..
+		return id.toString(); // username 대신 id 반환, Long -> String
+	}
 }

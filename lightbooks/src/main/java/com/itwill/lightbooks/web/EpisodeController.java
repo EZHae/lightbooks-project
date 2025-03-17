@@ -3,6 +3,7 @@ package com.itwill.lightbooks.web;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwill.lightbooks.domain.Episode;
@@ -67,12 +70,10 @@ public class EpisodeController {
 	
 	@PostMapping("/create")
 	public String createEpisode(@PathVariable Long novelId, EpisodeCreateDto dto,
-			RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+			RedirectAttributes redirectAttributes) {
 		log.info("POST create(dto={})", dto);
 		
-		//TODO 회차num 중복체크 검사
 		Novel novel = novelService.searchById(novelId);
-		
 		
 		Episode episode = epiService.createEpisode(novelId, dto);
 		log.info("저장된 엔터티 = {}", episode);
@@ -93,6 +94,13 @@ public class EpisodeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()
                 && !authentication.getPrincipal().equals("anonymousUser")) {
+        	
+        	// 현재 로그인한 사용자 정보 가져오기
+            Object principal = authentication.getPrincipal();
+            Long currentUserId = null; // 또는 String
+            if(principal instanceof UserDetails){
+            	 currentUserId = Long.valueOf(((UserDetails) principal).getUsername()); // UserDetails를 구현한 User 객체의 메서드
+            }
 
             // 세션에서 조회한 에피소드 ID 목록을 가져옴(없으면 새로 생성)
             Set<Long> viewedEpisodes = (Set<Long>) session.getAttribute("viewedEpisodes");
@@ -102,7 +110,8 @@ public class EpisodeController {
             }
 
             // 현재 에피소드 ID가 목록에 없으면 조회수 증가 + 목록에 추가
-            if (!viewedEpisodes.contains(episodeId)) {
+            if (!viewedEpisodes.contains(episodeId) && episode.getNovel() != null
+                    && !episode.getNovel().getUserId().equals(currentUserId)) {
                 epiService.increaseViewCount(episodeId);
                 viewedEpisodes.add(episodeId);
             }
@@ -163,5 +172,12 @@ public class EpisodeController {
 		return "redirect:/novel/" + novelId;
 
     }
+	
+	@GetMapping("/api/check-episode-num")
+    public ResponseEntity<Boolean> checkEpisodeNum(@RequestParam Long novelId, @RequestParam int episodeNum) {
+        boolean exists = epiService.doesEpisodeNumExist(novelId, episodeNum);
+        return ResponseEntity.ok(exists);
+    }
+
 	
 }

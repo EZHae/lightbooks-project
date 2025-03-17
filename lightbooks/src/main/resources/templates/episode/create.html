@@ -27,8 +27,8 @@
 					</div>
 				</div>
 					<!-- <h2 th:text="${novel.title}"></h2> -->
-		            <form th:action="@{/novel/{novelId}/episode/create(novelId=${novelId})}"
-			               th:object="${episodeCreateDto}" method="post">
+		            <form id="episodeForm" th:action="@{/novel/{novelId}/episode/create(novelId=${novelId})}"
+			               th:object="${episodeCreateDto}" method="post" onsubmit="event.preventDefault(); checkEpisodeNum();">
 			               
 			            <div class="form-group">
 			                <label for="category" class="form-label">카테고리 설정</label>
@@ -44,7 +44,7 @@
 						</div>
 			
 			            <div class="form-group">
-			                <label for="episodeNum" class="form-label">연재 회차</label>
+			                <label for="episodeNum" class="form-label">연재 회차번호</label>
 			                <input type="number" id="episodeNum" th:field="*{episodeNum}" class="form-control"
 			                       th:placeholder="${maxEpisodeNum != null} ? '다음 회차: ' + (${maxEpisodeNum} + 1) : '등록된 회차가 없습니다.'" />
 			            </div>

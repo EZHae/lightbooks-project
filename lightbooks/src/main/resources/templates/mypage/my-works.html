@@ -118,7 +118,7 @@
 						<div class="novelModifyBtn">
 			                <a class="btn btn-secondary " th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
 			                <br/>
-			                <a class="btn btn-secondary mt-2" th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
+			                <a class="btn btn-secondary mt-2" th:href="@{/novel/{id}/episode/create(id=${novel.id})}">회차작성</a><!-- 추가 -->
 			                <br/>
 			                <a class="btn btn-secondary mt-2" th:href="@{/novel/view}">작품보기</a>
 			                <br/>
