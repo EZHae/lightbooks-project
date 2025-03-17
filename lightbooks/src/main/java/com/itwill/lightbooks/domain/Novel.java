@@ -89,4 +89,9 @@ public class Novel extends BaseTimeEntity{
 	public void setNovelGenre(List<NGenre> novelGenre) {
 		this.novelGenre = novelGenre;
 	}
+
+	public void setLikeCount(Integer likeCount) {
+		this.likeCount = likeCount;
+	}
+
 }

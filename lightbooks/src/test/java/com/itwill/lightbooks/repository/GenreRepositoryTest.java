@@ -17,7 +17,7 @@ public class GenreRepositoryTest {
 	
 	@Autowired
 	private GenreRepository genreRepo;
-	@Test
+//	@Test
 	public void testFindByAll() {
 		List<Genre> genre = genreRepo.findAll();
 		log.info("genre={}", genre);

@@ -63,7 +63,7 @@ public class NovelService {
 				.collect(Collectors.toList());
 	}
 	
-	
+	// 소설 하나만 가져오는 기능
 	public Novel searchById(Long id) {
 		log.info("searchId()");
 		Novel novel = novelRepo.findById(id).orElseThrow();
@@ -71,6 +71,7 @@ public class NovelService {
 		return novel;
 	}
 	
+	// 모든 소설 리스트
 	public List<Novel> searchAll() {
 		log.info("searchAll()");
 		List<Novel> list = novelRepo.findAll();
@@ -80,6 +81,7 @@ public class NovelService {
 		return list;
 	}
 	
+	// 소설 생성
 	@Transactional
 	public Novel create(NovelCreateDto dto) {
 		
@@ -105,7 +107,8 @@ public class NovelService {
 		
 		return novel;
 	}
-
+	
+	// 소설 삭제
 	@Transactional
 	public void deleteById(Long id) {
 		novelRepo.deleteById(id);
@@ -118,6 +121,7 @@ public class NovelService {
 		log.info("genreID : {}", dto.getGenreId());
 	}
 
+	// 제목, 작성자로 소설 검색과 페이징
 	public Page<NovelListItemDto> search(NovelSearchDto dto, Sort sort) {
 		
 		Pageable pageable = PageRequest.of(dto.getP(), 10, sort);
@@ -125,5 +129,7 @@ public class NovelService {
 		
 		return result.map(NovelListItemDto::fromEntity);
 	}
+	
+	//
 
 }
