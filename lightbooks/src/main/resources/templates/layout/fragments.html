@@ -72,7 +72,17 @@
                                 도서
                             </a>
                         </li>
-                    </ul>
+						<li class="nav-item dropdown" sec:authorize="isAuthenticated() and principal.loginId == 'admin'">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								어드민메뉴
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" th:href="@{/admin/waitingpayment}">결제 대기</a></li>
+								<li><a class="dropdown-item" href="#">Another action</a></li>
+								<li><a class="dropdown-item" href="#">Something else here</a></li>
+							</ul>
+						</li>
+					</ul>
                     <form class="d-flex me-3 flex-grow-1" method="get" th:action="@{/novel/search/result}" onsubmit="return validateSearch(event)">
                         <div class="input-group">
                             <input class="form-control" type="search" name="keyword" id="searchKeyword" placeholder="제목, 작가를 입력하세요." aria-label="Search" 

@@ -15,7 +15,7 @@
 					<div>
 						<div class="row mt-3">
 						    <div class="col border border-black">
-						        <a href="#" id="selectGoods" class="d-block text-decoration-none text-dark" data-coin="50 코인" data-price="5,000원" data-goods="50" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-coin="50 코인" data-price="5,000원" data-product="50" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
 						                <span><i class="bi bi-coin"></i> 50 코인</span>
 						                <strong>5,000원</strong>
@@ -23,7 +23,7 @@
 						        </a>
 						    </div>
 						    <div class="col border border-black ms-3">
-						        <a href="#" id="selectGoods" class="d-block text-decoration-none text-dark" data-coin="100 코인" data-price="10,000원" data-goods="100" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-coin="100 코인" data-price="10,000원" data-product="100" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
 						                <span><i class="bi bi-coin"></i> 100 코인</span>
 						                <strong>10,000원</strong>
@@ -33,7 +33,7 @@
 						</div>
 						<div class="row mt-4">
 						    <div class="col border border-black">
-						        <a href="#" id="selectGoods" class="d-block text-decoration-none text-dark" data-coin="200 코인" data-price="20,000원" data-goods="200" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-coin="200 코인" data-price="20,000원" data-product="200" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
 						                <span><i class="bi bi-coin"></i> 200 코인</span>
 						                <strong>20,000원</strong>
@@ -41,7 +41,7 @@
 						        </a>
 						    </div>
 						    <div class="col border border-black ms-3">
-						        <a href="#" id="selectGoods" class="d-block text-decoration-none text-dark" data-coin="300 코인" data-price="30,000원" data-goods="300" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-coin="300 코인" data-price="30,000원" data-product="300" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
 						                <span><i class="bi bi-coin"></i> 300 코인</span>
 						                <strong>30,000원</strong>
@@ -51,7 +51,7 @@
 						</div>
 						<div class="row mt-4">
 						    <div class="col border border-black">
-						        <a href="#" id="selectGoods" class="d-block text-decoration-none text-dark" data-coin="500 코인" data-price="50,000원" data-goods="500" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-coin="500 코인" data-price="50,000원" data-product="500" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
 						                <span><i class="bi bi-coin"></i> 500 코인</span>
 						                <strong>50,000원</strong>
@@ -59,7 +59,7 @@
 						        </a>
 						    </div>
 						    <div class="col border border-black ms-3">
-						        <a href="#" id="selectGoods" class="d-block text-decoration-none text-dark" data-coin="1,000 코인" data-price="100,000원" data-goods="1000" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-coin="1,000 코인" data-price="100,000원" data-product="1000" data-bs-toggle="modal" data-bs-target="#coinBuyModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
 						                <span><i class="bi bi-coin"></i> 1,000 코인</span>
 						                <strong>100,000원</strong>
@@ -107,23 +107,28 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    	<div class="d-none" id="selctedGoods">상품 정보</div>
+                    	<div class="d-none" id="selectProductId">상품 정보</div>
 			            <div class="border border-black d-flex h-100 align-items-center justify-content-between p-3">
 			                <span><i class="bi bi-coin"></i> <span id="selectedCoin"></span></span>
 			                <strong id="selectedPrice"></strong>
+			                <span class="d-none" id="selectedCoinValue"></span>
+			                <span class="d-none" id="selectedPriceValue"></span>
 			            </div>
 			            <div class="row text-center pt-3 ps-3 pe-3">
-			            	<div class="col card">
-			            		<a class="text-decoration-none text-dark" href="#">
+			            	<div id="divBuyFromTransfer" class="col card">
+			            		<a id="btnBuyFromTransfer" class="text-decoration-none text-dark" href="#">
 			            			<i class="fs-1 bi bi-credit-card-fill"><br></i>무통장 입금
 			            		</a>
 			            	</div>
-			            	<div class="col card">
-			            		<a class="text-decoration-none text-dark" href="#">
+			            	<div id="divBuyFromKakao" class="col card">
+			            		<a id="btnBuyFromKakao" class="text-decoration-none text-dark" href="#">
 			            			<i class="fs-1 bi bi-chat-square-text-fill"><br></i>카카오페이
 			            		</a>
 			            	</div>
 			            </div>
+						<div id="transferSection">
+
+						</div>
                     </div>
                 </div>
             </div>

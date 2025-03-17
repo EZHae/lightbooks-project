@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{/layout/fragments :: htmlHead('결제완료')}"></head>
+    <script>
+        window.onload = function() {
+            alert("결제가 완료되었습니다! 결제 상품: " + document.getElementById("itemName").innerText);
+            window.opener.location.reload(); // 부모 창 새로고침
+            window.close(); // 현재 창 닫기
+        };
+    </script>
+</head>
+<body>
+    <div th:object="${approveResponse}" class="d-none">
+    	<p id="itemName" th:text="*{item_name}">
+    </div>
+    <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+</body>
+</html>

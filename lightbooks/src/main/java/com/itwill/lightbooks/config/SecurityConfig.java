@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,6 +66,14 @@ public class SecurityConfig {
 				.invalidateHttpSession(true) // 세션 무효화
 				.deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
 		);
+		
+        // 인증 실패 시 403 에러를 발생시키도록 설정
+        http.exceptionHandling(t -> t.authenticationEntryPoint(new AuthenticationEntryPoint() {
+            @Override
+            public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+            }
+        }));
 
 		/*
 		 * 페이지 접근 권한, 인증 구성: - 컨트롤러 메서드에서 애너테이션으로 설정. (1) SecurityConfig
