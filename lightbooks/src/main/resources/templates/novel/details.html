@@ -2,31 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
 	<style>
-	
-	
-		#btnPating:hover {
-			color:white;  
+		.star {
+		    font-size: 30px;
+		    color: gray;
+		    cursor: pointer;
+		    transition: color 0.2s ease-in-out;
 		}
-		
-		#ratingModal {
-			display : none;
-			position: fixed;
-			left: 100px;
-			top: 80px;
-			width: 300px;
-			height: 400px;
-			padding: 20px;
-			border-radius: 10px;
-			z-index: 1000;
-			text-align: center;
+	
+		#openRatingBtn:hover {
+			color:white;  
 		}
 		
 		.btnLikeWithRating{
 			display : flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-			justify-content: space-evenly;
-			margin: 0 auto;
+			justify-content: center;
+	        align-items: center;
+	        margin-top: 20px;
+		}
+		
+		#btnLike , #openRatingBtn{
+		    font-size: 24px; /* 아이콘 크기 */
 		}
 		
 		
@@ -74,33 +69,59 @@
 					
 					<!-- 좋아요 별점 버튼들 -->
 					<div class="btnLikeWithRating mt-2">
-						<div>
+						<div class="btn-container">
 							<button id="btnLike" th:data-novel-id="*{id}" th:data-user-id="${#authentication.principal != null ? #authentication.principal.id : 0}" 
-								class="btn btn-outline-danger bi bi-heart-fill">
+								class="btn btn-outline-danger p-4 h-2 me-3">
+								<i class="bi bi-heart-fill"></i>
 								<span id="likeCount" th:text="*{likeCount}"></span>
 							</button>
 						</div>
+
+
 						<div>
-							<button id="openRatingBtn" class="btn btn-outline-warning bi bi-star-fill f">
-								<span id="pating">별점주기 평균넣기</span>
+							<button id="openRatingBtn" 
+								class="btn btn-outline-warning p-4 h-2"
+								data-bs-toggle="modal" data-bs-target="#ratingModal">
+								<i class="bi bi-star-fill"></i>
+								<span id="averageRating">0.0</span> / 5.0
 							</button>
 						</div>
-						
-						<div id="ratingModal" class="modal">
+
+					<!-- 별점 기능 -->
+					<!-- Modal -->
+					<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered">
 							<div class="modal-content">
-							<span class="close">&times;</span>
-							<div>
-								<span class="star" data-value="1">⭐</span>
-								<span class="star" data-value="2">⭐</span>
-								<span class="star" data-value="3">⭐</span>
-								<span class="star" data-value="4">⭐</span>
-								<span class="star" data-value="5">⭐</span>
-							</div>
-							<h3>별을 클릭하세요</h3>
-							<input type="submit" id="btnRating" class="btn btn-success form-control btnRating" value="확인" />							
+								<div class="modal-header">
+									<h1 class="modal-title fs-5 text-center">
+									    <i class="bi bi-star-fill text-warning"></i> 
+									    별점 등록 
+									    <i class="bi bi-star-fill text-warning"></i>
+									</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body text-center">
+									<h3>별을 클릭하세요</h3>
+									<div id="stars">
+										<span class="bi bi-star star" data-value="1"></span>
+										<span class="bi bi-star star" data-value="2"></span>
+										<span class="bi bi-star star" data-value="3"></span>
+										<span class="bi bi-star star" data-value="4"></span>
+										<span class="bi bi-star star" data-value="5"></span>
+									</div>
+									<input type="hidden" id="selectedRating" name="rating" value="0">
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" id="btnRatingSubmit" class="btn btn-success form-control">확인</button>
+								</div>
 							</div>
 						</div>
 					</div>
+					</div>
+					
+					
 					
 					<!-- 댓글 기능 -->
 					<div>

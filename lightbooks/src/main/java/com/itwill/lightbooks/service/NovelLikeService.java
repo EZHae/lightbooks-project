@@ -1,7 +1,6 @@
 package com.itwill.lightbooks.service;
 
-import java.time.LocalDateTime;
-
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class LikeService {
+public class NovelLikeService {
 	
 	private final LikeRepository likeRepo;
 	private final UserRepository userRepo;
@@ -44,12 +43,14 @@ public class LikeService {
 	}
 
 	// 좋아요 카운트 개수 조회
+	@Transactional(readOnly = true)
+	@Cacheable(value = "novelLike", key = "#novelId")
 	public int getLikeCount(Long novelId) {
 		Novel novel = novelRepo.findById(novelId).orElseThrow();
 		return likeRepo.countByNovel(novel);
 	}
 	
-	// 
+	@Transactional(readOnly = true)
 	public boolean existsByUserAndNovel(Long userId, Long novelId) {
 		User user = userRepo.findById(userId).orElseThrow();
 		Novel novel = novelRepo.findById(novelId).orElseThrow();

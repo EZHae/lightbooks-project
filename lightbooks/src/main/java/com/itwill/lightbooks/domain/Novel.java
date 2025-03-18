@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.domain;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -60,6 +61,8 @@ public class Novel extends BaseTimeEntity{
 	private String coverSrc; // 표지 이미지 URL
 	
 	private Integer grade;
+	
+	private BigDecimal rating;
 	
 	@Column(name = "age_limit")
 	@Basic(optional = false)

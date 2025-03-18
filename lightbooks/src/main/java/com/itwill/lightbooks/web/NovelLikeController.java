@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.itwill.lightbooks.dto.LikeRequestDto;
-import com.itwill.lightbooks.service.LikeService;
+import com.itwill.lightbooks.service.NovelLikeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class LikeControler {
+public class NovelLikeController {
 	
-	private final LikeService likeService;
+	private final NovelLikeService novelLikeService;
 	
 	@PostMapping("/like")
 	public ResponseEntity<Map<String, Object>> toggleLike(@RequestBody LikeRequestDto dto) {
@@ -40,8 +40,8 @@ public class LikeControler {
 		log.info("현재 좋아요 user Id: {}", userId);
         log.info("현재 좋아요 novel Id: {}", novelId);
 		
-		boolean liked = likeService.toggleLike(userId, novelId);
-		int likeCount = likeService.getLikeCount(novelId);
+		boolean liked = novelLikeService.toggleLike(userId, novelId);
+		int likeCount = novelLikeService.getLikeCount(novelId);
 		
 		return ResponseEntity.ok(Map.of("liked", liked, "likeCount", likeCount));
 	}
@@ -50,8 +50,8 @@ public class LikeControler {
 	@GetMapping("/like/count/{novelId}")
 	public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable Long novelId, @RequestParam Long userId) {
 		
-		boolean liked = likeService.existsByUserAndNovel(userId, novelId);
-		Integer likeCount = likeService.getLikeCount(novelId);
+		boolean liked = novelLikeService.existsByUserAndNovel(userId, novelId);
+		Integer likeCount = novelLikeService.getLikeCount(novelId);
 		return ResponseEntity.ok(Map.of("liked", liked,"likeCount",likeCount));
 	}
 }

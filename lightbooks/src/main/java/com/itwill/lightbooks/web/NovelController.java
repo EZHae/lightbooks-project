@@ -1,6 +1,9 @@
 package com.itwill.lightbooks.web;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +32,7 @@ import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.service.EpisodeService;
+import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
 
 import jakarta.annotation.security.PermitAll;
@@ -44,6 +48,7 @@ public class NovelController {
 	
 	private final NovelService novelService;
 	private final EpisodeService episodeService; //추가
+	private final NovelRatingService novelRatingService;
 	
     @GetMapping("/new")
     public void novelCreate() {
