@@ -78,4 +78,9 @@ public class User extends BaseTimeEntity implements UserDetails {
 		
 		return this;
 	}
+	
+	//추가(다른 테이블에서 id를 가져가기 위한 메서드 ex)조회수 관련 본인글인지 확인 여부시 필요)
+	public Long getUserId() {
+	    return id;
+	}
 }

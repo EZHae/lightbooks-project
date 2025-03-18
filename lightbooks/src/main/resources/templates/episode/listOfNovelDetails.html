@@ -1,115 +1,145 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-	    <title>episodeListOfNovelDetailsFragment</title>
-	    <style>
-		    .episode-title, 
-		    .episode-number, 
-		    .episode-date, 
-		    .episode-views, 
-		    .episode-category {
-	    		display: block; /* 블록 요소로 전환 */
-	    		margin-bottom: 5px; /* 줄 간격 추가 */
-	    	}
-	    	
-    	</style>
-	</head>
-	<body>
-		<th:block th:fragment="episodeListOfNovelDetails">
-		    <div class="mb-3 mt-2">
-		        <a th:href="@{/novel/{id}/episodes(id=${novel.id})}"
-		           th:class="${category == null} ? 'btn btn-primary' : 'btn btn-secondary'">회차</a>
-		        <a th:href="@{/novel/{id}/episodes(id=${novel.id}, category=0)}"
-		           th:class="${category != null and category == 0} ? 'btn btn-primary' : 'btn btn-secondary'">공지</a>
-			</div>
-			<div>
-		        <div class="btn-group" style="float: right;">
-				    <a th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${category == 0 ? 
-				    	'createdTime,asc' : 'episodeNum,asc'})}" class="btn btn-outline-secondary"
-				       th:classappend="${sort == 'episodeNum,asc' or (category == 0 and sort == 'createdTime,asc')} ? 
-				       'active' : ''">등록순</a>	
-				    <a th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${category == 0 ? 
-				    	'createdTime,desc' : 'episodeNum,desc'})}" class="btn btn-outline-secondary"
-				       th:classappend="${sort == 'episodeNum,desc' or (category == 0 and sort == 'createdTime,desc')} ? 
-				       'active' : ''">최신순</a>
-				</div>
-		   </div>
-		
-		    <table class="table episode-table">
-			    <tbody>
-			        <tr th:each="episode : ${episodes.content}" th:data-episode-id="${episode.id}">
-			            <td>
-			                <div class="mb-2">
-			                	<span class="episode-number" th:if="${episode.category == 1 or episode.category == 2}" 
-			                		th:text="${episode.episodeNum} + '화 '"></span>
-			                    <a class="episode-title" 
-								   th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${episode.novelId}, episodeId=${episode.id})}" 
-								   th:text="${episode.title}" 
-								   style="font-weight: bold;"></a>
-			
-			                </div>
-			                <div>
-			                    <span class="episode-date" th:text="${#temporals.format(episode.createdTime, 'yyyy-MM-dd')}"></span>
-			                	<span class="episode-views">
-								    <th:block th:remove="tag">
-								        <img th:src="@{/images/count_view.png}" alt="조회수 아이콘" style="width: 11px; height: 11x; margin-right: 5px;" />
-								        <span th:text="${episode.views}"></span>
-								    </th:block>
-								</span>
-			                </div>
-			                <div>
-			                    <span class="episode-category">
-			                        <span th:switch="${episode.category}">
-			                            <!-- <span th:case="'0'" class="category-notice">공지</span> -->
-			                            <span th:case="'1'" class="category-free">무료</span>
-			                            <span th:case="'2'" class="category-paid">유료</span>
-			                        </span>
-			                    </span>
-			                    <!-- 수정/삭제 버튼은 소설 작성자만 보임 -->
-			                    <div th:if="${#authorization.expression('isAuthenticated()') and novel.userId eq #authentication.principal.id}">
-								    <span style="float: right; margin-left: 10px;">
-								        <a class="btn btn-primary btn-sm"
-								           th:href="@{/novel/{novelId}/episode/{episodeId}/modify(novelId=${episode.novelId}, episodeId=${episode.id})}">
-								           수정
-								        </a>
-								        <button class="btn btn-danger btn-sm btn-delete"
-								                th:data-episode-id="${episode.id}" 
-								                th:data-novel-id="${episode.novelId}">
-								            삭제
-								        </button>
-								    </span>
-								</div>
-			                </div>
-			            </td>
-			        </tr>
-			        <tr th:if="${episodes.isEmpty()}">
-			            <td colspan="5">등록된 글이 없습니다.</td>
-			        </tr>
-			    </tbody>
-			</table>
-
-			<!-- 페이징처리 -->
-		    <div th:if="${episodes.totalPages > 1}">
-		        <ul class="pagination justify-content-center">
-		            <li class="page-item" th:classappend="${!episodes.hasPrevious} ? 'disabled'">
-		                <a class="page-link" th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=0)}">처음</a>
-		            </li>
-		            <li class="page-item" th:classappend="${!episodes.hasPrevious} ? 'disabled'">
-		                <a class="page-link" th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${episodes.number - 1})}">이전</a>
-		            </li>
-		            <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, episodes.totalPages - 1)}"
-		                th:classappend="${pageNo == episodes.number} ? 'active' : ''">
-		                <a class="page-link" th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${pageNo})}"
-		                   th:text="${pageNo + 1}"></a>
-		            </li>
-		            <li class="page-item" th:classappend="${!episodes.hasNext} ? 'disabled'">
-		                <a class="page-link" th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${episodes.number + 1})}">다음</a>
-		            </li>
-		            <li class="page-item" th:classappend="${!episodes.hasNext} ? 'disabled'">
-		                <a class="page-link" th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${episodes.totalPages - 1})}">끝</a>
-		            </li>
-		        </ul>
-		    </div>
-		</th:block>
-	</body>
+   <head>
+       <title>episodeListOfNovelDetailsFragment</title>
+       <style>
+          .episode-title, 
+          .episode-number, 
+          .episode-date, 
+          .episode-views, 
+          .episode-category {
+             display: block; /* 블록 요소로 전환 */
+             margin-bottom: 5px; /* 줄 간격 추가 */
+          }
+       </style>
+   </head>
+   <body>
+      <!-- AJAX 업데이트 대상 영역 -->
+      <div id="episodeListContainer">
+         <th:block th:fragment="episodeListOfNovelDetails">
+             <div class="mb-3 mt-2">
+                 <!-- AJAX 링크: 회차 & 공지 -->
+                 <!-- AJAX 링크: 회차 & 공지 -->
+				<a th:href="@{/novel/{id}/episodes(id=${novel.id})}"
+				   class="ajax-link"
+				   th:classappend="${category == null} ? ' btn btn-primary' : ' btn btn-secondary'">
+				   회차
+				</a>
+				<a th:href="@{/novel/{id}/episodes(id=${novel.id}, category=0)}"
+				   class="ajax-link"
+				   th:classappend="${category != null and category == 0} ? ' btn btn-primary' : ' btn btn-secondary'">
+				   공지
+				</a>
+             </div>
+             <div>
+                 <div class="btn-group" style="float: right;">
+                   <!-- AJAX 링크: 등록순, 최신순 -->
+                   <a th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${category == 0 ? 'createdTime,asc' : 'episodeNum,asc'})}"
+                      class="btn btn-outline-secondary ajax-link"
+                      th:classappend="${sort == 'episodeNum,asc' or (category == 0 and sort == 'createdTime,asc')} ? ' active' : ''">
+                      등록순
+                   </a>
+                   <a th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${category == 0 ? 'createdTime,desc' : 'episodeNum,desc'})}"
+                      class="btn btn-outline-secondary ajax-link"
+                      th:classappend="${sort == 'episodeNum,desc' or (category == 0 and sort == 'createdTime,desc')} ? ' active' : ''">
+                      최신순
+                   </a>
+                 </div>
+             </div>
+          
+             <table class="table episode-table">
+                 <tbody>
+                     <tr th:each="episode : ${episodes.content}" th:data-episode-id="${episode.id}">
+                         <td>
+                             <div class="mb-2">
+                                <span class="episode-number" th:if="${episode.category == 1 || episode.category == 2}" 
+                                   th:text="${episode.episodeNum} + '화 '"></span>
+                                 <!-- 회차 제목: 전체 페이지 이동 -->
+                                 <a class="episode-title" 
+                                   th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${episode.novelId}, episodeId=${episode.id})}" 
+                                   th:text="${episode.title}" 
+                                   style="font-weight: bold;">
+                                 </a>
+                             </div>
+                             <div>
+                                 <span class="episode-date" th:text="${#temporals.format(episode.createdTime, 'yyyy-MM-dd')}"></span>
+                                 <span class="episode-views">
+                                    <th:block th:remove="tag">
+                                        <img th:src="@{/images/count_view.png}" alt="조회수 아이콘" style="width: 11px; height: 11px; margin-right: 5px;" />
+                                        <span th:text="${episode.views}"></span>
+                                    </th:block>
+                                 </span>
+                             </div>
+                             <div>
+                                 <span class="episode-category">
+                                     <span th:switch="${episode.category}">
+                                         <!-- <span th:case="'0'" class="category-notice">공지</span> -->
+                                         <span th:case="'1'" class="category-free">무료</span>
+                                         <span th:case="'2'" class="category-paid">유료</span>
+                                     </span>
+                                 </span>
+                                 <!-- 수정/삭제 버튼은 소설 작성자만 보임 -->
+                                 <div th:if="${novel.userId eq #authentication.principal.id}">
+                                    <span style="float: right; margin-left: 10px;">
+                                        <!-- 수정 버튼: 전체 페이지 이동 -->
+                                        <a class="btn btn-primary btn-sm"
+                                           th:href="@{/novel/{novelId}/episode/{episodeId}/modify(novelId=${episode.novelId}, episodeId=${episode.id})}">
+                                           수정
+                                        </a>
+                                        <!-- 삭제 버튼: AJAX 처리 (이미 처리 중) -->
+                                        <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                th:data-episode-id="${episode.id}" 
+                                                th:data-novel-id="${episode.novelId}">
+                                            삭제
+                                        </button>
+                                    </span>
+                                 </div>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr th:if="${episodes.isEmpty()}">
+                         <td colspan="5">등록된 글이 없습니다.</td>
+                     </tr>
+                 </tbody>
+             </table>
+         
+             <!-- 페이징처리 AJAX 링크 추가 -->
+             <div th:if="${episodes.totalPages > 1}">
+                 <ul class="pagination justify-content-center">
+                     <li class="page-item" th:classappend="${!episodes.hasPrevious} ? 'disabled'">
+                         <a class="page-link ajax-link"
+                            th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=0)}">
+                            처음
+                         </a>
+                     </li>
+                     <li class="page-item" th:classappend="${!episodes.hasPrevious} ? 'disabled'">
+                         <a class="page-link ajax-link"
+                            th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${episodes.number - 1})}">
+                            이전
+                         </a>
+                     </li>
+                     <li class="page-item" th:each="pageNo : ${#numbers.sequence(0, episodes.totalPages - 1)}"
+                         th:classappend="${pageNo == episodes.number} ? 'active' : ''">
+                         <a class="page-link ajax-link"
+                            th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${pageNo})}"
+                            th:text="${pageNo + 1}">
+                         </a>
+                     </li>
+                     <li class="page-item" th:classappend="${!episodes.hasNext} ? 'disabled'">
+                         <a class="page-link ajax-link"
+                            th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${episodes.number + 1})}">
+                            다음
+                         </a>
+                     </li>
+                     <li class="page-item" th:classappend="${!episodes.hasNext} ? 'disabled'">
+                         <a class="page-link ajax-link"
+                            th:href="@{/novel/{id}/episodes(id=${novel.id}, category=${category}, sort=${sort}, page=${episodes.totalPages - 1})}">
+                            끝
+                         </a>
+                     </li>
+                 </ul>
+             </div>
+         </th:block>
+      </div>
+   </body>
 </html>

@@ -175,6 +175,11 @@ public class EpisodeService {
         episodeRepo.deleteById(episodeId);
     }
     
+    //회차 create 입력시 회차번호가 이미 존재하는지
+    public boolean doesEpisodeNumExist(Long novelId, int episodeNum) {
+        return episodeRepo.existsByNovelIdAndEpisodeNum(novelId, episodeNum);
+    }
+    
 //    //소유자 확인 메서드(필요시 사용하려고....)
 //    public boolean isOwner(Long episodeId, Long userId) {
 //        // 에피소드 조회

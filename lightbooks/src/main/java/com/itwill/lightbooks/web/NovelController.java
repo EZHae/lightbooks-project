@@ -1,20 +1,13 @@
 package com.itwill.lightbooks.web;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +28,7 @@ import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
 
-import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,18 +60,19 @@ public class NovelController {
     // 작품 상세보기
     @GetMapping({"/{id}", "/{id}/episodes"})
     public String novelDetail(@PathVariable Long id, Model model,
-    		@RequestParam(name = "category", required = false) Integer category,
-    		@RequestParam(name = "sort", defaultValue = "episodeNum,asc") String sortStr,
-            @RequestParam(name = "page", defaultValue = "0") int pageNo) {
-    	log.info("소설 상세정보 페이지: {}",id);
-    	
-    	Novel novel = novelService.searchById(id);
-    	log.info("nove id = {}",novel);
-    	
-    	model.addAttribute("novel",novel);
-    	
-    	// 정렬 객체 생성 (기본값: episodeNum 오름차순) + category가 0(공지)이면 createdTime 내림차순
-    	Sort sort = Sort.by(Sort.Direction.ASC, "episodeNum"); //기본 정렬
+          @RequestParam(name = "category", required = false) Integer category,
+          @RequestParam(name = "sort", defaultValue = "episodeNum,asc") String sortStr,
+            @RequestParam(name = "page", defaultValue = "0") int pageNo,
+            HttpServletRequest request) {
+       log.info("소설 상세정보 페이지: {}",id);
+       
+       Novel novel = novelService.searchById(id);
+       log.info("nove id = {}",novel);
+       
+       model.addAttribute("novel",novel);
+       
+       // 정렬 객체 생성 (기본값: episodeNum 오름차순) + category가 0(공지)이면 createdTime 내림차순
+       Sort sort = Sort.by(Sort.Direction.ASC, "episodeNum"); //기본 정렬
         if(category != null && category == 0){
             sort = Sort.by(Sort.Direction.DESC, "createdTime");
         }
@@ -105,12 +99,17 @@ public class NovelController {
 
         model.addAttribute("episodes", episodes);     // 에피소드 목록 (Page<EpisodeListDto>)
         model.addAttribute("category", category);    // 선택된 카테고리 (null 또는 값)
-        model.addAttribute("sort", sortStr.toString());         // 현재 정렬 방식 (문자열)
+        model.addAttribute("sort", sortStr.toString()); // 현재 정렬 방식 (문자열)
         model.addAttribute("firstEpisodeId", firstEpisodeId); // 첫 번째 에피소드의 ID
         model.addAttribute("novelId", id);
-    	
-    	return "novel/details";
+       
+        // Ajax 요청인지 확인 (XMLHttpRequest 헤더 기준)
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return "episode/listOfNovelDetails :: episodeListOfNovelDetails";
+        }
+       return "novel/details";
     }
+
     
     // 내 작품 페이지
     @GetMapping("/my-works")
