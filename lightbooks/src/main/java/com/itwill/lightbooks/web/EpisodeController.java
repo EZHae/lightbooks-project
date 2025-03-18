@@ -22,10 +22,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.EpisodeCreateDto;
 import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
+import com.itwill.lightbooks.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.NoArgsConstructor;
@@ -98,8 +100,9 @@ public class EpisodeController {
         	// 현재 로그인한 사용자 정보 가져오기
             Object principal = authentication.getPrincipal();
             Long currentUserId = null; // 또는 String
-            if(principal instanceof UserDetails){
-            	 currentUserId = Long.valueOf(((UserDetails) principal).getUsername()); // UserDetails를 구현한 User 객체의 메서드
+            if (principal instanceof User) {
+                currentUserId = ((User) principal).getUserId();
+                System.out.println("현재 로그인된 사용자 pk(id): " + currentUserId);
             }
 
             // 세션에서 조회한 에피소드 ID 목록을 가져옴(없으면 새로 생성)
@@ -173,6 +176,7 @@ public class EpisodeController {
 
     }
 	
+	//ResponseEntity
 	@GetMapping("/api/check-episode-num")
     public ResponseEntity<Boolean> checkEpisodeNum(@RequestParam Long novelId, @RequestParam int episodeNum) {
         boolean exists = epiService.doesEpisodeNumExist(novelId, episodeNum);

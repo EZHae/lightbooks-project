@@ -34,6 +34,7 @@ import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +67,8 @@ public class NovelController {
     public String novelDetail(@PathVariable Long id, Model model,
           @RequestParam(name = "category", required = false) Integer category,
           @RequestParam(name = "sort", defaultValue = "episodeNum,asc") String sortStr,
-            @RequestParam(name = "page", defaultValue = "0") int pageNo) {
+            @RequestParam(name = "page", defaultValue = "0") int pageNo,
+            HttpServletRequest request) {
        log.info("소설 상세정보 페이지: {}",id);
        
        Novel novel = novelService.searchById(id);
@@ -102,10 +104,14 @@ public class NovelController {
 
         model.addAttribute("episodes", episodes);     // 에피소드 목록 (Page<EpisodeListDto>)
         model.addAttribute("category", category);    // 선택된 카테고리 (null 또는 값)
-        model.addAttribute("sort", sortStr.toString());         // 현재 정렬 방식 (문자열)
+        model.addAttribute("sort", sortStr.toString()); // 현재 정렬 방식 (문자열)
         model.addAttribute("firstEpisodeId", firstEpisodeId); // 첫 번째 에피소드의 ID
         model.addAttribute("novelId", id);
        
+        // Ajax 요청인지 확인 (XMLHttpRequest 헤더 기준)
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return "episode/listOfNovelDetails :: episodeListOfNovelDetails";
+        }
        return "novel/details";
     }
 

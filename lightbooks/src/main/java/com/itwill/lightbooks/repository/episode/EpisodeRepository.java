@@ -30,9 +30,6 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	@Query("select max(e.episodeNum) from Episode e where e.novel.id = :novelId")
     Integer findMaxEpisodeNumByNovelId(@Param("novelId") Long novelId);
 	
-	
-	//------------------------
-	
 	//소설 상세 페이지의 에피소드 기본 목록 (공지 제외, 회차 번호 오름차순, 페이징)
 	Page<Episode> findByNovelAndCategoryNotOrderByEpisodeNumAsc(Novel novel, Integer category, Pageable pageable);
 	

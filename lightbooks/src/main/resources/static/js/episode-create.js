@@ -1,10 +1,6 @@
 /**
  * src/main/resources/static/js/episode-create.js
  */
-/**
- * src/main/resources/static/js/episode-create.js
- */
-
 	function toggleEpisodeNum() {
 	    const categorySelect = document.getElementById('category');
 	    const episodeNumInput = document.getElementById('episodeNum');
