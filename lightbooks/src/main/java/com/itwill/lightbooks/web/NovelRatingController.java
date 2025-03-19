@@ -26,7 +26,7 @@ public class NovelRatingController {
 	
 	// 별점 평균 조회
 	@GetMapping("/{novelId}/rating")
-	public ResponseEntity<NovelRatingResponse> ratingAvg(@PathVariable Long novelId) {
+	public ResponseEntity<NovelRatingResponse> ratingAvg(@PathVariable(name = "novelId") Long novelId) {
 		BigDecimal avgRating  = novelRatingService.readRating(novelId);
 		
 		// 응답 호출
@@ -38,7 +38,7 @@ public class NovelRatingController {
 	
 	// 별점 추가/수정 
 	@PostMapping("/{novelId}/rating")
-	public ResponseEntity<?> insertRating(@PathVariable Long novelId,
+	public ResponseEntity<?> insertRating(@PathVariable(name = "novelId") Long novelId,
 											@RequestBody Map<String, Object> payload) {
 		
 		Long userId = Long.parseLong(payload.get("userId").toString());

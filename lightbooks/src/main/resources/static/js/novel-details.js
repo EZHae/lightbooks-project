@@ -178,20 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		const reqBody = {novelId, userId};
 		
-		
 		// UI를 먼저 업데이트하여 즉각 반응하도록 수정
-		const heartIcon = btnLike.querySelector("i");
 		const likeCountSpan = btnLike.querySelector("span");
-		
 		const isLiked = btnLike.classList.contains("btn-danger"); // 현재 좋아요 여부
 		const newLikeCount = isLiked ? parseInt(likeCountSpan.textContent) - 1 : parseInt(likeCountSpan.textContent) + 1;
-		
-		
-		// 반응 속도
-		btnLike.classList.toggle("btn-danger", !isLiked);
-		btnLike.classList.toggle("btn-outline-danger", isLiked);
-		heartIcon.className = `bi bi-heart${!isLiked ? '-fill' : ''}`;
-		likeCountSpan.textContent = newLikeCount;
 		
 		try {
 			const response = await axios.post(`/api/like`, reqBody, {withCredentials: true});
@@ -204,18 +194,17 @@ document.addEventListener('DOMContentLoaded', () => {
 			const { liked, likeCount } = response.data;
 			
 			// 좋아요 상태 업데이트
-			btnLike.classList.toggle("btn-danger", liked);
-			btnLike.classList.toggle("btn-outline-danger", !liked);
-			heartIcon.className = `bi bi-heart${liked ? '-fill' : '' }`;
+			btnLike.classList.remove("btn-danger", "btn-outline-danger")
+			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
 			likeCountSpan.textContent = likeCount;
 			
 		} catch (error) {
 			console.error("좋아요 처리 중 오류", error);
 			
 			//오류 발생 시 원래 상태로 되돌리기 (UI 복구)
-			btnLike.classList.toggle("btn-danger", isLiked);
-            btnLike.classList.toggle("btn-outline-danger", !isLiked);
-            heartIcon.className = `bi bi-heart${isLiked ? '-fill' : ''}`;
+			btnLike.classList.remove("btn-danger", "btn-outline-danger")
+			btnLike.classList.add(isLiked ? "btn-danger" : "btn-outline-danger")
+			
             likeCountSpan.textContent = isLiked ? newLikeCount + 1 : newLikeCount - 1;
 		} finally {
             setTimeout(() => { isProcessing = false; }, 500); // 0.5초 동안 추가 클릭 방지
@@ -224,9 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 	});
 	
-
-	
-	
 	async function loadLikeCount(novelId, userId) {
 		try {
 			const response = await axios.get(`/api/like/count/${novelId}?userId=${userId}`);
@@ -234,14 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			const btnLike = document.querySelector("button#btnLike")
 			if(!btnLike) return;
-			
-			btnLike.classList.toggle("btn-danger", liked);
-			btnLike.classList.toggle("btn-outline-danger", !liked);
-			
-			const heartIcon = btnLike.querySelector("i");
-			if(heartIcon) {
-				heartIcon.className = `bi bi-heart${liked ? '-fill' : ''}`
-			}
+			btnLike.classList.remove("btn-danger", "btn-outline-danger")
+			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
 			
 			const likeCountSpan = btnLike.querySelector("span");
 			if(likeCountSpan) {
