@@ -111,7 +111,7 @@
 								<i class="bi bi-heart-fill"></i>
 								<span th:text="${novel.likeCount}"></span>
 								<i class="bi bi-star-fill"></i>
-								<span th:text="${novel.likeCount}"></span>
+								<span th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'">0.0</span>
 							</span>
 							
 						</div>

@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +21,5 @@ public class NovelResponseDto {
 	private Integer state;
 	private List<String> genres;
 	
-	
-	
+	private BigDecimal rating;
 }

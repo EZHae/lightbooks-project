@@ -58,7 +58,8 @@ public class NovelService {
 				novel.getState(),
 				novel.getNovelGenre()
 				.stream().map(novelGenre -> novelGenre.getGenre().getName())
-				.collect(Collectors.toList())
+				.collect(Collectors.toList()),
+				novel.getRating() // 데시멀이라서 stream할 필요없음
 				))
 				.collect(Collectors.toList());
 	}
