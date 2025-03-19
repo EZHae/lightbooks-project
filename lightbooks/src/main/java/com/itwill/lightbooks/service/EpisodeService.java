@@ -193,4 +193,8 @@ public class EpisodeService {
 //        return episode.getNovel().getUserId().equals(userId);
 //    }
 	
+    @Transactional(readOnly = true)
+    public Long getEpisodeCountByNovelId(Long novelId) {
+    	return episodeRepo.countNovelId(novelId);
+    }
 }
