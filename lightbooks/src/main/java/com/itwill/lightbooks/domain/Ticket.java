@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,42 +22,32 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @DynamicInsert
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @NoArgsConstructor
+@Builder
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
 @Entity
-@Table(name = "BOOKMARK")
-public class Bookmark extends BaseTimeEntity {
+@Table(name = "TICKETS")
+public class Ticket {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//관계 매핑
-	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
-	
-	//관계 매핑
-	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "novel_id", nullable = false)
-	private Novel novel;
-	
-	//관계 매핑
-	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "episode_id")
-	private Episode episode;
-	
-	@Column(nullable = false)
-	private Integer type; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
-	
-	@Column(nullable = false)
-	private LocalDateTime accessTime;
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "grade", nullable = false)
+    private Integer grade;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "novel_id")
+    private Novel novel;
+
+    @Column(name = "created_time", nullable = false, updatable = false, insertable = false)
+    private LocalDateTime createdTime;
+
 }

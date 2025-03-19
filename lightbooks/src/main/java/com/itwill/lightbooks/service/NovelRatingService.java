@@ -83,7 +83,7 @@ public class NovelRatingService {
 		return ratingRepo.existsByNovelIdAndUserId(novelId, userId);
 	}
 	
-	
+	// 좋아요한 사용자의 소설을 찾을 때 사용
 	public BigDecimal findRatingByUserAndNovel(Long novelId, Long userId) {
 		return ratingRepo.findRatingByUserAndNovel(novelId, userId).orElse(BigDecimal.ZERO);
 	}

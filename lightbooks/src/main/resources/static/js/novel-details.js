@@ -66,11 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// 기존 별점 조회 (모달창에서)
 	async function getUserRating(novelId, userId) {
-		console.log("📌 전달된 novelId:", novelId);
-	    console.log("📌 전달된 userId:", userId);
+		console.log("전달된 novelId:", novelId);
+	    console.log("전달된 userId:", userId);
 		
 		if (!novelId || !userId) {
-	       console.error("🚨 오류: novelId 또는 userId가 없습니다!", { novelId, userId });
+	       console.error("오류: novelId 또는 userId가 없습니다!", { novelId, userId });
 	       return;
 	   }
 		
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const newLikeCount = isLiked ? parseInt(likeCountSpan.textContent) - 1 : parseInt(likeCountSpan.textContent) + 1;
 		
 		try {
-			const response = await axios.post(`/api/like`, reqBody, {withCredentials: true});
+			const response = await axios.post(`/novel/${novelId}/like?userId=${userId}`, reqBody, {withCredentials: true});
 			console.log(response);
 			
 			if (response.status !== 200) {
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	async function loadLikeCount(novelId, userId) {
 		try {
-			const response = await axios.get(`/api/like/count/${novelId}?userId=${userId}`);
+			const response = await axios.get(`/novel/like/count/${novelId}?userId=${userId}`);
 			const { liked, likeCount } = response.data;
 			
 			const btnLike = document.querySelector("button#btnLike")
