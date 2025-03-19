@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.service.NovelService;
 
 import jakarta.servlet.http.HttpSession;
@@ -42,4 +44,14 @@ public class HomeController {
 		
 	}
 	
+    @GetMapping("/premium/{novelId}")
+	public String premium(@PathVariable(name = "novelId") Long novelId, Model model) {
+		log.info("premium()");
+		
+		Novel novel = novelService.searchById(novelId);
+    	log.info("novels : {}", novel);
+    	
+    	model.addAttribute("novel", novel);
+		return "premium";
+	}
 }

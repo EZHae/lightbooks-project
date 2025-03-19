@@ -2,6 +2,7 @@ package com.itwill.lightbooks.web;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itwill.lightbooks.domain.NovelRating;
 import com.itwill.lightbooks.dto.NovelRatingResponse;
 import com.itwill.lightbooks.service.NovelRatingService;
 
@@ -26,7 +28,7 @@ public class NovelRatingController {
 	
 	// 별점 평균 조회
 	@GetMapping("/{novelId}/rating")
-	public ResponseEntity<NovelRatingResponse> ratingAvg(@PathVariable Long novelId) {
+	public ResponseEntity<NovelRatingResponse> ratingAvg(@PathVariable(name = "novelId") Long novelId) {
 		BigDecimal avgRating  = novelRatingService.readRating(novelId);
 		
 		// 응답 호출
@@ -38,7 +40,7 @@ public class NovelRatingController {
 	
 	// 별점 추가/수정 
 	@PostMapping("/{novelId}/rating")
-	public ResponseEntity<?> insertRating(@PathVariable Long novelId,
+	public ResponseEntity<?> insertRating(@PathVariable(name = "novelId") Long novelId,
 											@RequestBody Map<String, Object> payload) {
 		
 		Long userId = Long.parseLong(payload.get("userId").toString());
@@ -55,8 +57,17 @@ public class NovelRatingController {
 	
 	// 별점을 부여했는가?
 	@GetMapping("/{novelId}/user/{userId}/rating")
-	public ResponseEntity<Boolean> checkUserRating(@PathVariable Long novelId, @PathVariable Long userId) {
+	public ResponseEntity<Boolean> checkUserRating(@PathVariable(name = "novelId") Long novelId, @PathVariable(name = "userId") Long userId) {
 	    boolean hasRated = novelRatingService.hasUserRated(novelId, userId);
 	    return ResponseEntity.ok(hasRated);
+	}
+	
+	// 사용자가 별점 몇점을 부여했는가
+	@GetMapping("/{novelId}/user/{userId}/rating-value")
+	public ResponseEntity<?> getUserRating(@PathVariable(name = "novelId") Long novelId, @PathVariable(name = "userId") Long userId) {
+		// Optional은 있을 수도 있고 없을 수도 있고 
+	    BigDecimal avgRating = novelRatingService.findRatingByUserAndNovel(novelId, userId);
+	    
+	    return ResponseEntity.ok(Map.of("avgRating", avgRating));
 	}
 }

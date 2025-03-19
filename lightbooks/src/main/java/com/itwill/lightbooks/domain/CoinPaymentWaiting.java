@@ -2,6 +2,8 @@ package com.itwill.lightbooks.domain;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +27,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
+//@ToString
 @EqualsAndHashCode
 @Entity
 @Table(name = "COIN_PAYMENT_WAITING")
@@ -35,6 +37,8 @@ public class CoinPaymentWaiting {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@JsonIgnore
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -50,5 +54,16 @@ public class CoinPaymentWaiting {
 	public CoinPaymentWaiting update(int con) {
 		this.con = con;
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+	    return "CoinPaymentWaiting(id=" + id + 
+	           ", userId=" + (user != null ? user.getId() : "null") + 
+	           ", type=" + type + 
+	           ", coin=" + coin + 
+	           ", cash=" + cash + 
+	           ", createdTime=" + createdTime + 
+	           ", con=" + con + ")";
 	}
 }

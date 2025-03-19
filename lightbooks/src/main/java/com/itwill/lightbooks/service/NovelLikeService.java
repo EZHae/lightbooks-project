@@ -50,6 +50,7 @@ public class NovelLikeService {
 		return likeRepo.countByNovel(novel);
 	}
 	
+	// 로그인한 유저가 해당 소설에 좋아요를 했는가?
 	@Transactional(readOnly = true)
 	public boolean existsByUserAndNovel(Long userId, Long novelId) {
 		User user = userRepo.findById(userId).orElseThrow();

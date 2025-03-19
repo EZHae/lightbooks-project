@@ -47,5 +47,10 @@ public class NovelRating {
 	
 	@Column(precision = 3, scale = 1, nullable = false) 
 	private BigDecimal rating; 
+	
+	
+	public BigDecimal getRating() {
+		return rating;
+	}
 
 }

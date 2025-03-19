@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const novelId = btnLike.dataset.novelId;
 	const userId = btnLike.dataset.userId;
 	
-	let isProcessing = false; //중복 요청 방지 변수
-	console.log("소설 아이디: ",novelId);
 	console.log("로그인 유저 아이디: ",userId);
 
 	// 좋아요, 별점 새로 불러오기
@@ -34,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 	
 	// 별점 관련 기능
+	
 	const btnRatingSubmit = document.getElementById('btnRatingSubmit');
 	const stars = document.querySelectorAll('span.star');
 	const selectedRating = document.getElementById('selectedRating');
@@ -60,7 +59,39 @@ document.addEventListener('DOMContentLoaded', () => {
 			updateStarColors(ratingValue);
 		});
 	});
-	
+
+	document.getElementById('openRatingBtn').addEventListener('click', function() {
+		getUserRating(novelId, userId);
+	})
+
+	// 기존 별점 조회 (모달창에서)
+	async function getUserRating(novelId, userId) {
+		console.log("📌 전달된 novelId:", novelId);
+	    console.log("📌 전달된 userId:", userId);
+		
+		if (!novelId || !userId) {
+	       console.error("🚨 오류: novelId 또는 userId가 없습니다!", { novelId, userId });
+	       return;
+	   }
+		
+		try {
+			const response = await axios.get(`/api/${novelId}/user/${userId}/rating-value`)
+			console.log("API 응답 데이터:", response.data);
+			
+			const userRating = response.data.avgRating;
+			initializeUserRating(userRating);
+		} catch(error) {
+			console.error("사용자 별점 조회 실패: ", error);
+		}
+	}
+	function initializeUserRating(userRating) {
+		if(userRating > 0) {
+			ratingValue = userRating; // 현재 선택된 별점 값 
+			updateStarColors(userRating);
+			document.getElementById('selectedRating').value = userRating; // hidden input 값 설정
+		}
+	}
+
 	// 별 색상을 업데이트하는 함수
 	function updateStarColors(value) {
 		console.log(`별 색상 업데이트! 선택된 값: ${value}`);
@@ -127,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			window.isProcessing = false; // 요청 완료 후 다시 요청 가능
 			
-			// 🚀 버튼 활성화 (요청 완료 후)
+			// 버튼 활성화 (요청 완료 후)
 	        btnRatingSubmit.disabled = false;
 	        btnRatingSubmit.textContent = "확인";
 			
@@ -136,9 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	// 사용자 체크 (별점을 남겼는지)
 	async function checkUserRating(novelId, userId){
-		
 		try{
 			const response = await axios.get(`/api/${novelId}/user/${userId}/rating`);
+			console.log("API 응답:", response.data);
+			
 			const hasRated = response.data;
 			
 			console.log("사용자가 별점을 남겼는가?", hasRated);
@@ -159,10 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 		
-	
-	
-	
-
 	// 좋아요 요청
 	btnLike.addEventListener('click', async function() {
 		// 비로그인 사용자는 로그인 페이지로 이동
@@ -173,25 +201,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		
 		//중복 요청 방지 (요청이 처리 중이면 클릭 불가능)
-		if (isProcessing) return;
-		isProcessing = true;
+		if (window.isProcessing) return;
+		window.isProcessing = true;
+		
+		// 연속 입력 방지
+		btnLike.disabled = true;
 		
 		const reqBody = {novelId, userId};
 		
-		
 		// UI를 먼저 업데이트하여 즉각 반응하도록 수정
-		const heartIcon = btnLike.querySelector("i");
 		const likeCountSpan = btnLike.querySelector("span");
-		
 		const isLiked = btnLike.classList.contains("btn-danger"); // 현재 좋아요 여부
 		const newLikeCount = isLiked ? parseInt(likeCountSpan.textContent) - 1 : parseInt(likeCountSpan.textContent) + 1;
-		
-		
-		// 반응 속도
-		btnLike.classList.toggle("btn-danger", !isLiked);
-		btnLike.classList.toggle("btn-outline-danger", isLiked);
-		heartIcon.className = `bi bi-heart${!isLiked ? '-fill' : ''}`;
-		likeCountSpan.textContent = newLikeCount;
 		
 		try {
 			const response = await axios.post(`/api/like`, reqBody, {withCredentials: true});
@@ -204,28 +225,24 @@ document.addEventListener('DOMContentLoaded', () => {
 			const { liked, likeCount } = response.data;
 			
 			// 좋아요 상태 업데이트
-			btnLike.classList.toggle("btn-danger", liked);
-			btnLike.classList.toggle("btn-outline-danger", !liked);
-			heartIcon.className = `bi bi-heart${liked ? '-fill' : '' }`;
+			btnLike.classList.remove("btn-danger", "btn-outline-danger")
+			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
 			likeCountSpan.textContent = likeCount;
 			
+			loadLikeCount(novelId, userId);
 		} catch (error) {
 			console.error("좋아요 처리 중 오류", error);
 			
 			//오류 발생 시 원래 상태로 되돌리기 (UI 복구)
-			btnLike.classList.toggle("btn-danger", isLiked);
-            btnLike.classList.toggle("btn-outline-danger", !isLiked);
-            heartIcon.className = `bi bi-heart${isLiked ? '-fill' : ''}`;
+			btnLike.classList.remove("btn-danger", "btn-outline-danger")
+			btnLike.classList.add(isLiked ? "btn-danger" : "btn-outline-danger")
+			
             likeCountSpan.textContent = isLiked ? newLikeCount + 1 : newLikeCount - 1;
 		} finally {
-            setTimeout(() => { isProcessing = false; }, 500); // 0.5초 동안 추가 클릭 방지
+			isProcessing = false;
+			btnLike.disabled = false;
     	}
-
-		
 	});
-	
-
-	
 	
 	async function loadLikeCount(novelId, userId) {
 		try {
@@ -233,15 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			const { liked, likeCount } = response.data;
 			
 			const btnLike = document.querySelector("button#btnLike")
+			
 			if(!btnLike) return;
 			
-			btnLike.classList.toggle("btn-danger", liked);
-			btnLike.classList.toggle("btn-outline-danger", !liked);
-			
-			const heartIcon = btnLike.querySelector("i");
-			if(heartIcon) {
-				heartIcon.className = `bi bi-heart${liked ? '-fill' : ''}`
-			}
+			btnLike.classList.remove("btn-danger", "btn-outline-danger")
+			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
 			
 			const likeCountSpan = btnLike.querySelector("span");
 			if(likeCountSpan) {
@@ -249,9 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		} catch (error) {
 			console.error("좋아요 개수를 불러오지 못했습니다.");
+		} finally {
+			window.isProcessing = false;
+			btnLike.disabled = false;
 		}
 	}
-	
 });
 
 

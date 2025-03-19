@@ -48,7 +48,7 @@ public class NovelLikeController {
 	
 	// 페이지가 로드될 때 좋아요 개수 갖고오는 메서드
 	@GetMapping("/like/count/{novelId}")
-	public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable Long novelId, @RequestParam Long userId) {
+	public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable(name = "novelId") Long novelId, @RequestParam(name = "userId") Long userId) {
 		
 		boolean liked = novelLikeService.existsByUserAndNovel(userId, novelId);
 		Integer likeCount = novelLikeService.getLikeCount(novelId);

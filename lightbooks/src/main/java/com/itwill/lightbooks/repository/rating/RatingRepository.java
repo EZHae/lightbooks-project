@@ -2,6 +2,7 @@ package com.itwill.lightbooks.repository.rating;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +30,6 @@ public interface RatingRepository extends JpaRepository<NovelRating, Long> {
 
 	Boolean existsByNovelIdAndUserId(Long novelId, Long userId);
 
-	
+	@Query("SELECT n.rating FROM NovelRating n WHERE n.novel.id = :novelId AND n.user.id = :userId")
+	Optional<BigDecimal> findRatingByUserAndNovel(@Param("novelId")Long novelId, @Param("userId")Long userId);
 }
