@@ -29,15 +29,6 @@
 		float: left;
 	}
 	
-	.footer {
-		background: #e9e9ff;
-		height: 250px;
-		display: flex;
-		justify-content: center;
-		color: white;
-		margin-top: 2px;
-	}
-	
 	.navbar-category {
 		top: 60px; /* navbar 높이만큼 조정 */
 		background: white;
@@ -144,19 +135,10 @@
 					    </div>
 			
 					</div>
-					<footer class="footer">
-						<div>
-							<div>
-								<div>
-									<div>
-									</div>
-								</div>					
-							</div>
-						</div>
-					</footer>
-				
 				</div>
 			</div>
+			
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	</body>

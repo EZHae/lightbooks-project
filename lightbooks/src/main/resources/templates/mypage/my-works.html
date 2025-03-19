@@ -47,6 +47,8 @@
 		justify-content: space-evenly;
 		margin-top: 5px;
 	}
+	
+	
 	.nav-work {
 		background: white;
 		height:80px;	
@@ -113,14 +115,18 @@
 								<i class="bi bi-star-fill"></i>
 								<span th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'">0.0</span>
 							</span>
-							
+							<br/>
+							<!-- 장르 -->
+							<span th:each="genre : ${novel.genres}">
+								<span th:text="|웹소설-${genre}|"></span>
+							</span>
 						</div>
 						<div class="novelModifyBtn">
 			                <a class="btn btn-secondary " th:href="@{/novel/modify/{id}(id=${novel.id})}">작품수정</a>
 			                <br/>
 			                <a class="btn btn-secondary mt-2" th:href="@{/novel/{id}/episode/create(id=${novel.id})}">회차작성</a><!-- 추가 -->
 			                <br/>
-			                <a class="btn btn-secondary mt-2" th:href="@{/novel/view}">작품보기</a>
+			                <a class="btn btn-secondary mt-2" th:href="@{/premium/{id}(id=${novel.id})}">전환신청</a>
 			                <br/>
 						</div>
 					</div>
@@ -129,7 +135,7 @@
 			</div>
 		</main>
 		
-		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	</body>

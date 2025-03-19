@@ -3,6 +3,10 @@ package com.itwill.lightbooks.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,12 +15,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.MileagePayment;
+import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
+import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.repository.mileagepayment.MileagePaymentRepository;
+import com.itwill.lightbooks.repository.ticket.TicketRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +36,7 @@ public class UserService implements UserDetailsService {
 
 	private final UserRepository userRepo;
 	private final MileagePaymentRepository mileagePaymentRepo;
+	private final TicketRepository ticketRepo;
 	private final PasswordEncoder passwordEncoder;
 	
 	@Override
@@ -160,6 +168,21 @@ public class UserService implements UserDetailsService {
 		userRepo.save(user);
 		MileagePayment mileagePayment = MileagePayment.builder().userId(user.getId()).type(0).mileage(100L).descrip("출석 적립").build();
 		mileagePaymentRepo.save(mileagePayment);
+	}
+	
+	public Page<MileagePayment> readMileagePaymentByUserId(Long userId, int page, int size, int type) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+		Page<MileagePayment> result = mileagePaymentRepo.findByUserIdAndType(userId, type, pageable);
+		
+		return result;
+	}
+	
+	public void saveMileagePaymentWithGlobalTicket(PaymentRequestDto dto) {
+		MileagePayment mileagePayment = MileagePayment.builder().userId(dto.getUserId()).type(dto.getType()).mileage(dto.getMileage()).descrip(dto.getDescrip()).build();
+		mileagePaymentRepo.save(mileagePayment);
+		
+		Ticket ticket = Ticket.builder().user(searchById(dto.getUserId())).grade(0).build();
+		ticketRepo.save(ticket);
 	}
 	
 }

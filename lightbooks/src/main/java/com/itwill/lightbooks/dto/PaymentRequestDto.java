@@ -13,5 +13,8 @@ public class PaymentRequestDto {
 	private String itemName;
 	private Long coin;
 	private Long cash;
+	private Long mileage;
+	private String descrip;
 	private int type;
+	private int grade;
 }

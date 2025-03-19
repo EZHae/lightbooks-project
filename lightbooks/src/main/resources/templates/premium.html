@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('Premuim Service')}"></head>
+	
+	<style>
+		.top-banner {
+			background: #f7f7f7;
+		}
+		.intro{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			background: #f7f7f7;
+			padding-left: 50px;
+			margin-bottom: 50px;
+		}
+			
+		.top-banner img{
+			display: block;
+			margin: 0 auto;
+			height: 250px;
+			
+		}
+		
+		div.intro p {
+			font-size: 13px;
+		}
+		
+		.bold {
+			font-weight: bold;
+			color : #ff5722; /* 오렌쥐 */
+		}
+		
+		div.premumContent{
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-evenly;
+		}
+		
+		
+		.novelList{
+			display: flex;
+			width: 100%;
+			flex-direction: column;
+			padding: 0 30px;
+		}
+		
+		.my-novel{
+		    background: beige;
+		    display: flex; /* grid에서 flex로 변경 */
+		    flex-direction: row; /* 가로 정렬 유지 */
+		    align-items: center;
+		    justify-content: space-evenly;
+		    width: 100%; /* 한 줄에 하나씩 */
+		    padding: 10px;
+		}
+		
+		.novelContent {
+			width: 800px;
+		
+		}
+		img.coverImg{
+			height:180px;
+		}
+		
+		div.novelContent {
+			margin-left: 50px;
+		}
+		
+		div.indicator {
+			height: 300px;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			background-color: #f5f5f5; /* 배경색 */
+		}
+		
+		.step1, .step2, .step3{
+			display: flex;
+			justify-content: center;
+			background: white;
+			width: 150px;
+			height: 150px;
+			border: 8px solid #ff5722;
+			border-radius : 20px;
+			align-items: center;
+		}
+		
+	</style>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+			<div class="top-banner">
+				<img alt="banner" th:src="@{/images/premium.jpg}">
+			</div>
+			<div class="intro">
+				<p>
+				프리미엄 전환 신청을 해주셔서 감사합니다. 
+				<br/>
+				작가님께서는 신청하신 작품이 <span class="bold">총 10회 이상</span> 연재가 되었는지,
+				 작품 좋아요가 <span class="bold">500이상</span> 되어 있는지 먼저 확인해주시길 바랍니다.
+				</p>
+			</div>
+			
+			<div class="premumContent">
+				<form method="post">
+					<!-- 전환할 작품 하나를 가져옴 -->
+					<div class="novel">
+						<h5>프리미엄 전환 소설</h5>
+						<div class="my-novel">
+							<div class="novelCoverImg">
+								<img class="coverImg" th:src="@{{novel.coverSrc}(novel.coverSrc=${novel.coverSrc})}">
+							</div>
+							<div class="novelContent">
+								<a th:href="@{/novel/{id}(id=${novel.id})}">
+									<b th:text="${novel.title}"></b>
+								</a>
+								
+								<span th:text="${novel.writer}"></span>
+								<br/>
+								
+								<span th:text="${novel.intro}"></span>
+								
+								<br/>
+								<span>
+									<i class="bi bi-heart-fill"></i>
+									<span th:text="${novel.likeCount}"></span>
+									<i class="bi bi-star-fill"></i>
+									<span th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'">0.0</span>
+								</span>
+								<br/>
+								<!-- 장르 -->
+								<span th:each="genre : ${novel.novelGenre}">
+									<span th:text="|웹소설-${genre.genre.name}|"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					
+					<div class="indicator">
+					<!-- 회차 수 -->
+						<div class="step1">
+							회차 1
+						</div>
+					<!-- 해당 작품의 좋아요 개수 -->
+						<div class="step2">
+							좋아요 1
+						</div>
+					
+					<!-- ?? -->
+						<div class="step3">
+							좋아요 1
+						</div>
+					
+					</div>
+					
+					<div>
+						<a class="btn btn-secondary " th:href="@{/novel/my-works(id=${#authentication.principal.id})}">돌아가기</a>
+						<button class="btn btn-success" name="">신청하기</button>
+					</div>
+				</form>
+			</div>
+		</main>
+		
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

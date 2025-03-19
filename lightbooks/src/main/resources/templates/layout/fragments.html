@@ -28,6 +28,15 @@
 					padding: 10px;
 				}
 				
+				.footer {
+					background: #e9e9ff;
+					height: 250px;
+					display: flex;
+					justify-content: center;
+					color: white;
+					margin-top: 2px;
+				}
+				
             	
                 .custom-dropdown {
                     min-width: 300px; /* 원하는 크기로 조절 */
@@ -179,7 +188,7 @@
                                         <span>마일리지</span>
                                         <button class="border-0" id="mileageRefresh"><i class="bi bi-repeat"></i></button>
                                         <strong id="nowMileage" class="flex-grow-1 text-end">0</strong>
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/mileageshop}">
                                             <button class="p-2 ms-2 text-center border rounded-3 wallet-now">교환</button>
                                         </a>
                                     </div>
@@ -207,9 +216,9 @@
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/user/mileagepayment(id=${#authentication.principal.id})}">
                                             <img th:src="@{/images/dropdown_icon_example.jpg}" /> <br>
-                                            선물함
+                                            마일리지
                                         </a>
                                     </div>
                                     <div class="col-4">
@@ -241,13 +250,14 @@
                     </div>
                 </div>
             </div>
-			
+            
             <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
-        
-        
-
+		<footer class="footer" th:fragment="footer">
+			<p>© 2025 LightBooks. All Rights Reserved.</p>
+	  	</footer>	
+	  	
         <!-- 부트스트랩 -->
         <th:block th:fragment="bootstrapJS">
             <script
