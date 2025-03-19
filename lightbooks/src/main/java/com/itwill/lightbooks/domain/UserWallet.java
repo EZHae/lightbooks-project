@@ -1,5 +1,7 @@
 package com.itwill.lightbooks.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +21,6 @@ import lombok.ToString;
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
 @EqualsAndHashCode
 @Entity
 @Table(name = "USER_WALLET")
@@ -29,6 +30,7 @@ public class UserWallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @OneToOne
     @ToString.Exclude
     @JoinColumn(name = "user_id", unique = true) // USER 테이블의 PK와 연결
@@ -38,4 +40,11 @@ public class UserWallet {
 //    private Long userId;
     private Long coin;
     private Long mileage;
+    
+    @Override
+    public String toString() {
+        return "UserWallet(id=" + id + ", coin=" + coin + ", mileage=" + mileage + ")";
+    }
 }
+
+

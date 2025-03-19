@@ -1,9 +1,14 @@
 package com.itwill.lightbooks.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -99,5 +104,19 @@ public class OrderService {
     	CoinPaymentWaiting savedCoinPaymentWaiting = coinPaymentWaitingRepo.save(coinPaymentWaiting);
     	
     	return savedCoinPaymentWaiting;
+    }
+    
+    public Page<CoinPayment> readCoinPaymentByUserId(Long userId, int page, int size, int type) {
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+    	Page<CoinPayment> result = coinPaymentRepo.findByUserIdAndType(userId, type, pageable);
+    	
+    	return result;
+    }
+    
+    public Page<CoinPaymentWaiting> readCoinPaymentWaitingByUserId(Long userId, int page, int size, int type) {
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+    	Page<CoinPaymentWaiting> result = coinPaymentWaitingRepo.findByUserIdAndType(userId, type, pageable);
+    	
+    	return result;
     }
 }

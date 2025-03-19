@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	
+	<style>
+		
+	</style>
+	
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main class="container-md">
+			<div>
+				<div>
+					<h2 class="text-start">코인 충전 내역</h2>
+					<table class="mt-3 table table-bordered table-hover table-striped table-responsive">
+						<thead>
+							<tr class="row">
+								<th class="col-1">구분</th>
+								<th class="col">충전 코인</th>
+								<th class="col">사용 금액</th>
+								<th class="col">충전 일시</th>
+							</tr>
+						</thead>
+						<tbody id="coinChargeTBody">
+						</tbody>
+					</table>
+	                <div id="coinChargePagination">
+	                    <ul class="pagination justify-content-center" id="coinChargePagination">
+	
+	                    </ul>
+	                </div>
+				</div>
+				<div class="mt-4">
+					<h2 class="text-start">작품 구매 내역</h2>
+					<table class="mt-3 table table-bordered table-striped table-hover table-responsive">
+						<thead>
+							<tr class="row">
+								<th class="col-1">구분</th>
+								<th class="col-5">작품명</th>
+								<th class="col-1">회차</th>
+								<th class="col-2">사용 코인</th>
+								<th class="col-3">구매 일시</th>
+							</tr>
+						</thead>
+						<tbody id="buyTBody">
+						</tbody>
+					</table>
+	                <div id="buyPagination">
+	                    <ul class="pagination justify-content-center" id="buyPagination">
+	
+	                    </ul>
+	                </div>
+				</div>
+				<div class="mt-4">
+					<h2 class="text-start d-inline">코인 환불/환전 내역</h2>
+                    <button id="btnReApp" type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#reAppModal">
+                    	환불/환전 신청
+                    </button>
+					<table class="mt-3 table table-bordered table-striped table-hover table-responsive">
+						<thead>
+							<tr class="row">
+								<th class="col-1">구분</th>
+								<th class="col-3">환불/환전 코인</th>
+								<th class="col-4">환불/환전 금액</th>
+								<th class="col-3">환불 일시</th>
+								<th class="col-1">결과</th>
+							</tr>
+						</thead>
+						<tbody id="coinReTBody">
+						</tbody>
+					</table>
+	                <div id="coinRePagination">
+	                    <ul class="pagination justify-content-center" id="coinRePagination">
+	
+	                    </ul>
+	                </div>
+				</div>
+				<div class="mt-4">
+					<h2 class="text-start">후원 내역</h2>
+					<table class="mt-3 table table-bordered table-striped table-hover table-responsive">
+						<thead>
+							<tr class="row">
+								<th class="col-1">구분</th>
+								<th class="col-6">작품명</th>
+								<th class="col-2">후원 코인</th>
+								<th class="col-3">후원 일시</th>
+							</tr>
+						</thead>
+						<tbody id="donationTBody">
+						</tbody>
+					</table>
+	                <div id="donationPagination">
+	                    <ul class="pagination justify-content-center" id="donationPagination">
+	
+	                    </ul>
+	                </div>
+				</div>
+			</div>
+		</main>
+		
+		
+        <!-- 로그인/회원가입 모달-->
+        <div class="modal fade" id="reAppModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">환불/환전 신청</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" th:action="@{/user/signin}">
+                            <div>
+                            	<span>환불 가능 코인</span>
+                            	<strong id="reAppPossibleCoin">0</strong>
+                            </div>
+                            <div class="mt-2">
+                            	<label for="reAppCoin">환불 신청 코인</label>
+                            	<input type="number" id="reAppCoin" class="form-control" min=100 />
+                            </div>
+                            <div>
+                            	<label for="resultCash">환불 금액</label>
+                            	<input type="number" id="resultCash" class="form-control" readonly>
+                            </div>
+                            <div>
+                            	<strong>환불/환전 신청은 100코인부터 가능합니다.</strong> <br>
+                            	<strong>환불/환전은 1코인당 90원으로 신청됩니다.</strong>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id=btnReAppSubmit class="btn btn-danger disabled">환불/환전 신청</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/coin-payment.js}"></script>
+	</body>
+</html>

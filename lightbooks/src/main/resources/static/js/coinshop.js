@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		
 		console.log(coin, cash);
-		const data = {userId, coin, cash}
+		const type = 0;
+		const data = {userId, coin, cash, type}
 		console.log(data);
 		
 		axios.post('/order/kakaopay/ready', data).then(response => {
@@ -125,8 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		const btnTransferApp = document.querySelector('button#btnTransferApp');
 		btnTransferApp.addEventListener('click', () => {
+			const type = 0;
 			const url = '/order/transfer/ready'
-			const data = {userId, coin, cash}
+			const data = {userId, coin, cash, type};
 
 			const result = confirm('결제 신청을 하시겠습니까?');
 			if (result) {

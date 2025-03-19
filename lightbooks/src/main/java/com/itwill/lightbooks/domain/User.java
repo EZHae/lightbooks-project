@@ -6,6 +6,8 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +29,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
+//@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "USERS")
@@ -54,6 +56,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(name = "img_src")
     private String imgSrc;
 
+    @JsonIgnore
     @ToString.Exclude
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserWallet userWallet;
@@ -82,5 +85,20 @@ public class User extends BaseTimeEntity implements UserDetails {
 	//추가(다른 테이블에서 id를 가져가기 위한 메서드 ex)조회수 관련 본인글인지 확인 여부시 필요)
 	public Long getUserId() {
 	    return id;
+	}
+	
+	@Override
+	public String toString() {
+	    return "User(id=" + id + 
+	           ", loginId=" + loginId + 
+	           ", password=********" + // 보안상 비밀번호 숨김 처리
+	           ", nickname=" + nickname + 
+	           ", username=" + username + 
+	           ", gender=" + gender + 
+	           ", year=" + year + 
+	           ", phonenumber=" + phonenumber + 
+	           ", email=" + email + 
+	           ", accessTime=" + accessTime + 
+	           ", imgSrc=" + imgSrc + ")";
 	}
 }
