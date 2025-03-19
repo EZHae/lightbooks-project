@@ -109,10 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(result => {
                             if (!result) return;
 
-                            if (result === "PURCHASED" || result === "FREE") { //구매했거나 무료회차인경우
+                            if (result === "PURCHASED" || result === "FREE") {
                                 window.location.href = episodeLink.getAttribute("href");
                             } else {//구매하지 않았는데 유료회차를 클릭한 경우
-                                alert("유료 회차입니다. 구매 후 이용해주세요.");
+								const ex = document.querySelector('strong#nowCoin').textContent;
+								console.log(ex);
+                                alert(`유료 회차입니다. 구매 후 이용해주세요.${ex}`);
+								
                             }
                         })
                         .catch(error => console.error("오류 발생:", error));

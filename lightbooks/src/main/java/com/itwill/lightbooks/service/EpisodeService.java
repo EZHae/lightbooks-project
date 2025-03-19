@@ -153,7 +153,7 @@ public class EpisodeService {
         return episodeRepo.findFirstByNovelOrderByEpisodeNumAsc(novel);
     }
 	
-	 // 조회수 증가 메서드
+	// 조회수 증가 메서드
     @Transactional
     public void increaseViewCount(Long episodeId) {
         log.info("increaseViewCount(episodeId={})", episodeId);
