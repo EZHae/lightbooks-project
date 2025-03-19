@@ -1,5 +1,10 @@
 package com.itwill.lightbooks.web;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwill.lightbooks.domain.CoinPayment;
+import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
+import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
+import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	
 	private final UserService userService;
+	private final OrderService orderService;
     
     @GetMapping("/signup")
     public void signup() {
@@ -76,6 +86,13 @@ public class UserController {
     	userService.deleteUser(id);
     	
     	return "redirect:/user/signout";
+    }
+    
+    @GetMapping("/coinpayment")
+    public String coinPayment(@RequestParam(name = "id") Long id) {
+    	log.info("coinPayment(id={})", id);
+    	
+    	return "/user/coin-payment";
     }
     
     /* ResponseBody */
@@ -165,5 +182,63 @@ public class UserController {
     public ResponseEntity<String> clearErrorMessage(HttpSession session) {
         session.removeAttribute("errorMessage");
         return ResponseEntity.ok("ok");
+    }
+    
+    @ResponseBody
+    @GetMapping("/coinpayment/read")
+    public ResponseEntity<Page<CoinPayment>> readCoinPayment(@RequestParam(name = "userId") Long userId,
+    	    @RequestParam(name = "page", defaultValue = "0") int page,
+    	    @RequestParam(name = "size", defaultValue = "5") int size,
+    	    @RequestParam(name = "type", defaultValue = "0") int type) {
+    	
+    	Page<CoinPayment> result = orderService.readCoinPaymentByUserId(userId, page, size, type);
+    	log.info("이거보세요.{}", result);
+    	
+        // 페이징 정보와 데이터 함께 전달
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("data", result.getContent());
+//        response.put("totalItems", result.getTotalElements());
+//        response.put("totalPages", result.getTotalPages());
+//        response.put("currentPage", result.getNumber());
+    	return ResponseEntity.ok(result);
+    }
+    
+    @ResponseBody
+    @GetMapping("/coinpaymentwaiting/read")
+    public ResponseEntity<Page<CoinPaymentWaiting>> readCoinPaymentWaiting(@RequestParam(name = "userId") Long userId,
+    	    @RequestParam(name = "page", defaultValue = "0") int page,
+    	    @RequestParam(name = "size", defaultValue = "5") int size,
+    	    @RequestParam(name = "type", defaultValue = "0") int type) {
+    	
+    	Page<CoinPaymentWaiting> result = orderService.readCoinPaymentWaitingByUserId(userId, page, size, type);
+    	log.info("waiting.{}", result);
+    	
+    	result.forEach(dd -> {
+    		log.info("{}", dd);
+    	});
+    	
+        // 페이징 정보와 데이터 함께 전달
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("data", result.getContent());
+//        response.put("totalItems", result.getTotalElements());
+//        response.put("totalPages", result.getTotalPages());
+//        response.put("currentPage", result.getNumber());
+    	return ResponseEntity.ok(result);
+    }
+    
+    
+    @ResponseBody
+    @PostMapping("/coinpayment/reApp")
+    public ResponseEntity<String> coinPaymentReApp(@RequestBody PaymentRequestDto dto) {
+    	log.info("coinPaymentReApp()");
+    	User user = userService.searchById(dto.getUserId());  	
+    	
+    	CoinPayment coinpayment = CoinPayment.builder().userId(dto.getUserId()).coin(dto.getCoin()).cash(dto.getCash()).type(dto.getType()).build();
+    	CoinPaymentWaiting coinpaymentWaiting = CoinPaymentWaiting.builder().user(user).coin(dto.getCoin()).cash(dto.getCash()).type(dto.getType()).con(0).build();
+    	
+    	orderService.saveCoinPayment(coinpayment);
+    	orderService.saveCoinPaymentWaiting(coinpaymentWaiting);
+    	
+    	return ResponseEntity.ok("/");
     }
 }

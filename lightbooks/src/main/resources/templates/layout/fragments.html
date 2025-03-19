@@ -105,7 +105,7 @@
 
                     <!-- 로그인/회원가입 모달 생성 버튼 -->
                     <div sec:authorize="isAnonymous()">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signModal" ma>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signModal">
                             <i class="bi bi-person-fill"></i>
                         </button>
                     </div>
@@ -201,7 +201,7 @@
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/user/coinpayment(id=${#authentication.principal.id})}">
                                             <img th:src="@{/images/dropdown_icon_example.jpg}" /> <br>
                                             코인 내역
                                         </a>
@@ -245,6 +245,8 @@
             <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
+        
+        
 
         <!-- 부트스트랩 -->
         <th:block th:fragment="bootstrapJS">

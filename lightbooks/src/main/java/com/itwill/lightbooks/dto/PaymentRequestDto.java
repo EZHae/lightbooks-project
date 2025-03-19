@@ -13,4 +13,5 @@ public class PaymentRequestDto {
 	private String itemName;
 	private Long coin;
 	private Long cash;
+	private int type;
 }

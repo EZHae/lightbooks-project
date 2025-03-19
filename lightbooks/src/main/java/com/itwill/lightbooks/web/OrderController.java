@@ -51,7 +51,7 @@ public class OrderController {
 		
 		log.info("tid={}, userId={}, partnerOrderId={}", readyResponse.getTid(), dto.getUserId(), partnerOrderId);
 		
-		CoinPayment coinPayment = CoinPayment.builder().userId(dto.getUserId()).type(0).coin(dto.getCoin()).cash(dto.getCash()).build();
+		CoinPayment coinPayment = CoinPayment.builder().userId(dto.getUserId()).type(dto.getType()).coin(dto.getCoin()).cash(dto.getCash()).build();
 		
 		session.setAttribute("coinPayment", coinPayment);
 		
@@ -84,7 +84,7 @@ public class OrderController {
 		log.info("tranferReady(PaymentRequestDto={})", dto);
 		User user = userService.searchById(dto.getUserId()); 
 		
-		CoinPaymentWaiting coinPaymentWaiting = CoinPaymentWaiting.builder().user(user).type(0).coin(dto.getCoin()).cash(dto.getCash()).con(0).build();
+		CoinPaymentWaiting coinPaymentWaiting = CoinPaymentWaiting.builder().user(user).type(dto.getType()).coin(dto.getCoin()).cash(dto.getCash()).con(0).build();
 		log.info("coinPaymentWaiting={}", coinPaymentWaiting);
 		orderService.saveCoinPaymentWaiting(coinPaymentWaiting);
 			
