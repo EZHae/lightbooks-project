@@ -130,6 +130,14 @@ public class NovelService {
 		return result.map(NovelListItemDto::fromEntity);
 	}
 	
-	//
+	//추가
+	// 소설 작성자 여부 확인 메서드
+    public boolean isUserOwnerOfNovel(Long novelId, Long userId) {
+        Novel novel = novelRepo.findById(novelId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 소설을 찾을 수 없습니다. ID: " + novelId));
+
+        // Novel의 userId와 현재 사용자의 userId 비교
+        return novel.getUserId().equals(userId);
+    }
 
 }

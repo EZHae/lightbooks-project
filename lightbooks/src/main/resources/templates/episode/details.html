@@ -1,87 +1,255 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${episode.title} + ' - ' + ${episode.novel.title}">회차 상세 보기</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-      .episode-container {
-            max-width: 800px;
-            margin: 20px auto; 
-            padding: 20px calc(20px + 17px) 20px 20px;  
-            overflow-y: scroll;
-            height: 70vh; 
-            background-color: white; 
-            box-sizing: border-box; 
- 		} 
-
-       .episode-title-main { 
-           font-size: 2rem; 
-           font-weight: bold; 
-           margin-bottom: 0.5rem; 
-           text-align: center; 
-       } 
-
-       .episode-title-sub { 
-           font-size: 1.5rem; 
-           font-weight: bold; 
-           margin-bottom: 0rem; 
-           text-align: center; 
-           color: #6c757d; 
-       } 
-
-       .episode-stage-sub { 
-           font-size: 1.2rem; 
-           font-weight: bold; 
-           margin-bottom: 1rem; 
-           text-align: center; 
-           color: #6c757d; 
-       } 
-
-       .episode-content { 
-           white-space: pre-wrap; 
-           word-wrap: break-word; 
-           line-height: 1.6; 
-           font-family: 'Nanum Gothic', sans-serif; 
-       } 
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="episode-container">
-        <h1 class="episode-title-main" th:text="${episode.novel.title}">소설 제목</h1>
-        <h2 class="episode-title-sub" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></h2>
-        <h3 class="episode-stage-sub" th:text="${episode.title}"></h3>
-
-        <hr>
-
-        <div class="episode-content" th:utext="${episode.content}"></div>
-
-        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <a th:if="${previousEpisodeId != null}"
-			   th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${previousEpisodeId})}"
-			   class="btn btn-secondary">이전 화</a>
+    <head>
+        <title th:text="${episode.title} + ' - ' + ${episode.novel.title}">회차 상세 보기</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+        <style>
+            /* 기본 설정 */
+			html, body {
+			    margin: 0;
+			    padding: 0;
+			    overflow-y: auto;
+			    height: 100%;
+			    background-color: #ffffff;
+			    font-family: 'Nanum Gothic', sans-serif;
+			}
 			
-			 <a th:if="${nextEpisodeId != null}"
-			    th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
-			    class="btn btn-secondary">다음 화</a>
+			/* 상단 바 스타일 */
+			.global-menu-bar {
+			    position: fixed;
+			    top: 0;
+			    left: 0;
+			    width: 100%;
+			    height: 50px;
+			    background-color: #ffffff; /* 메뉴바 배경: 항상 흰색 */
+			    color: #000000; /* 메뉴바 텍스트: 항상 검정색 */
+			    display: flex;
+			    align-items: center;
+			    justify-content: space-between;
+			    padding: 0 20px;
+			    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 입체감 추가 */
+			    z-index: 1000;
+			}
+			
+			.global-menu-bar button {
+			    background-color: #e9ecef;
+			    color: #000000;
+			    border: 1px solid #ced4da;
+			    padding: 8px 15px;
+			    border-radius: 5px;
+			    cursor: pointer;
+			}
+			
+			.global-menu-bar button:hover {
+			    background-color: #dee2e6; /* 버튼 호버 시 밝은 회색 */
+			}
+			
+			/* 본문 제목 스타일 */
+			.episode-title-main {
+			    font-size: 2.5rem; /* 제목 크기 */
+			    font-weight: bold;
+			    margin-bottom: 0.5rem;
+			    text-align: center; /* 가운데 정렬 */
+			}
+			
+			.episode-title-sub {
+			    font-size: 1.8rem;
+			    font-weight: bold;
+			    margin-bottom: 0.3rem;
+			    text-align: center; /* 가운데 정렬 */
+			}
+			
+			.episode-stage-sub {
+			    font-size: 1.5rem;
+			    font-weight: 400;
+			    margin-bottom: 1rem;
+			    text-align: center; /* 가운데 정렬 */
+			}
+			
+			/* 본문 스타일 */
+			.episode-container {
+			    max-width: 800px;
+			    margin: 70px auto 20px auto;
+			    padding: 20px;
+			    background-color: white;
+			    box-sizing: border-box;
+			}
+			
+			.episode-content {
+			    white-space: pre-wrap; /* 줄바꿈 및 공백 유지 */
+			    word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
+			    line-height: 1.8; /* 줄 간격 */
+			    font-size: 1.1rem; /* 텍스트 크기 */
+			    font-family: 'Nanum Gothic', sans-serif;
+			    color: #333333; /* 본문 텍스트 색상 */
+			}
+			
+			/* 뷰어 설정 버튼 */
+			.viewer-settings-icon {
+			    position: fixed;
+			    bottom: 20px;
+			    right: 20px;
+			    background-color: #f8f9fa;
+			    border: 1px solid #ced4da;
+			    border-radius: 50%;
+			    width: 50px;
+			    height: 50px;
+			    display: flex;
+			    align-items: center;
+			    justify-content: center;
+			    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			    cursor: pointer;
+			    z-index: 1100;
+			}
+			
+			.viewer-settings-icon:hover {
+			    background-color: #dee2e6;
+			}
+			
+			/* 뷰어 설정 팝업 */
+			.viewer-settings-popup {
+			    position: fixed;
+			    bottom: 80px;
+			    right: 20px;
+			    background-color: #fff; /* 배경 흰색 */
+			    border: 1px solid #ced4da;
+			    border-radius: 8px;
+			    padding: 20px;
+			    width: 300px;
+			    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+			    display: none; /* 초기 상태 숨김 */
+			    z-index: 1101;
+			}
+			
+			.viewer-settings-popup label {
+			    font-weight: bold;
+			    margin-bottom: 10px;
+			    display: block;
+			    color: #000000; /* 텍스트 검정색으로 설정 */
+			}
+			
+			.viewer-settings-popup input[type="radio"] {
+			    margin-right: 5px;
+			}
+			
+			.viewer-settings-popup button {
+			    background-color: #2b78e4;
+			    color: #ffffff;  /* 버튼 텍스트 검정 */
+			    border: 1px solid #1c5dbf;
+			    padding: 10px 20px;
+			    border-radius: 5px;
+			    font-weight: bold;
+			    cursor: pointer;
+			}
+			
+			.viewer-settings-popup button:hover {
+			    background-color: #1c5dbf; /* 호버 시 더 짙은 파란색 */
+    			border: 1px solid #143f91; /* 테두리: 더 짙은 파란색 */
+			}
+			
+			/* 다크모드 테마 */
+			.dark-mode {
+			    background-color: #121212; /* 다크모드 배경 */
+			    color: #ffffff; /* 기본 텍스트 색상 */
+			}
+			
+			/* 다크모드에서 본문 스타일 */
+			.dark-mode .episode-container {
+			    background-color: #121212; /* 어두운 배경 */
+			    color: #ffffff; 
+			}
+			
+			.dark-mode .episode-container .episode-content {
+			    color: #ffffff !important; /* 다크모드에서 텍스트 흰색으로 고정 */
+			}
+			
+			/* 이전화, 다음화, 수정 버튼 */
+			.btn-secondary,
+			.btn-primary {
+			    color: #ffffff !important; /* 버튼 텍스트 흰색 */
+			    background-color: #444444; /* 버튼 배경 어두운 회색 */
+			    border: 1px solid #666666;
+			}
+			
+			.btn-secondary:hover,
+			.btn-primary:hover {
+			    background-color: #555555; /* 호버 시 밝은 회색 */
+			}
+			
+			/* 다크모드에서 메뉴바 기본 스타일 유지 */
+			.dark-mode .global-menu-bar {
+			    background-color: #ffffff; /* 항상 흰색 배경 유지 */
+			    color: #000000; /* 항상 검정 텍스트 유지 */
+			}
+			
+			.dark-mode .global-menu-bar a {
+			    color: inherit; /* 기본 텍스트 색상 유지 */
+			}
+			
+			.dark-mode .global-menu-bar button {
+			    background-color: #e9ecef; /* 항상 동일한 버튼 배경 */
+			    color: #000000; /* 항상 검정 텍스트 유지 */
+			    border: 1px solid #ced4da;
+			}
+			            
+        </style>
+    </head>
+    <body>
+        <!-- 상단 메뉴바 -->
+        <div class="global-menu-bar">
+            <h1 style="font-size: 1.2rem; margin: 0;">
+                <a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}" style="text-decoration: none; color: inherit;">
+                    <i class="bi bi-house"></i> <span th:text="${episode.novel.title}">소설 제목</span>
+                </a>
+            </h1>
+            <div>
+                <button>가로보기</button>
+                <button>댓글</button>
+            </div>
         </div>
-        <!-- 수정버튼 작성자만 보이게  -->
-        <div th:if="${episode.novel.userId eq #authentication.principal.id}">
-			<a class="btn btn-primary btn-sm" th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">수정</a>
-        </div>
-        
-        <div>
-			<a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}">뒤로가기</a>
-        </div>
-    </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="/js/episode-listOfNovelDetails.js"></script>
-</body>
+        <!-- 본문 -->
+        <div class="container">
+            <div class="episode-container">
+                <h1 class="episode-title-main" th:text="${episode.novel.title}">소설 제목</h1>
+                <h2 class="episode-title-sub" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></h2>
+                <h3 class="episode-stage-sub" th:text="${episode.title}"></h3>
+                <hr>
+                <div class="episode-content" th:utext="${episode.content}"></div>
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <a th:if="${previousEpisodeId != null}"
+                        th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${previousEpisodeId})}"
+                        class="btn btn-secondary">이전 화</a>
+                    <a th:if="${nextEpisodeId != null}"
+                        th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
+                        class="btn btn-secondary">다음 화</a>
+                </div>
+                <div th:if="${episode.novel.userId eq #authentication.principal.id}">
+                    <a class="btn btn-primary btn-sm" th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">수정</a>
+                </div>
+                <div>
+                    <a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}">뒤로가기</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 뷰어 설정 버튼 -->
+        <div class="viewer-settings-icon" id="viewer-settings-icon">
+            <i class="bi bi-gear-fill"></i>
+        </div>
+
+        <!-- 뷰어 설정 팝업 -->
+        <div class="viewer-settings-popup" id="viewer-settings-popup">
+            <label>테마 설정</label>
+            <input type="radio" name="theme" value="light" checked> 라이트 모드<br>
+            <input type="radio" name="theme" value="dark"> 다크 모드<br><br>
+            <button id="apply-settings" class="btn btn-primary btn-sm">적용</button>
+        </div>
+
+        <script src="/js/episode-details.js"></script>
+    </body>
 </html>
+
