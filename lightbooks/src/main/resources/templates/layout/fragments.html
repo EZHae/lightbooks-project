@@ -28,6 +28,15 @@
 					padding: 10px;
 				}
 				
+				.footer {
+					background: #e9e9ff;
+					height: 250px;
+					display: flex;
+					justify-content: center;
+					color: white;
+					margin-top: 2px;
+				}
+				
             	
                 .custom-dropdown {
                     min-width: 300px; /* 원하는 크기로 조절 */
@@ -241,11 +250,13 @@
                     </div>
                 </div>
             </div>
-			
+            
             <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
-
+		<footer class="footer" th:fragment="footer">
+			<p>© 2025 LightBooks. All Rights Reserved.</p>
+	  	</footer>	
         <!-- 부트스트랩 -->
         <th:block th:fragment="bootstrapJS">
             <script

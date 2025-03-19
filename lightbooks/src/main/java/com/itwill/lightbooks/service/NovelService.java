@@ -69,6 +69,8 @@ public class NovelService {
 		log.info("searchId()");
 		Novel novel = novelRepo.findById(id).orElseThrow();
 		
+		String genre = novel.getNovelGenre().isEmpty() ? "장르 없음" : novel.getNovelGenre().get(0).getGenre().getName();
+		log.info("장르2 : {}", genre);
 		return novel;
 	}
 	
@@ -100,6 +102,7 @@ public class NovelService {
 				.map(genre -> NGenre.builder()
 						.novel(novel)
 						.genre(genre)
+						.isMain(1)
 						.build())
 				.collect(Collectors.toList());
 		
@@ -141,4 +144,12 @@ public class NovelService {
         return novel.getUserId().equals(userId);
     }
 
+    public String getMainGenre(Novel novel) {
+   	return novel.getNovelGenre()
+    			.stream()
+    			.filter(novelGenre -> novelGenre.getIsMain() == 1)
+    			.map(novelGenre -> novelGenre.getGenre().getName())
+    			.findFirst()
+    			.orElse("장르없음");
+    } 
 }
