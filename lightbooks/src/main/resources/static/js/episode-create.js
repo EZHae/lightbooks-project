@@ -16,8 +16,23 @@
 	
 	function checkEpisodeNum() {
 	    const novelId = document.querySelector('input[name="novelId"]').value;
+	    const categorySelect = document.getElementById("category"); // 카테고리 선택
 	    const episodeNum = document.getElementById("episodeNum").value;
-	
+
+	    // 공지사항일 경우 로직 실행하지 않음
+	    if (categorySelect.value === '0') { // category가 '공지'인 경우
+	        document.getElementById("episodeForm").submit(); // 바로 폼 제출
+	        return; // 함수 종료
+	    }
+		
+		// 회차 번호가 비어 있거나 공백인 경우 처리
+		if (!episodeNum || episodeNum.trim() === "") {
+			alert("회차 번호를 입력하세요."); // 사용자에게 경고 메시지
+			document.getElementById("episodeNum").focus();
+			return; // 함수 종료
+		}
+
+	    // 공지사항이 아닌 경우에만 회차 번호 확인
 	    fetch(`/novel/${novelId}/episode/api/check-episode-num?novelId=${novelId}&episodeNum=${episodeNum}`)
 	        .then(response => response.json())
 	        .then(exists => {

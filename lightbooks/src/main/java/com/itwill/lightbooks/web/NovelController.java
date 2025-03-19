@@ -6,6 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.EpisodeListDto;
 import com.itwill.lightbooks.dto.NovelCreateDto;
 import com.itwill.lightbooks.dto.NovelListItemDto;
@@ -65,6 +71,21 @@ public class NovelController {
             @RequestParam(name = "page", defaultValue = "0") int pageNo,
             HttpServletRequest request) {
        log.info("소설 상세정보 페이지: {}",id);
+       
+       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+       if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+           throw new IllegalStateException("로그인이 필요합니다."); // 로그인되지 않은 사용자 처리
+       }
+
+       // 현재 로그인된 사용자 ID 가져오기
+       User currentUser = (User) auth.getPrincipal(); // User 엔터티로 캐스팅
+       Long currentUserId = currentUser.getUserId();
+
+       // 작성자 여부 확인
+       boolean isOwner = novelService.isUserOwnerOfNovel(id, currentUserId);
+       model.addAttribute("isOwner", isOwner); // 작성자 여부를 모델에 추가
+
        
        Novel novel = novelService.searchById(id);
        log.info("nove id = {}",novel);

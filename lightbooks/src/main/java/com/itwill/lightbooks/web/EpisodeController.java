@@ -25,10 +25,12 @@ import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.EpisodeCreateDto;
 import com.itwill.lightbooks.dto.EpisodeUpdateDto;
+import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 import com.itwill.lightbooks.service.UserService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,7 @@ public class EpisodeController {
 	
 	private final EpisodeService epiService;
 	private final NovelService novelService;
+	private final BookmarkService bookmarkService;
 
 	@GetMapping("/create")
 	public String createEpisode(@PathVariable Long novelId, Model model) {
@@ -99,7 +102,7 @@ public class EpisodeController {
         	
         	// 현재 로그인한 사용자 정보 가져오기
             Object principal = authentication.getPrincipal();
-            Long currentUserId = null; // 또는 String
+            Long currentUserId = null;
             if (principal instanceof User) {
                 currentUserId = ((User) principal).getUserId();
                 System.out.println("현재 로그인된 사용자 pk(id): " + currentUserId);
@@ -182,6 +185,40 @@ public class EpisodeController {
         boolean exists = epiService.doesEpisodeNumExist(novelId, episodeNum);
         return ResponseEntity.ok(exists);
     }
-
 	
+	// 유료회차 구매 여부 확인
+	@GetMapping("/{episodeId}/check")
+	@ResponseBody
+	public ResponseEntity<String> checkEpisode(@PathVariable Long novelId, @PathVariable Long episodeId) {
+		// 인증 정보 확인
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof User)) {
+	        return ResponseEntity.status(401).body("로그인이 필요합니다.");
+	    }
+
+	    // 현재 로그인된 사용자 ID 가져오기
+	    Long currentUserId = ((User) auth.getPrincipal()).getUserId();
+	    log.info("현재 로그인된 사용자 ID: " + currentUserId);
+
+	    try {
+	        Episode episode = epiService.getEpisodeById(episodeId);
+
+	        // 무료 회차 확인
+	        if (episode.getCategory() == 1) {
+	            return ResponseEntity.ok("FREE");
+	        }
+
+	        // 유료 회차 구매 여부 확인
+	        boolean purchased = bookmarkService.isPurchasedByUser(currentUserId, novelId, episodeId);
+	        if (purchased) {
+	            return ResponseEntity.ok("PURCHASED");
+	        }
+
+	        // 구매되지 않은 상태
+	        return ResponseEntity.status(403).body("NOT_PURCHASED");
+	    } catch (EntityNotFoundException e) {
+	        return ResponseEntity.status(404).body("해당 회차를 찾을 수 없습니다.");
+	    }
+	}
+
 }
