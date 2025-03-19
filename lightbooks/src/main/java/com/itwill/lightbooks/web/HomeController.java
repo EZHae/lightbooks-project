@@ -54,4 +54,9 @@ public class HomeController {
     	model.addAttribute("novel", novel);
 		return "premium";
 	}
+    
+    @GetMapping("/mileageshop")
+    public void mileageshop() {
+    	log.info("mileageshop");
+    }
 }

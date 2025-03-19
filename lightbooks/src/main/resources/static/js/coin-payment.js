@@ -58,8 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				console.error(error);
 			})
 		}
-
-
 	}
 	
 	// 충전 리스트
