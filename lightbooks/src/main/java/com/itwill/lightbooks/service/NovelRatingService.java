@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -80,5 +81,10 @@ public class NovelRatingService {
 	// 현재 사용자가 해당 소설에 별점을 부여했는지 여부
 	public Boolean hasUserRated(Long novelId, Long userId) {
 		return ratingRepo.existsByNovelIdAndUserId(novelId, userId);
+	}
+	
+	
+	public BigDecimal findRatingByUserAndNovel(Long novelId, Long userId) {
+		return ratingRepo.findRatingByUserAndNovel(novelId, userId).orElse(BigDecimal.ZERO);
 	}
 }
