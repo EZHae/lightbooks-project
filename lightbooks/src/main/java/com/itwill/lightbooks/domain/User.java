@@ -55,6 +55,9 @@ public class User extends BaseTimeEntity implements UserDetails {
     
     @Column(name = "img_src")
     private String imgSrc;
+    
+    @Column(name = "today_check")
+    private Integer todayCheck;
 
     @JsonIgnore
     @ToString.Exclude
@@ -78,6 +81,12 @@ public class User extends BaseTimeEntity implements UserDetails {
 	
 	public User updatePassword(String password) {
 		this.password = password;
+		
+		return this;
+	}
+	
+	public User updateTodayCheck(int todayCheck) {
+		this.todayCheck = todayCheck;
 		
 		return this;
 	}

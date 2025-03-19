@@ -10,11 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwill.lightbooks.domain.MileagePayment;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
+import com.itwill.lightbooks.repository.mileagepayment.MileagePaymentRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService implements UserDetailsService {
 
 	private final UserRepository userRepo;
+	private final MileagePaymentRepository mileagePaymentRepo;
 	private final PasswordEncoder passwordEncoder;
 	
 	@Override
@@ -36,6 +39,13 @@ public class UserService implements UserDetailsService {
 		Optional<User> user = userRepo.findByLoginId(loginId);
 		log.info("{}", user);
 		if (user.isPresent()) {
+			User loginUser = user.get();
+			
+			int todayCheck = loginUser.getTodayCheck();
+			if (todayCheck == 0) {
+				updateCheck(loginUser);
+			}
+			
 			return user.get();
 		} else {
 			throw new UsernameNotFoundException(loginId + "과 일치하는 사용자 없음");
@@ -144,4 +154,12 @@ public class UserService implements UserDetailsService {
 	public void deleteUser(Long id) {
 		userRepo.deleteById(id);
 	}
+	
+	public void updateCheck(User user) {
+		user.updateTodayCheck(1);
+		userRepo.save(user);
+		MileagePayment mileagePayment = MileagePayment.builder().userId(user.getId()).type(0).mileage(100L).descrip("출석 적립").build();
+		mileagePaymentRepo.save(mileagePayment);
+	}
+	
 }

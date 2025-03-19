@@ -158,7 +158,7 @@ public class UserController {
     	return ResponseEntity.ok(result);
     }
     
-    
+    /*
     @ResponseBody
     @GetMapping("/getUserWallet")
     public ResponseEntity<Long> getUserWallet(@RequestParam(name = "userId") Long userId,
@@ -174,6 +174,19 @@ public class UserController {
     	} else {
     		return ResponseEntity.ok(userWallet.getMileage());
     	}
+    }
+    */
+    
+    @ResponseBody
+    @GetMapping("/getUserWallets")
+    public ResponseEntity<UserWallet> getUserWallets(@RequestParam(name = "userId") Long userId) {
+    	log.info("getUserWallet?userId");
+    	log.info("userId={}", userId);
+    	
+    	UserWallet userWallet = userService.SearchUserWalletByUserId(userId);
+    	log.info("잉userWallet={}", userWallet);
+    	
+    	return ResponseEntity.ok(userWallet);
     }
     
     // Servlet 또는 Controller에서 세션에서 errorMessage를 제거하는 코드
