@@ -54,7 +54,7 @@ public class Bookmark extends BaseTimeEntity {
 	private Episode episode;
 	
 	@Column(nullable = false)
-	private Integer div; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
+	private Integer type; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
 	
 	@Column(nullable = false)
 	private LocalDateTime accessTime;

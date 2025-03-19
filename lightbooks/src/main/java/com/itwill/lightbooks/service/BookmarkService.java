@@ -15,6 +15,6 @@ public class BookmarkService {
 	
 	// 유료 회차 구매 여부 확인
     public boolean isPurchasedByUser(Long userId, Long novelId, Long episodeId) {
-        return bookmarkRepo.existsByUserIdAndNovelIdAndEpisodeIdAndDiv(userId, novelId, episodeId, 2); // div=2: 구매 작품
+        return bookmarkRepo.existsByUserIdAndNovelIdAndEpisodeIdAndType(userId, novelId, episodeId, 2); // type=2: 구매 작품
     }
 }

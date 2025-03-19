@@ -28,11 +28,9 @@ import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
-import com.itwill.lightbooks.service.UserService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
