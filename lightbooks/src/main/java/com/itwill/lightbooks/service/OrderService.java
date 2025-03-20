@@ -13,15 +13,22 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
+import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.dto.CoinApproveResponse;
 import com.itwill.lightbooks.dto.CoinReadyResponse;
+import com.itwill.lightbooks.dto.EpisodeBuyDto;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentRepository;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentWaitingRepository;
+import com.itwill.lightbooks.repository.episode.EpisodeRepository;
+import com.itwill.lightbooks.repository.novel.NovelRepository;
+import com.itwill.lightbooks.repository.ticketpayment.TicketPaymentRepository;
 import com.itwill.lightbooks.utils.SessionUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +42,9 @@ public class OrderService {
 	private final RestTemplate restTemplate;
 	private final CoinPaymentRepository coinPaymentRepo;
 	private final CoinPaymentWaitingRepository coinPaymentWaitingRepo;
+	private final TicketPaymentRepository ticketPaymentRepo;
+	private final NovelRepository novelRepo;
+	private final EpisodeRepository epiRepo;
 	
     private final String SECRET_KEY = "DEV_SECRET_KEY DEVEE3295B3CF7D02C946B4565AD192895823EB5";
     private final String CONTENT_TYPE = "application/json";
@@ -100,23 +110,59 @@ public class OrderService {
     	return savedCoinPayment;
     }
     
+    public CoinPayment saveCoinPaymentFromEpisodeBuyDto(EpisodeBuyDto dto) {
+    	CoinPayment coinpayment = CoinPayment.builder()
+    			.userId(dto.getUserId())
+    			.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
+    			.episodeId(dto.getEpisodeId())
+    			.coin(dto.getCoin())
+    			.type(1).build();
+    	
+    	CoinPayment savedCoinPayment = coinPaymentRepo.save(coinpayment);
+    	
+    	return savedCoinPayment;
+    }
+    
     public CoinPaymentWaiting saveCoinPaymentWaiting(CoinPaymentWaiting coinPaymentWaiting) {
     	CoinPaymentWaiting savedCoinPaymentWaiting = coinPaymentWaitingRepo.save(coinPaymentWaiting);
     	
     	return savedCoinPaymentWaiting;
     }
     
+    @Transactional
     public Page<CoinPayment> readCoinPaymentByUserId(Long userId, int page, int size, int type) {
+    	log.info("여기 오류");
     	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
     	Page<CoinPayment> result = coinPaymentRepo.findByUserIdAndType(userId, type, pageable);
+        result.getContent().forEach(coinPayment -> {
+        	if (coinPayment.getEpisodeId() != null) {
+        		Integer episodeNum = epiRepo.findById(coinPayment.getEpisodeId()).orElseThrow().getEpisodeNum();
+        		coinPayment.setEpisodeNum(episodeNum);
+        	}
+        	
+//        	coinPayment.setEpisodeNum(epiRepo.findById(coinPayment.getEpisodeId()).orElseThrow().getEpisodeNum());
+        });
     	
     	return result;
     }
     
+    @Transactional
     public Page<CoinPaymentWaiting> readCoinPaymentWaitingByUserId(Long userId, int page, int size, int type) {
     	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
     	Page<CoinPaymentWaiting> result = coinPaymentWaitingRepo.findByUserIdAndType(userId, type, pageable);
     	
     	return result;
+    }
+    
+    public TicketPayment saveTicketPaymentFromEpisodeBuyDto(EpisodeBuyDto dto, Long ticketId) {
+    	TicketPayment ticketPayment = TicketPayment.builder()
+    			.ticketId(ticketId)
+    			.userId(dto.getUserId())
+    			.novelId(dto.getNovelId())
+    			.episodeId(dto.getEpisodeId()).build();
+    	
+    	TicketPayment savedTicketPayment = ticketPaymentRepo.save(ticketPayment);
+    	
+    	return savedTicketPayment;
     }
 }

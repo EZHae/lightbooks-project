@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.lightbooks.domain.Bookmark;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.dto.EpisodeBuyDto;
 import com.itwill.lightbooks.repository.bookmark.BookmarkRepository;
+import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
@@ -24,10 +26,24 @@ public class BookmarkService {
 	private final BookmarkRepository bookmarkRepo;
 	private final UserRepository userRepo;
 	private final NovelRepository novelRepo;
+	private final EpisodeRepository epiRepo;
 	
 	// 유료 회차 구매 여부 확인
     public boolean isPurchasedByUser(Long userId, Long novelId, Long episodeId) {
         return bookmarkRepo.existsByUserIdAndNovelIdAndEpisodeIdAndType(userId, novelId, episodeId, 2); // type=2: 구매 작품
+    }
+    
+    // 회차를 구매했을 때 북마크 저장 from EpisodeBuyDto
+    public Bookmark saveBookmarkFromEpisodeBuyDto(EpisodeBuyDto dto) {
+    	Bookmark bookmark = Bookmark.builder()
+    			.user(userRepo.findById(dto.getUserId()).orElseThrow())
+    			.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
+    			.episode(epiRepo.findById(dto.getEpisodeId()).orElseThrow())
+    			.type(2).build();
+    	
+    	Bookmark savedBookmark = bookmarkRepo.save(bookmark);
+    	
+    	return savedBookmark;
     }
     
     

@@ -56,10 +56,9 @@ public class Bookmark{
 	@Column(nullable = false)
 	private Integer type; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
 	
-	@Column(name = "access_time", nullable = false)
+	@Column(name = "access_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime accessTime;
 	
-	@CreatedDate
-	@Column(name = "created_time", nullable = false)
+	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
 }

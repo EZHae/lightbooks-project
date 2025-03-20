@@ -27,6 +27,7 @@ import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.EpisodeListDto;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelItemDto;
 import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
@@ -241,5 +242,14 @@ public class NovelController {
 	public ResponseEntity<Boolean> isLiked(@RequestParam Long userId, @PathVariable Long novelId) {
 		boolean liked = bookmarkService.isLiked(userId, novelId);
 		return ResponseEntity.ok(liked);
+	}
+	
+	// 마일리지 교환에서 사용하려고 만듦
+	@ResponseBody
+	@GetMapping("/paidnobel/get")
+	public ResponseEntity<List<NovelItemDto>> searchPaidNovelByKeyword(@RequestParam String keyword) {
+		List<NovelItemDto> novels = novelService.getPaidNovelByKeyword(keyword);
+		
+		return ResponseEntity.ok(novels);
 	}
 }
