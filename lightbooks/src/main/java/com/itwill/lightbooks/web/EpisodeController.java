@@ -6,11 +6,8 @@ import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +29,7 @@ import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.TicketService;
+import com.itwill.lightbooks.service.UserService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
@@ -48,6 +46,7 @@ public class EpisodeController {
 	private final NovelService novelService;
 	private final BookmarkService bookmarkService;
 	private final OrderService orderService; // COIN_PAYMENT 테이블 생성하기 위함
+	private final UserService userService;
 	private final TicketService ticketService;
 
 	@GetMapping("/create")

@@ -26,10 +26,11 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @Getter
-@ToString(callSuper = true)
+@ToString
 @Entity
 @Table(name = "BOOKMARK")
-public class Bookmark{
+public class Bookmark {
+
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	
+	<style>
+		th, td {
+			text-align: center;
+		}
+	</style>
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
@@ -18,17 +24,23 @@
 							<th>확인</th>
 						</tr>
 					</thead>
-					<tbody th:each="waiting : ${waitings}" th:object="${waiting}">
+					<tbody th:each="gradeReq : ${gradeReqs}" th:object="${gradeReq}">
 						<tr>
 							<td th:text="*{id}"></td>
 							<td th:text="*{user.loginId}"></td>
 							<td th:text="*{user.username}"></td>
-							<td th:text="*{type == 0 ? '코인 충전' : type == 1 ? '코인 사용' : type == 2 ? '코인 환불/환전' : type == 3 ? '작품후원' : ''}"></td>
+							<td th:text="*{type == 0 ? '무료' : '유료'}"></td>
 							<td th:text="*{createdTime}"></td>
-							<td th:text="*{con == 0 ? '대기 중' : '완료'}"></td>
+							<td th:text="*{status == 0 ? '대기 중' : (status == 1 ? '완료' : '거절')}"></td>
 							<td class="text-center">
-								<button th:if="*{con == 0}" th:attr="data-id=*{id}" id="btnCheck" class="btn btn-primary btn-sm">확인</button>
-								<span th:if="*{con == 1}" class="text-success">완료</span>
+								<!-- 상태가 0 이면 확인 버튼 -->
+								<button th:if="*{status == 0}" th:attr="data-id=*{id}" id="btnCheck" class="btn btn-primary btn-sm">확인</button>
+								
+								<!-- 상태가 0 이면 거절 버튼 -->
+								<button th:if="*{status == 0}" th:attr="data-id=*{id}" id="btnCancleCheck" class="btn btn-danger btn-sm">거절</button>
+								
+								<span th:if="*{status == 1}" class="text-success">완료</span>
+								<span th:if="*{status == 2}" class="text-danger">거절</span>
 							</td>
 						</tr>
 					</tbody>
@@ -38,6 +50,6 @@
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-		<script th:src="@{/js/waiting-payment.js}"></script>
+		<script th:src="@{/js/premium-request.js}"></script>
 	</body>
 </html>

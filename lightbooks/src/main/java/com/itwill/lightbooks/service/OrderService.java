@@ -1,9 +1,7 @@
 package com.itwill.lightbooks.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
-import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.dto.CoinApproveResponse;
 import com.itwill.lightbooks.dto.CoinReadyResponse;
@@ -29,7 +26,6 @@ import com.itwill.lightbooks.repository.coinpayment.CoinPaymentWaitingRepository
 import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.ticketpayment.TicketPaymentRepository;
-import com.itwill.lightbooks.utils.SessionUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

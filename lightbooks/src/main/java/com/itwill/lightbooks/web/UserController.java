@@ -263,7 +263,7 @@ public class UserController {
     	
     	return ResponseEntity.ok("/");
     }
-    
+
     @ResponseBody
     @GetMapping("/mileagepayment/read")
     public ResponseEntity<Page<MileagePayment>> readMileagePayment(@RequestParam(name = "userId") Long userId,

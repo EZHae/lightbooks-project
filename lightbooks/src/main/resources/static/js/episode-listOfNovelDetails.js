@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             if (result === "PURCHASED" || result === "FREE") {
                                 window.location.href = episodeLink.getAttribute("href");
-                            } else {//구매하지 않았는데 유료회차를 클릭한 경우
+                            } else {//구매하지 않았는데 유료회차를 클릭한 경우(구매 모달창 뜨게)
 								const ex = document.querySelector('strong#nowCoin').textContent;
 								console.log(ex);
                                 alert(`유료 회차입니다. 구매 후 이용해주세요.${ex}`);
