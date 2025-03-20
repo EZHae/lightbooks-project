@@ -277,11 +277,11 @@ public class UserController {
     }
     
     @ResponseBody
-    @PostMapping("/mileagepayment/app")
+    @PostMapping("/exchange/ticket")
     public ResponseEntity<String> mileagepaymentApp(@RequestBody PaymentRequestDto dto) {
     	log.info("mileagepaymentApp()");
     	
-    	userService.saveMileagePaymentWithGlobalTicket(dto);
+    	userService.saveMileagePaymentWithTicket(dto);
     	
     	return ResponseEntity.ok("/");
     }

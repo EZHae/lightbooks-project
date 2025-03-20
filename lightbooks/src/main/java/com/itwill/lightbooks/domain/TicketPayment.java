@@ -2,17 +2,11 @@ package com.itwill.lightbooks.domain;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.DynamicInsert;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,40 +16,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@DynamicInsert
 @NoArgsConstructor
 @Builder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString(callSuper = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@ToString
+@EqualsAndHashCode
 @Entity
-@Table(name = "NOVEL_GRADE_REQUESTS")
-public class NovelGradeRequest {
-	
+@Table(name = "TICKET_PAYMENT")
+public class TicketPayment {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ToString.Exclude
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column(name = "ticket_id")
+	private Long ticketId;
 	
-	@ToString.Exclude
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "novel_id")
-	private Novel novel;
+	@Column(name = "user_id")
+	private Long userId;
 	
-	private Integer type;
-	private Integer status;
+	@Column(name = "novel_id")
+	private Long novelId;
+	
+	@Column(name = "episode_id")
+	private Long episodeId;
 	
 	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
-	
-	
-	public NovelGradeRequest updateStatus(int status) {
-		this.status = status;
-		return this;
-	}
 }

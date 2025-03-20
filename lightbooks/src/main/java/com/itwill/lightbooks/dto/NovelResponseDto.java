@@ -19,6 +19,7 @@ public class NovelResponseDto {
 	private String coverSrc;
 	private Integer likeCount;
 	private Integer state;
+	private Integer grade;
 	private List<String> genres;
 	
 	private BigDecimal rating;

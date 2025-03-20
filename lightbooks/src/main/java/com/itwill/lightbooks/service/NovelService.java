@@ -15,13 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.lightbooks.domain.Genre;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelItemDto;
 import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
+import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.repository.genre.GenreRepository;
 import com.itwill.lightbooks.repository.novel.NGenreRepository;
+import com.itwill.lightbooks.repository.novel.NovelGradeRequestRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,7 @@ public class NovelService {
 	private final NovelRepository novelRepo;
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
+	private final NovelGradeRequestRepository novelGradeRequestRepo;
 	
 	// 작품 수정 페이지에 데이터를 가져옴
 	public Novel searchByIdWithGenre(Long id) {
@@ -56,6 +61,7 @@ public class NovelService {
 				novel.getCoverSrc(),
 				novel.getLikeCount(),
 				novel.getState(),
+				novel.getGrade(),
 				novel.getNovelGenre()
 				.stream().map(novelGenre -> novelGenre.getGenre().getName())
 				.collect(Collectors.toList()),
@@ -70,7 +76,7 @@ public class NovelService {
 		Novel novel = novelRepo.findById(id).orElseThrow();
 		
 		String genre = novel.getNovelGenre().isEmpty() ? "장르 없음" : novel.getNovelGenre().get(0).getGenre().getName();
-		log.info("장르2 : {}", genre);
+		log.info("장르 : {}", genre);
 		return novel;
 	}
 	
@@ -151,6 +157,31 @@ public class NovelService {
     			.map(novelGenre -> novelGenre.getGenre().getName())
     			.findFirst()
     			.orElse("장르없음");
-    } 
+    }
+
+    // 등급 : 유료/무료를 업데이트
+    @Transactional
+	public void updateNovelGrade(Long novelId, Integer grade) {
+		Novel novelUpdateGrade = novelRepo.findById(novelId).orElseThrow();
+		novelUpdateGrade.updateGrade(grade);
+	}
+
     
+    // 소설 사용자가 해당 소설을 유료 신청되는 NovelGradeRequest 테이블에 데이터를 저장
+    @Transactional
+	public NovelGradeRequest saveGradeRequest(NovelGradeRequest ngReq) {
+		NovelGradeRequest novelGradeRequest = novelGradeRequestRepo.save(ngReq);
+		log.info("유료 신청 : {} ", novelGradeRequest);
+		return novelGradeRequest;
+	}
+
+    
+    // 마일리지 샵에서 사용함
+    public List<NovelItemDto> getPaidNovelByKeyword(String keyword) {
+    	List<Novel> novels = novelRepo.searchPaidAndKeyword(keyword);
+    	
+    	List<NovelItemDto> result = novels.stream().map(NovelItemDto::fromEntity).toList();
+    	
+    	return result;
+    }
 }

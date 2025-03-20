@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.MileagePayment;
+import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
@@ -23,6 +24,7 @@ import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.repository.mileagepayment.MileagePaymentRepository;
+import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.ticket.TicketRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
@@ -38,6 +40,7 @@ public class UserService implements UserDetailsService {
 	private final MileagePaymentRepository mileagePaymentRepo;
 	private final TicketRepository ticketRepo;
 	private final PasswordEncoder passwordEncoder;
+	private final NovelRepository novelRepo;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -177,12 +180,28 @@ public class UserService implements UserDetailsService {
 		return result;
 	}
 	
-	public void saveMileagePaymentWithGlobalTicket(PaymentRequestDto dto) {
-		MileagePayment mileagePayment = MileagePayment.builder().userId(dto.getUserId()).type(dto.getType()).mileage(dto.getMileage()).descrip(dto.getDescrip()).build();
+	public void saveMileagePaymentWithTicket(PaymentRequestDto dto) {
+		MileagePayment mileagePayment = MileagePayment.builder()
+				.userId(dto.getUserId())
+				.type(1)
+				.mileage(dto.getMileage())
+				.descrip(dto.getDescrip()).build();
 		mileagePaymentRepo.save(mileagePayment);
 		
-		Ticket ticket = Ticket.builder().user(searchById(dto.getUserId())).grade(0).build();
-		ticketRepo.save(ticket);
+		int grade = dto.getGrade();
+		
+		if (grade == 0) {
+			Ticket ticket = Ticket.builder()
+				.user(searchById(dto.getUserId()))
+				.grade(dto.getGrade()).build();
+			ticketRepo.save(ticket);
+		} else {
+			Ticket ticket = Ticket.builder()
+				.user(searchById(dto.getUserId()))
+				.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
+				.grade(dto.getGrade()).build();
+			ticketRepo.save(ticket);
+		}
 	}
 	
 }

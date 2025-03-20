@@ -17,19 +17,63 @@
 						    <div class="col border border-black">
 						        <a href="#" id="selectGlobalTicket" class="d-block text-decoration-none text-dark" data-product="자유 이용권" data-price="100 마일리지" data-priceM="100" data-grade="0">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
-						                <span><i class="bi bi-coin"></i> 자유 이용권</span>
+						                <span><i class="bi bi-mastodon"></i> 자유 이용권</span>
 						                <strong>100 마일리지</strong>
 						            </div>
 						        </a>
 						    </div>
 						    <div class="col border border-black ms-3">
-						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-product="작품 이용권" data-price="50 마일리지" data-priceM="50" data-grade="1" data-bs-toggle="modal" data-bs-target="#ticketExchangeModal">
+						        <a href="#" id="selecNovelTicket" class="d-block text-decoration-none text-dark" data-product="작품 이용권" data-price="50 마일리지" data-priceM="50" data-grade="1" data-bs-toggle="modal" data-bs-target="#ticketExchangeModal">
 						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
-						                <span><i class="bi bi-coin"></i> 작품 이용권</span>
+						                <span><i class="bi bi-mastodon"></i> 작품 이용권</span>
 						                <strong>50 마일리지</strong>
 						            </div>
 						        </a>
 						    </div>
+						</div>
+					</div>
+					
+					<div class="mt-5">
+						<h2>이용권</h2>
+					</div>
+					<div class="mt-3">
+						<div>
+							<div class="row">
+								<div class="col">
+									<div>
+										<h5 class="fw-semibold">자유 이용권</h5>
+										<span>작품에 상관없이 원하는 회차를 자유롭게 구매할 수 있는 이용권입니다.<br>다양한 작품을 부담 없이 즐기고 싶은 독자에게 추천합니다.</span>
+									</div>
+								</div>
+								<div class="col ms-3">
+									<div>
+										<h5 class="fw-semibold">작품 이용권</h5>
+										<span>특정 작품의 회차만 구매할 수 있는 이용권입니다.<br>한 작품을 정주행하며 몰입하고 싶은 독자에게 추천합니다.</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="mt-5">
+						<h2>마일리지 적립 방법</h2>
+					</div>
+					<div class="mt-3">
+						<div>
+							<div class="row">
+								<div class="col">
+									<div>
+										<h5 class="fw-semibold">출석체크</h5>
+										<span>매일 출석하면 마일리지 100점을 받을 수 있습니다.<br>하루 한 번씩 간단하게 적립하고, 차곡차곡 모아서 원하는 작품을 즐겨보세요!</span>
+									</div>
+								</div>
+								<div class="col ms-3">
+									<div>
+										<h5 class="fw-semibold">다양한 이벤트</h5>
+										<span>이벤트에 참여하면 추가 마일리지를 받을 수 있습니다.<br>특별한 기념일, 프로모션, 미션 수행 등 다양한 기회로 마일리지를 쌓아보세요!</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -44,9 +88,54 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-						<div id="transferSection">
-
-						</div>
+                    	<div class="input-group">
+                    		<input class="form-control" id="inputSearch" type="text" placeholder="작품명을 입력해주세요.">
+                    		<button class="btn btn-outline-primary" id="btnSearchTicket"><i class="bi bi-search"></i></button>
+                    	</div>
+                    	<div>
+                    		<span class="ms-1 fw-semibold">유료 작품만 검색됩니다.</span>
+                    	</div>
+                    	<div class="mt-3">
+                    		<div class="border border-black p-1">
+	                    		<span class="fs-5 fw-bold">검색 결과</span>
+	                    		<div class="row text-center">
+	                    			<div class="col-1 p-0 ps-2">
+	                    				선택
+	                    			</div>
+	                    			<div class="col-7">
+	                    				작품명
+	                    			</div>
+	                    			<div class="col-4">
+	                    				작가명
+	                    			</div>
+	                    		</div>
+	                    		<div id="divResult">
+	                    		</div>
+                    		</div>
+                    		<div id="divSelectedNovel" class="mt-4 border border-black p-1">
+                   				<span class="fs-5 fw-bold">선택 작품</span>
+                   				<div class="row">
+                   					<div class="col-8">
+                   						작품명
+                   					</div>
+                   					<div class="col-4">
+                   						작가명
+                   					</div>
+                   				</div>
+                   				<div class="row">
+                   					<div class="col-8">
+                   						<span id="selectedNovelId" class="d-none"></span>
+                   						<span id="selectedNovelTitle"></span>
+                   					</div>
+                   					<div class="col-4">
+                   						<span id="selectedNovelWriter"></span>
+                   					</div>
+                   				</div>
+                    		</div>
+                    		<div class="d-flex justify-content-end mt-2">
+                    			<button id="btnExchange" class="btn btn-sm btn-outline-primary disabled">교환</button>
+                    		</div>
+                    	</div>
                     </div>
                 </div>
             </div>

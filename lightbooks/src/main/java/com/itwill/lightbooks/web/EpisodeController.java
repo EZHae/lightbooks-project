@@ -1,22 +1,18 @@
 package com.itwill.lightbooks.web;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,11 +21,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.dto.EpisodeBuyDto;
 import com.itwill.lightbooks.dto.EpisodeCreateDto;
 import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
+import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
 
@@ -47,6 +45,7 @@ public class EpisodeController {
 	private final EpisodeService epiService;
 	private final NovelService novelService;
 	private final BookmarkService bookmarkService;
+	private final OrderService orderService; // COIN_PAYMENT 테이블 생성하기 위함
 	private final UserService userService;
 	private final TicketService ticketService;
 
@@ -232,4 +231,24 @@ public class EpisodeController {
 	    }
 	}
 
+	@ResponseBody
+	@PostMapping("/buy")
+	public ResponseEntity<?> episodeBuy(@RequestBody EpisodeBuyDto dto) {
+		
+		int result = dto.getType();
+		Long ticketId;
+		
+		if (result == 2) { // 타입이 2인 경우 (코인으로 구매)
+			orderService.saveCoinPaymentFromEpisodeBuyDto(dto); // 코인 이용내역 테이블 추가
+		} else { // 타입이 0, 1인 경우 (이용권으로 구매)
+			ticketId = ticketService.deleteTicketFromEpisodeBuyDto(dto); // 이용권 삭제, 서비스 메서드보면 dto.getType 값에 따라 삭제되는 이용권이 다름
+			orderService.saveTicketPaymentFromEpisodeBuyDto(dto, ticketId);
+		}
+		// 북마크 테이블 추가, 구매하면 북마크에는 무조건 들어가니 if문 밖에 설정
+		bookmarkService.saveBookmarkFromEpisodeBuyDto(dto); 
+		
+		
+		return ResponseEntity.ok(null);
+	}
+	
 }

@@ -26,6 +26,8 @@
 							<td th:text="*{user.loginId}"></td>
 							<td th:text="*{user.username}"></td>
 							<td th:text="*{type == 0 ? '코인 충전' : type == 1 ? '코인 사용' : type == 2 ? '코인 환불/환전' : type == 3 ? '작품후원' : ''}"></td>
+							<td th:text="*{coin}"></td>
+							<td th:text="*{cash}"></td>
 							<td th:text="*{createdTime}"></td>
 							<td th:text="*{con == 0 ? '대기 중' : '완료'}"></td>
 							<td class="text-center">
