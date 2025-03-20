@@ -1,8 +1,11 @@
 package com.itwill.lightbooks.web;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import com.itwill.lightbooks.dto.CoinApproveResponse;
 import com.itwill.lightbooks.dto.CoinReadyResponse;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.service.OrderService;
+import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
 import com.itwill.lightbooks.utils.SessionUtils;
 
@@ -90,5 +94,5 @@ public class OrderController {
 			
 		return ResponseEntity.ok(coinPaymentWaiting);
 	}
-	
+
 }

@@ -59,6 +59,7 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	
 	
 	
+	
 	 //-- 선택 사항 (필요에 따라 추가) ---
     //(4) 특정 소설의 모든 에피소드를 회차 번호 *내림차순*, 페이징
    //Page<Episode> findByNovelOrderByEpisodeNumDesc(Novel novel, Pageable pageable);

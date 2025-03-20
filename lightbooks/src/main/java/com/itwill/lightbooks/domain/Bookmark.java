@@ -25,11 +25,10 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@ToString
 @Entity
 @Table(name = "BOOKMARK")
-public class Bookmark extends BaseTimeEntity {
+public class Bookmark {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +55,10 @@ public class Bookmark extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Integer type; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
 	
-	@Column(nullable = false)
+	@Column(name = "access_time", nullable= false)
 	private LocalDateTime accessTime;
+	
+	@Column(name = "created_time", nullable = false)
+	 private LocalDateTime createdTime;
 	
 }

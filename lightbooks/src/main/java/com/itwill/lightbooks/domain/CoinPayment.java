@@ -47,4 +47,5 @@ public class CoinPayment {
 	
 	@Column(name = "donation_msg")
 	private String donationMsg;
+	
 }

@@ -10,5 +10,8 @@ import com.itwill.lightbooks.domain.NovelRating;
 public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQuerydsl {
 	
 	List<Novel> findByUserId(Long userId);
+	
+	//추가
+	String findTitleById(Long novelId);
 
 }
