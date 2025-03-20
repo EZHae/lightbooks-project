@@ -1,6 +1,8 @@
 package com.itwill.lightbooks.web;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,8 @@ import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
+import com.itwill.lightbooks.service.TicketService;
+import com.itwill.lightbooks.service.UserService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
@@ -43,6 +47,8 @@ public class EpisodeController {
 	private final EpisodeService epiService;
 	private final NovelService novelService;
 	private final BookmarkService bookmarkService;
+	private final UserService userService;
+	private final TicketService ticketService;
 
 	@GetMapping("/create")
 	public String createEpisode(@PathVariable Long novelId, Model model) {

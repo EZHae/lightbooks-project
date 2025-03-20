@@ -8,6 +8,4 @@ import com.itwill.lightbooks.domain.NovelGradeRequest;
 
 public interface NovelGradeRequestRepository extends JpaRepository<NovelGradeRequest, Long>, NovelGradeQuerydsl {
 	
-	Page<NovelGradeRequest> findByUserIdAndNovelIdAndType(Long userId, Long novelId, int type, Sort sort);
-	
 }

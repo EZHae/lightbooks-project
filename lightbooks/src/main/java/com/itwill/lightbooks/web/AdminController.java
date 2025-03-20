@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,7 +57,7 @@ public class AdminController {
 	}
 	
 	
-	// 유료 무료 전환 프리미엄 페이지
+	// 유료/무료 전환 프리미엄 페이지
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/premiumrequest")
 	public String premiumrequest(Model model) {
@@ -65,4 +66,16 @@ public class AdminController {
 		model.addAttribute("gradeReqs", gradeReqs);
 		return "/admin/premium-request";
 	}
+	
+	// 유료/무료 신청 확인 
+	@PostMapping("/premiumrequest/check")
+	public ResponseEntity<Integer> premiumCheck(@RequestParam(name = "id") Long id, int status) {
+		NovelGradeRequest gradeReq = adminService.searchNovelGradeRequestById(id);
+		gradeReq.updateStatus(status);
+		adminService.saveNovelGradeRequest(gradeReq);
+		
+		return ResponseEntity.ok(null);
+
+	}
+	
 }

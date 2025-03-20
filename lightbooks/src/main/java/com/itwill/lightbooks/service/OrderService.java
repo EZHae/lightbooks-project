@@ -13,15 +13,19 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
+import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.CoinApproveResponse;
 import com.itwill.lightbooks.dto.CoinReadyResponse;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentRepository;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentWaitingRepository;
+import com.itwill.lightbooks.repository.user.UserRepository;
 import com.itwill.lightbooks.utils.SessionUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -119,4 +123,5 @@ public class OrderService {
     	
     	return result;
     }
+
 }

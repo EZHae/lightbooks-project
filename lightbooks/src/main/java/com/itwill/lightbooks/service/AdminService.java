@@ -2,6 +2,7 @@ package com.itwill.lightbooks.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,7 +26,6 @@ public class AdminService {
 
 	private final CoinPaymentRepository coinPaymentRepo;
 	private final CoinPaymentWaitingRepository coinPaymentWaitingRepo;
-	
 	private final NovelGradeRequestRepository novelGradeRequestRepo;
 	
 	
@@ -46,21 +46,28 @@ public class AdminService {
 	 * 어드민이 프리미엄 신청 내역을 조회 및 무료/유료 여부
 	 * 데이터가 많아질 경우에 대비해 페이징, 검색 추가를 고려
 	 */
+	// 모든 신청 내역 리스트
 	public List<NovelGradeRequest> searchAllNovelGradeRequests() {
 		List<NovelGradeRequest> gradeRequests = novelGradeRequestRepo.findAll();
 		return gradeRequests;
 	}
 	
-	public List<NovelGradeRequest> searchAllNovelGradeRequestByKeyword(NovelSearchGradeDto dto, Sort sort) {
+	// 키워드로 검색하는 내역을 리스트로 반환
+	public Page<NovelGradeRequest> searchAllNovelGradeRequestByKeyword(NovelSearchGradeDto dto, Sort sort) {
 		Pageable pageable = PageRequest.of(dto.getP(), 10, sort);
-//		List<NovelGradeRequest> gradeRequests = novelGradeRequestRepo.searchByKeyword(dto,pageable);
+		Page<NovelGradeRequest> gradeRequests = novelGradeRequestRepo.searchByKeyword(dto, pageable);
 		
-//		return gradeRequests;
-		return null;
+		return gradeRequests;
 	}
 	
-	public NovelGradeRequest searchNovelGradeRequestByUserIdAndNovelId(Long userId, Long NovelId) {
-//		NovelGradeRequest gradeRequest = novelGradeRequestRepo.findByUserIdAndNovelIdAndType(userId, NovelId, 0, null) 
-		return null;	
+	// 아이디와 소설아이디로 신청한 목록 1개를 조회
+	public NovelGradeRequest searchNovelGradeRequestById(Long id) {
+		NovelGradeRequest gradeReqest = novelGradeRequestRepo.findById(id).orElseThrow();
+		
+		return gradeReqest;
+	}
+
+	public void saveNovelGradeRequest(NovelGradeRequest gradeReq) {
+		novelGradeRequestRepo.save(gradeReq);
 	}
 }

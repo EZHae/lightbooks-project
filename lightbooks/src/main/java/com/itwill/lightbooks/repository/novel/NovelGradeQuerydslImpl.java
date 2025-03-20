@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.domain.QNovel;
-import com.itwill.lightbooks.domain.QNovelGradeRequests;
+import com.itwill.lightbooks.domain.QNovelGradeRequest;
 import com.itwill.lightbooks.domain.QUser;
 import com.itwill.lightbooks.dto.NovelSearchGradeDto;
 import com.querydsl.core.BooleanBuilder;
@@ -31,23 +31,37 @@ public class NovelGradeQuerydslImpl extends QuerydslRepositorySupport implements
 		log.info("searchByKeyword()");
 		QNovel novel = QNovel.novel;
 		QUser user = QUser.user;
-		QNovelGradeRequests ngReq = QNovelGradeRequests.novelGradeRequests;
+		QNovelGradeRequest ngReq = QNovelGradeRequest.novelGradeRequest;
+		
+		String keyword = dto.getKeyword();
+		String category = dto.getCategory();
+		
+		
+		Integer typeStr = convertType(keyword);
+		Integer statusStr = convertStatus(keyword);
 		
 		JPQLQuery<NovelGradeRequest> query = from(ngReq)
 				.join(ngReq.user, user)
 				.join(ngReq.novel, novel)
 				.select(ngReq);
+		
+		// 동적으로 where 구문(조건절)을 생성하기 위해서 BooleanBuilder 객체를 생성 
 		BooleanBuilder builder = new BooleanBuilder();
 		
-		String keyword = dto.getKeyword();
-		
-		if(ngReq.getType() != null) {
-			builder.and(builder);
+		switch(category) {
+		case "id":
+			builder.and(user.loginId.containsIgnoreCase(keyword));
+			break;
+		case "t":
+			builder.and(novel.title.containsIgnoreCase(keyword));
+			break;
+		case "ty":
+			builder.or(ngReq.type.eq(typeStr));
+			break;
+		case "st":
+			builder.or(ngReq.status.eq(statusStr));
+			break;
 		}
-		
-		builder.and(user.loginId.containsIgnoreCase(keyword))
-				.or(novel.title.containsIgnoreCase(keyword))
-				.or(ngReq.type);
 		
 		query.where(builder);
 		
@@ -63,4 +77,24 @@ public class NovelGradeQuerydslImpl extends QuerydslRepositorySupport implements
 		return result;
 	}
 
+	
+	// Type 을 String 으로 변환
+	private Integer convertType(String typeStr) {
+		if("무료".equals(typeStr)) 
+			return 0;
+		if("유료".equals(typeStr))
+			return 1;
+		return null; 
+	}
+	// status 를 String 으로 변환
+	private Integer convertStatus(String statusStr) {
+		if("대기".equals(statusStr))
+			return 0;
+		if("승인".equals(statusStr))
+			return 1;
+		if("취소".equals(statusStr))
+			return 2;
+		return null;
+	}
+	
 }

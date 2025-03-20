@@ -49,5 +49,6 @@ public class Ticket {
 
     @Column(name = "created_time", nullable = false, updatable = false, insertable = false)
     private LocalDateTime createdTime;
+    
 
 }

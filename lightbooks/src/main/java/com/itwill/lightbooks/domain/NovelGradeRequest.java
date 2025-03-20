@@ -54,4 +54,8 @@ public class NovelGradeRequest {
 	private LocalDateTime createdTime;
 	
 	
+	public NovelGradeRequest updateStatus(int status) {
+		this.status = status;
+		return this;
+	}
 }

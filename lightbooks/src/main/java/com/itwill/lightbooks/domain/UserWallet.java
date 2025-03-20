@@ -45,6 +45,7 @@ public class UserWallet {
     public String toString() {
         return "UserWallet(id=" + id + ", coin=" + coin + ", mileage=" + mileage + ")";
     }
+    
 }
 
 

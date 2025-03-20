@@ -152,4 +152,5 @@ public class NovelService {
     			.findFirst()
     			.orElse("장르없음");
     } 
+    
 }
