@@ -111,6 +111,20 @@
                             </button>
                         </div>
                     </form>
+                    
+                    <!-- 북마크 버튼 -->
+                    <div class="me-2">
+                    	<div sec:authorize="isAnonymous()">
+	                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signModal">
+	                            <i class="bi bi-box-seam-fill"></i>
+	                        </button>
+                    	</div>
+                    	<div sec:authorize="isAuthenticated()">
+                    		<a class="btn btn-outline-primary" th:href="@{/user/bookmark(id=${#authentication.principal.id})}">
+                    			<i class="bi bi-box-seam-fill"></i>
+                    		</a>
+                    	</div>
+                    </div>
 
                     <!-- 로그인/회원가입 모달 생성 버튼 -->
                     <div sec:authorize="isAnonymous()">
