@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.Ticket;
+import com.itwill.lightbooks.dto.EpisodeBuyDto;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.repository.ticket.TicketRepository;
 
@@ -16,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TicketService {
 	
-	private TicketRepository ticketRepo;
+	private final TicketRepository ticketRepo;
 	
 	// 특정 유저가 가진 특정 작품 무료 이용권 갯수 조회
     public int getNovelTicketCount(Authentication authentication, Long novelId) {
@@ -60,6 +61,23 @@ public class TicketService {
 
         // 무료 이용권 사용 처리
         ticketRepo.delete(ticket);
+    }
+    
+    // 이용권으로 회차 구매 시 가장 오래된 이용권 삭제
+    @Transactional
+    public Long deleteTicketFromEpisodeBuyDto(EpisodeBuyDto dto) {
+    	int grade = dto.getType(); // 우연치 않게 dto.getType이 0이면 grade도 글로벌이라 사용하기 좋음
+    	Long ticketId;
+    	if (grade == 0) {
+    		ticketId = ticketRepo.findOldestGlobalTicketId(dto.getUserId(), grade);
+    		ticketRepo.deleteById(ticketId);
+    	} else if (grade == 1) {
+    		ticketId = ticketRepo.findOldestNovelTicketId(dto.getUserId(), dto.getNovelId(), grade);
+    		ticketRepo.deleteById(ticketId);
+    	} else {
+    		return 0L;
+    	}
+    	return ticketId;
     }
     
 }

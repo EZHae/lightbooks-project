@@ -1,6 +1,7 @@
 package com.itwill.lightbooks.repository.ticket;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,4 +23,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>{
     @Query("SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.grade = :grade")
     Ticket findTopByUserIdAndGrade(@Param("userId") Long userId, @Param("grade") Integer grade);
 
+    // 글로벌 티켓 중 가장 오래된 데이터의 id 반환
+    @Query(value = "SELECT id FROM TICKETS WHERE user_id = :userId AND grade = :grade ORDER BY created_time ASC LIMIT 1", nativeQuery = true)
+    Long findOldestGlobalTicketId(@Param("userId") Long userId, @Param("grade") int grade);
+    
+    // 노벨 티켓중 가장 오래된 데이터의 id 반환
+    @Query(value = "SELECT id FROM TICKETS WHERE user_id = :userId AND novel_id = :novelId AND grade = :grade ORDER BY created_time ASC LIMIT 1", nativeQuery = true)
+    Long findOldestNovelTicketId(@Param("userId") Long userId, @Param("novelId") Long novelId, @Param("grade") int grade);
+    
 }

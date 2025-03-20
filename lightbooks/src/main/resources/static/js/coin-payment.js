@@ -108,12 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		buyList.forEach(item => {
+			/*<td class="col-1">${item.episodeId}</td> */
+			let title;
+				(item.novel !== null) ? title = item.novel.title : '-';
+			let episodeNum;
+				(item.episodeNum !== null) ? episodeNum = item.episodeNum : '-';
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 구매</td>
-					<td class="col-5">${item.novelId}</td>
-					<td class="col-1">${item.episodeId}</td>
+					<td class="col-5">${title}</td>
+					<td class="col-1">${episodeNum}</td>
 					<td class="col-2 text-danger">${item.coin}</td>
 					<td class="col-3">${item.createdTime}</td>
 				</tr>

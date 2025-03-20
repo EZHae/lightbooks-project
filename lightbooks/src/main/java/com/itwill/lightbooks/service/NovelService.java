@@ -17,6 +17,7 @@ import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.dto.NovelCreateDto;
+import com.itwill.lightbooks.dto.NovelItemDto;
 import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
@@ -175,4 +176,12 @@ public class NovelService {
 	}
 
     
+    // 마일리지 샵에서 사용함
+    public List<NovelItemDto> getPaidNovelByKeyword(String keyword) {
+    	List<Novel> novels = novelRepo.searchPaidAndKeyword(keyword);
+    	
+    	List<NovelItemDto> result = novels.stream().map(NovelItemDto::fromEntity).toList();
+    	
+    	return result;
+    }
 }
