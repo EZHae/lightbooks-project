@@ -70,7 +70,7 @@ public class NovelService {
 		Novel novel = novelRepo.findById(id).orElseThrow();
 		
 		String genre = novel.getNovelGenre().isEmpty() ? "장르 없음" : novel.getNovelGenre().get(0).getGenre().getName();
-		log.info("장르2 : {}", genre);
+		log.info("장르 : {}", genre);
 		return novel;
 	}
 	

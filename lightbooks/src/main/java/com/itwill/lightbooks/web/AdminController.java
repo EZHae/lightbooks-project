@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
+import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.service.AdminService;
 import com.itwill.lightbooks.service.OrderService;
 
@@ -60,9 +61,8 @@ public class AdminController {
 	@GetMapping("/premiumrequest")
 	public String premiumrequest(Model model) {
 		
-		List<CoinPaymentWaiting> waitings = adminService.searchAllCoinPaymentWaiting();
-		model.addAttribute("waitings", waitings);
-		
+		List<NovelGradeRequest> gradeReqs = adminService.searchAllNovelGradeRequests();
+		model.addAttribute("gradeReqs", gradeReqs);
 		return "/admin/premium-request";
 	}
 }
