@@ -195,10 +195,10 @@ public class EpisodeController {
 	@ResponseBody
 	public ResponseEntity<String> checkEpisode(@PathVariable Long novelId, @PathVariable Long episodeId) {
 		// 인증 정보 확인
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof User)) {
-	        return ResponseEntity.status(401).body("로그인이 필요합니다.");
-	    }
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() instanceof String) {
+		    return ResponseEntity.status(401).body("로그인이 필요합니다.");
+		}
 
 	    // 현재 로그인된 사용자 ID 가져오기
 	    Long currentUserId = ((User) auth.getPrincipal()).getUserId();
@@ -214,12 +214,19 @@ public class EpisodeController {
 
 	        // 유료 회차 구매 여부 확인
 	        boolean purchased = bookmarkService.isPurchasedByUser(currentUserId, novelId, episodeId);
+	        log.info("유저 ID: " + currentUserId);
+	        log.info("소설 ID: " + novelId);
+	        log.info("에피소드 ID: " + episodeId);
+	        log.info("구매 여부: " + purchased);
+
 	        if (purchased) {
+	        	log.info("구매된 회차");
 	            return ResponseEntity.ok("PURCHASED");
 	        }
 
 	        // 구매되지 않은 상태
-	        return ResponseEntity.status(403).body("NOT_PURCHASED");
+	        log.info("구매하지 않은 유료 회차");
+	        return ResponseEntity.ok("NOT_PURCHASED");
 	    } catch (EntityNotFoundException e) {
 	        return ResponseEntity.status(404).body("해당 회차를 찾을 수 없습니다.");
 	    }

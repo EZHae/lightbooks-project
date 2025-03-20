@@ -36,6 +36,7 @@ import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,7 @@ public class NovelController {
     // 작품 상세보기
     @GetMapping({"/{id}", "/{id}/episodes"})
     public String novelDetail(@PathVariable Long id, Model model,
+//    		@RequestParam(name = "episodeId", required = false) Long episodeId,
           @RequestParam(name = "category", required = false) Integer category,
           @RequestParam(name = "sort", defaultValue = "episodeNum,asc") String sortStr,
             @RequestParam(name = "page", defaultValue = "0") int pageNo,
@@ -95,6 +97,7 @@ public class NovelController {
        log.info("nove id = {}",novel);
        
        model.addAttribute("novel",novel);
+//       log.info("novelCheck={}", novel);
        
        // 정렬 객체 생성 (기본값: episodeNum 오름차순) + category가 0(공지)이면 createdTime 내림차순
        Sort sort = Sort.by(Sort.Direction.ASC, "episodeNum"); //기본 정렬
@@ -128,10 +131,15 @@ public class NovelController {
         model.addAttribute("firstEpisodeId", firstEpisodeId); // 첫 번째 에피소드의 ID
         model.addAttribute("novelId", id);
        
-        // Ajax 요청인지 확인 (XMLHttpRequest 헤더 기준)
+        // Ajax 요청인지 확인
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return "episode/listOfNovelDetails :: episodeListOfNovelDetails";
         }
+        
+//        Episode episode = episodeService.getEpisodeById(episodeId);
+//        model.addAttribute("episode", episode);
+//        log.info("episodeCheck={}", episode);
+        
        return "novel/details";
     }
 
