@@ -3,10 +3,11 @@ package com.itwill.lightbooks.domain;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.annotation.CreatedDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,45 +23,35 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @DynamicInsert
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @NoArgsConstructor
+@Builder
 @Getter
-@ToString
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-@Table(name = "BOOKMARK")
-public class Bookmark {
-
+@Table(name = "NOVEL_GRADE_REQUESTS")
+public class NovelGradeRequest {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//관계 매핑
 	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
-	//관계 매핑
 	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "novel_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "novel_id")
 	private Novel novel;
 	
-	//관계 매핑
-	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "episode_id")
-	private Episode episode;
+	private int type;
+	private int status;
 	
-	@Column(nullable = false)
-	private Integer type; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
-	
-	@Column(name = "access_time", nullable = false)
-	private LocalDateTime accessTime;
-	
-	@CreatedDate
-	@Column(name = "created_time", nullable = false)
+	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
+	
+	
 }

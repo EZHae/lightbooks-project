@@ -73,7 +73,7 @@
 							<button id="btnLike" th:data-novel-id="*{id}" th:data-user-id="${#authentication.principal != null ? #authentication.principal.id : 0}" 
 								class="btn btn-outline-danger p-4 h-2 me-3">
 								<i class="bi bi-heart-fill"></i>
-								<span id="likeCount" th:text="*{likeCount}"></span>
+								<span id="likeCount" th:text="${likeCount}"></span>
 							</button>
 						</div>
 

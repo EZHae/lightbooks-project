@@ -74,18 +74,43 @@
 			display: flex;
 			justify-content: space-around;
 			align-items: center;
-			background-color: #f5f5f5; /* 배경색 */
 		}
 		
 		.step1, .step2, .step3{
 			display: flex;
-			justify-content: center;
-			background: white;
+			flex-direction: column;
+			background: #f5f5f5;
 			width: 150px;
 			height: 150px;
-			border: 8px solid #ff5722;
+			border: 8px solid gray;
 			border-radius : 20px;
 			align-items: center;
+		}
+		
+		.result {
+			font-size: 60px;
+			color: red;
+			font-weight: bold;
+		}
+		
+		.result-icon {
+			border: 1px solid gray;
+			border-radius : 5px;
+			background: #f5f5f5;
+			padding: 3px;
+		}
+		
+		.btnIndicator {
+			display: flex;
+			
+			align-items: center;
+			justify-content: center;
+		}
+		a.btn-secondary , .btn-success{
+			display: inline-block;
+			width: auto;
+			text-align: center;
+			margin-left: 10px;
 		}
 		
 	</style>
@@ -143,23 +168,34 @@
 					<div class="indicator">
 					<!-- 회차 수 -->
 						<div class="step1">
-							회차 1
+							<div class="result" th:text="${count}"></div>
+							<div class="result-icon">
+								<label>
+									<i class="bi bi-book-fill" style="color:green;"><span style="color: black;">연재회차 수</span></i>
+								</label>
+							</div>
 						</div>
 					<!-- 해당 작품의 좋아요 개수 -->
 						<div class="step2">
-							좋아요 1
+							<div class="result" th:text="${novel.likeCount}"></div>
+							<div class="result-icon">
+								<i class="bi bi-heart-fill" style="color:red;"><span style="color: black;">좋아요 수</span></i>
+							</div>
 						</div>
 					
 					<!-- ?? -->
 						<div class="step3">
-							좋아요 1
+							<div class="result" th:text="${novel.rating}"></div>
+							<div class="result-icon">
+								<i class="bi bi-star-fill" style="color: yellow;"><span style="color: black;">평점</span></i>
+							</div>
 						</div>
 					
 					</div>
 					
-					<div>
-						<a class="btn btn-secondary " th:href="@{/novel/my-works(id=${#authentication.principal.id})}">돌아가기</a>
-						<button class="btn btn-success" name="">신청하기</button>
+					<div class="btnIndicator">
+						<a class="btn btn-secondary" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">돌아가기</a>
+						<button class="btn btn-success" id="btn" type="button" name="">신청하기</button>
 					</div>
 				</form>
 			</div>

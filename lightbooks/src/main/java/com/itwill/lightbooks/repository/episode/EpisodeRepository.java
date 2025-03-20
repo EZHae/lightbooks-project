@@ -54,6 +54,10 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	Page<EpisodeListDto> getEpisodesByNovelAndCategory(Long novelId, Integer category, String sortOrder, Pageable pageable);
 	
 	boolean existsByNovelIdAndEpisodeNum(Long novelId, int episodeNum);
+
+	// 해당 소설의 회차 개수를 불러올 때 사용
+	@Query("SELECT COUNT(e) FROM Episode e WHERE e.novel.id = :novelId") 
+	Long countNovelId(Long novelId);
 	
 	
 	
