@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main class="container-md">
+			<div>
+				<div class="mt-2">
+					<h2 class="text-start">마일리지 적립 내역</h2>
+					<table class="mt-3 table table-bordered table-hover table-striped table-responsive">
+						<thead>
+							<tr class="row">
+								<th class="col-1">구분</th>
+								<th class="col-2">적립 마일리지</th>
+								<th class="col-6">설명</th>
+								<th class="col-3">적립 일시</th>
+							</tr>
+						</thead>
+						<tbody id="mileageEarnTBody">
+						</tbody>
+					</table>
+	                <div id="mileageEarnPagination">
+	                    <ul class="pagination justify-content-center" id="mileageEarnPagination">
+	
+	                    </ul>
+	                </div>
+				</div>
+				
+				<div class="mt-2">
+					<h2 class="text-start">마일리지 사용 내역</h2>
+					<table class="mt-3 table table-bordered table-hover table-striped table-responsive">
+						<thead>
+							<tr class="row">
+								<th class="col-1">구분</th>
+								<th class="col-2">사용 마일리지</th>
+								<th class="col-6">설명</th>
+								<th class="col-3">사용 일시</th>
+							</tr>
+						</thead>
+						<tbody id="mileageUseTBody">
+						</tbody>
+					</table>
+	                <div id="mileageUsePagination">
+	                    <ul class="pagination justify-content-center" id="mileageUsePagination">
+	
+	                    </ul>
+	                </div>
+				</div>
+			</div>
+		</main>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/mileage-payment.js}"></script>
+	</body>
+</html>

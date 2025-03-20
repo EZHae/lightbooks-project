@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
+import com.itwill.lightbooks.domain.MileagePayment;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
@@ -95,6 +96,13 @@ public class UserController {
     	return "/user/coin-payment";
     }
     
+    @GetMapping("/mileagepayment")
+    public String mileagePayment(@RequestParam(name = "id") Long id) {
+    	log.info("mileagePayment(id={})", id);
+    	
+    	return "/user/mileage-payment";
+    }
+    
     /* ResponseBody */
     @ResponseBody
     @GetMapping("/checkLoginId")
@@ -158,7 +166,7 @@ public class UserController {
     	return ResponseEntity.ok(result);
     }
     
-    
+    /*
     @ResponseBody
     @GetMapping("/getUserWallet")
     public ResponseEntity<Long> getUserWallet(@RequestParam(name = "userId") Long userId,
@@ -174,6 +182,19 @@ public class UserController {
     	} else {
     		return ResponseEntity.ok(userWallet.getMileage());
     	}
+    }
+    */
+    
+    @ResponseBody
+    @GetMapping("/getUserWallets")
+    public ResponseEntity<UserWallet> getUserWallets(@RequestParam(name = "userId") Long userId) {
+    	log.info("getUserWallet?userId");
+    	log.info("userId={}", userId);
+    	
+    	UserWallet userWallet = userService.SearchUserWalletByUserId(userId);
+    	log.info("잉userWallet={}", userWallet);
+    	
+    	return ResponseEntity.ok(userWallet);
     }
     
     // Servlet 또는 Controller에서 세션에서 errorMessage를 제거하는 코드
@@ -213,10 +234,6 @@ public class UserController {
     	Page<CoinPaymentWaiting> result = orderService.readCoinPaymentWaitingByUserId(userId, page, size, type);
     	log.info("waiting.{}", result);
     	
-    	result.forEach(dd -> {
-    		log.info("{}", dd);
-    	});
-    	
         // 페이징 정보와 데이터 함께 전달
 //        Map<String, Object> response = new HashMap<>();
 //        response.put("data", result.getContent());
@@ -225,7 +242,6 @@ public class UserController {
 //        response.put("currentPage", result.getNumber());
     	return ResponseEntity.ok(result);
     }
-    
     
     @ResponseBody
     @PostMapping("/coinpayment/reApp")
@@ -238,6 +254,28 @@ public class UserController {
     	
     	orderService.saveCoinPayment(coinpayment);
     	orderService.saveCoinPaymentWaiting(coinpaymentWaiting);
+    	
+    	return ResponseEntity.ok("/");
+    }
+    
+    @ResponseBody
+    @GetMapping("/mileagepayment/read")
+    public ResponseEntity<Page<MileagePayment>> readMileagePayment(@RequestParam(name = "userId") Long userId,
+    	    @RequestParam(name = "page", defaultValue = "0") int page,
+    	    @RequestParam(name = "size", defaultValue = "5") int size,
+    	    @RequestParam(name = "type", defaultValue = "0") int type) {
+    	
+    	Page<MileagePayment> result = userService.readMileagePaymentByUserId(userId, page, size, type);
+
+    	return ResponseEntity.ok(result);
+    }
+    
+    @ResponseBody
+    @PostMapping("/mileagepayment/app")
+    public ResponseEntity<String> mileagepaymentApp(@RequestBody PaymentRequestDto dto) {
+    	log.info("mileagepaymentApp()");
+    	
+    	userService.saveMileagePaymentWithGlobalTicket(dto);
     	
     	return ResponseEntity.ok("/");
     }

@@ -13,13 +13,12 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 	boolean existsByUserIdAndNovelIdAndEpisodeIdAndType(Long userId, Long novelId, Long episodeId, Integer type);
 
 	// 유저아이디와 소설아이디로 좋아요 (추가/삭제) 상태를 확인하는데 사용 
-	boolean existsByUserIdAndNovelIdAndType(User user, Novel novel, Integer type);
+	boolean existsByUserIdAndNovelIdAndType(Long userId, Long novelId, Integer type);
 
 	// 유저아이디와 소설아이디로 좋아요 삭제하는데 사용
-	void deleteByUserIdAndNovelIdAndType(User user, Novel novel, Integer type);
+	void deleteByUserIdAndNovelIdAndType(Long userId, Long novelId, Integer type);
 
 	// 해당 소설의 좋아요 개수 조회
 	@Query ("SELECT COUNT(b) FROM Bookmark b WHERE b.novel.id = :novelId AND b.type = :type")
-	int countByNovelAndType(Long novelId, Integer type);
-
+	int countByNovelIdAndType(Long novelId, Integer type);
 }

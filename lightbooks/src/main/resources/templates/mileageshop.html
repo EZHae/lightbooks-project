@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<main>
+			<div>
+				배너?
+			</div>
+			<div class="container-sm mt-4">
+				<div class="w-75 mx-auto">
+					<div>
+						<h2>마일리지 교환</h2>
+					</div>
+					<div>
+						<div class="row mt-3">
+						    <div class="col border border-black">
+						        <a href="#" id="selectGlobalTicket" class="d-block text-decoration-none text-dark" data-product="자유 이용권" data-price="100 마일리지" data-priceM="100" data-grade="0">
+						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
+						                <span><i class="bi bi-coin"></i> 자유 이용권</span>
+						                <strong>100 마일리지</strong>
+						            </div>
+						        </a>
+						    </div>
+						    <div class="col border border-black ms-3">
+						        <a href="#" id="selectProduct" class="d-block text-decoration-none text-dark" data-product="작품 이용권" data-price="50 마일리지" data-priceM="50" data-grade="1" data-bs-toggle="modal" data-bs-target="#ticketExchangeModal">
+						            <div class="d-flex h-100 align-items-center justify-content-between p-3">
+						                <span><i class="bi bi-coin"></i> 작품 이용권</span>
+						                <strong>50 마일리지</strong>
+						            </div>
+						        </a>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		
+        <div class="modal fade" id="ticketExchangeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">작품 이용권</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+						<div id="transferSection">
+
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/mileageshop.js}"></script>
+	</body>
+</html>

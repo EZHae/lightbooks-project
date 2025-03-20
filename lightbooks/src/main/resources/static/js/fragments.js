@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		const btnCoinRefresh = document.querySelector('button#coinRefresh');
 		btnCoinRefresh.addEventListener('click', () => {
+			WalletRefresh(userId);
+			/*
 			let uri = `/user/getUserWallet?userId=${userId}&type=c`;
 			axios.get(uri).then(response => {
 				let coin = response.data;
@@ -27,10 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			}).catch(error => {
 				console.error(error);
 			});
+			*/
 		});
 		
 		const btnMileageRefresh = document.querySelector('button#mileageRefresh');
 		btnMileageRefresh.addEventListener('click', () => {
+			WalletRefresh(userId);
+			/*
 			let uri = `/user/getUserWallet?userId=${userId}&type=m`;
 			axios.get(uri).then(response => {
 				let mileage = response.data;
@@ -40,12 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			}).catch(error => {
 				console.error(error);
 			});
+			*/
 		});
 	}
 	
 	function WalletRefresh(userId) {
 		console.log('WalletRefresh()');
-		
+		/*
 		let uriC = `/user/getUserWallet?userId=${userId}&type=c`;
 		axios.get(uriC).then(response => {
 			let coin = response.data;
@@ -65,6 +71,22 @@ document.addEventListener('DOMContentLoaded', () => {
 		}).catch(error => {
 			console.error(error);
 		});
+		*/
+		
+		const url = `/user/getUserWallets?userId=${userId}`;
+		axios.get(url).then(response => {
+			console.log(response.data);
+			let coin = response.data.coin;
+			let mileage = response.data.mileage;
+			
+			let strongNowCoin = document.querySelector('strong#nowCoin');
+			strongNowCoin.textContent = coin;
+			
+			let strongNowMileage = document.querySelector('strong#nowMileage');
+			strongNowMileage.textContent = mileage;
+		}).catch(error => {
+			console.error(error);
+		})
 	}
 	
 	

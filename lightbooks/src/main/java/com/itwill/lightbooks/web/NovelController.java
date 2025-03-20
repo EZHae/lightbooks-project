@@ -1,6 +1,8 @@
 package com.itwill.lightbooks.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -205,17 +207,32 @@ public class NovelController {
     // 작품 좋아요 토클 (추가/취소)
     @PostMapping("/{novelId}/like")
     @ResponseBody
-	public ResponseEntity<Boolean> toggleLike(@RequestParam Long userId, @PathVariable Long novelId) {
+	public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable(name = "novelId") Long novelId, 
+											@RequestParam(name = "userId") Long userId) {
+    	log.info("소설 아이디 : {}, 유저 아이디 : {}", novelId, userId);
     	boolean isLiked = bookmarkService.toggleLike(userId, novelId);
-    	return ResponseEntity.ok(isLiked);
+    	int likeCount = bookmarkService.getLikeCount(novelId);
+    	
+    	Map<String, Object> response = new HashMap<>();
+    	response.put("liked", isLiked);
+    	response.put("likeCount", likeCount);
+    	
+    	return ResponseEntity.ok(response);
 	}
 	
 	// 좋아요 개수 조회
 	@GetMapping("/{novelId}/like/count")
 	@ResponseBody
-	public ResponseEntity<Integer> getLikeCount(@PathVariable(name = "novelId") Long novelId) {
-		Integer Count = bookmarkService.getLikeCount(novelId);
-		return ResponseEntity.ok(Count);
+	public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable(name = "novelId") Long novelId, @RequestParam(name = "userId") Long userId) {
+		Integer count = bookmarkService.getLikeCount(novelId);
+		boolean liked = bookmarkService.isLiked(userId, novelId); // 사용자가 좋아요 했는지 확인
+		
+	    Map<String, Object> response = Map.of(
+            "liked", liked,
+            "likeCount", count
+        );
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	// 사용자가 좋아요 했는지 확인
