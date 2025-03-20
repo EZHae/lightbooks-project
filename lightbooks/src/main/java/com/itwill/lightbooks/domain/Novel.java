@@ -97,4 +97,8 @@ public class Novel extends BaseTimeEntity{
 		this.likeCount = likeCount;
 	}
 
+	public void updateGrade(Integer grade) {
+		this.grade = grade;
+	}
+
 }

@@ -131,7 +131,7 @@
 			</div>
 			
 			<div class="premumContent">
-				<form method="post">
+				<div>
 					<!-- 전환할 작품 하나를 가져옴 -->
 					<div class="novel">
 						<h5>프리미엄 전환 소설</h5>
@@ -143,11 +143,11 @@
 								<a th:href="@{/novel/{id}(id=${novel.id})}">
 									<b th:text="${novel.title}"></b>
 								</a>
-								
 								<span th:text="${novel.writer}"></span>
 								<br/>
 								
 								<span th:text="${novel.intro}"></span>
+								
 								
 								<br/>
 								<span>
@@ -195,15 +195,19 @@
 					
 					<div class="btnIndicator">
 						<a class="btn btn-secondary" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">돌아가기</a>
-						<button class="btn btn-success" id="btn" type="button" name="">신청하기</button>
+						<button class="btn btn-success" 
+						id="btnPremiumSubmit" 
+						th:data-novel-id="${novel.id}"
+						th:data-novel-grade="${novel.grade}"
+						data-status="1"
+						type="submit" name="btnPremiumSubmit">신청하기</button>
 					</div>
-				</form>
+				</div>
 			</div>
 		</main>
-		
-		
 		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/premium-apply.js}"></script>
 	</body>
 </html>

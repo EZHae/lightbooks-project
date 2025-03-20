@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
+import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.service.AdminService;
+import com.itwill.lightbooks.service.NovelService;
 import com.itwill.lightbooks.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class AdminController {
 	
 	private final AdminService adminService;
 	private final OrderService orderService;
+	private final NovelService novelService;
 
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'")  // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/waitingpayment")
@@ -56,7 +59,6 @@ public class AdminController {
 		return ResponseEntity.ok(null);
 	}
 	
-	
 	// 유료/무료 전환 프리미엄 페이지
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/premiumrequest")
@@ -67,15 +69,26 @@ public class AdminController {
 		return "/admin/premium-request";
 	}
 	
-	// 유료/무료 신청 확인 
+	// 유료/무료 신청 확인 시
 	@PostMapping("/premiumrequest/check")
-	public ResponseEntity<Integer> premiumCheck(@RequestParam(name = "id") Long id, int status) {
+	public ResponseEntity<?> premiumCheck(@RequestParam(name = "id") Long id) {
 		NovelGradeRequest gradeReq = adminService.searchNovelGradeRequestById(id);
-		gradeReq.updateStatus(status);
-		adminService.saveNovelGradeRequest(gradeReq);
+		
+		gradeReq.updateStatus(1);
+		// 처리한 결과가 Novel grade에 업데이트 
+		novelService.updateNovelGrade(gradeReq.getNovel().getId(), gradeReq.getStatus());
 		
 		return ResponseEntity.ok(null);
-
+	}
+	
+	@PostMapping("/premiumrequest/cancle")
+	public ResponseEntity<?> premiumCancle(@RequestParam(name = "id") Long id) {
+		NovelGradeRequest gradeReq = adminService.searchNovelGradeRequestById(id);
+		NovelGradeRequest updateGrade = gradeReq.updateStatus(2);
+		
+		adminService.saveGrade(updateGrade);
+		
+		return ResponseEntity.ok(null);
 	}
 	
 }

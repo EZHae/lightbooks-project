@@ -2,15 +2,23 @@ package com.itwill.lightbooks.web;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.NovelGradeRequest;
+import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.NovelResponseDto;
+import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
+import com.itwill.lightbooks.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +31,7 @@ public class HomeController {
 
 	private final NovelService novelService;
 	private final EpisodeService episodeService;
+	private final UserService userService;
 	
 	@GetMapping("/")
 	public String home(Model model) {
@@ -46,20 +55,6 @@ public class HomeController {
 		
 	}
 	
-    @GetMapping("/premium/{novelId}")
-	public String premium(@PathVariable(name = "novelId") Long novelId, Model model) {
-		log.info("premium()");
-		
-		Novel novel = novelService.searchById(novelId);
-    	log.info("novels : {}", novel);
-    	Long count = episodeService.getEpisodeCountByNovelId(novelId);
-    	log.info("count : {}", count);
-    	
-    	model.addAttribute("novel", novel);
-    	model.addAttribute("count", count);
-		return "premium";
-	}
-    
     @GetMapping("/mileageshop")
     public void mileageshop() {
     	log.info("mileageshop");

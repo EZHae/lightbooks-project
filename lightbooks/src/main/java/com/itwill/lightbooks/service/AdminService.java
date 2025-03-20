@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
@@ -61,13 +62,14 @@ public class AdminService {
 	}
 	
 	// 아이디와 소설아이디로 신청한 목록 1개를 조회
+	@Transactional
 	public NovelGradeRequest searchNovelGradeRequestById(Long id) {
 		NovelGradeRequest gradeReqest = novelGradeRequestRepo.findById(id).orElseThrow();
 		
 		return gradeReqest;
 	}
 
-	public void saveNovelGradeRequest(NovelGradeRequest gradeReq) {
-		novelGradeRequestRepo.save(gradeReq);
+	public void saveGrade(NovelGradeRequest updateGrade) {
+		novelGradeRequestRepo.save(updateGrade);
 	}
 }

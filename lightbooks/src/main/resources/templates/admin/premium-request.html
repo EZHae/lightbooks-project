@@ -18,6 +18,7 @@
 							<th>아이디</th>
 							<th>유저아이디</th>
 							<th>유저이름</th>
+							<th>소설제목</th>
 							<th>구분</th>
 							<th>신청일</th>
 							<th>상태</th>
@@ -29,6 +30,7 @@
 							<td th:text="*{id}"></td>
 							<td th:text="*{user.loginId}"></td>
 							<td th:text="*{user.username}"></td>
+							<td th:text="*{novel.title}"></td>
 							<td th:text="*{type == 0 ? '무료' : '유료'}"></td>
 							<td th:text="*{createdTime}"></td>
 							<td th:text="*{status == 0 ? '대기 중' : (status == 1 ? '완료' : '거절')}"></td>

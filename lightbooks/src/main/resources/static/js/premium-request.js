@@ -27,13 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	btnCancleChecks.forEach(btn => {
 		btn.addEventListener('click', (event) => {
+			console.log(event.target.dataset.id);
+			
 			const id = event.target.dataset.id;
 			console.log(id);
 			
 			let result = confirm('해당 신청을 거절 처리 하시겠습니까?')
 			if(result) {
 				disableClicks();
-				axios.post('/admin/premiumrequest/cancle?id=${id}').then(response => {
+				axios.post(`/admin/premiumrequest/cancle?id=${id}`).then(response => {
 					console.log(response);
 					alert('처리되었습니다.');
 					window.location.reload();

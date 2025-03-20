@@ -12,7 +12,7 @@
 	}
 	
 	.my-novel{
-	    background: beige;
+	    background: white;
 	    display: flex; /* grid에서 flex로 변경 */
 	    flex-direction: row; /* 가로 정렬 유지 */
 	    align-items: center;
@@ -35,33 +35,44 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: space-evenly;
+		margin-top : 20px;
 		padding: 5px;
 	}
 	
 	div.container{
-		background: #F08080;
+		background: white;
 		height: 100%;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: space-evenly;
-		margin-top: 5px;
+		margin-top: 20px;
 	}
 	
 	
 	.nav-work {
 		background: white;
 		height:80px;	
-		width: 180px;
+		width: 160px;
 		float:left;
-		border: 1px solid black;
+		border: 1px solid gray;
+		border-radius: 12px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		margin-left: 10px;
 		
 	}
 	.nav-link{
 		text-align: center;
+	}
+	
+	.gradeIcon span{
+		border: 1px solid white;
+		background: #cf97ff;
+		color : white;
+		padding: 2px;
+		border-radius: 12px;
 	}
 	
 	
@@ -70,7 +81,7 @@
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		<main>
-		    <div class="container">
+		    <div class="container ">
 		        <ul>
 		            <li class="nav-work">
 		                <a class="nav-link active" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">내 작품</a>
@@ -88,31 +99,34 @@
 		    </div>
 		    
 		    <div class="novelWriter">
-				<a class="btn btn-secondary" th:href="@{/novel/new}">작품작성</a>	    	
+				<a class="btn btn-success form-control" th:href="@{/novel/new}">작품작성</a>	    	
 		    </div>
 			
 			<hr/>
 			<div class="novelList">
-				<div th:each="novel : ${novels}">
+				<div th:each="novel : ${novels}" th:object="${novel}">
 					<div class="my-novel" >
 						<div class="novelCoverImg">
 							<img class="coverImg" th:src="@{{novel.coverSrc}(novel.coverSrc=${novel.coverSrc})}">
 						</div>
 						<div class="novelContent">
-							<a th:href="@{/novel/{id}(id=${novel.id})}">
-								<b th:text="${novel.title}"></b>
+							<div class="gradeIcon">
+								<span th:text="*{grade == 0 ? '무료' : '유료'}"></span>
+							</div>
+							<a th:href="@{/novel/{id}(id=*{id})}">
+								<b th:text="*{title}"></b>
 							</a>
 							
-							<span th:text="${novel.writer}"></span>
+							<span th:text="*{writer}"></span>
 							<br/>
 							
-							<span th:text="${novel.intro}"></span>
+							<span th:text="*{intro}"></span>
 							
 							<br/>
 							<span>
-								<i class="bi bi-heart-fill"></i>
+								<i class="bi bi-heart-fill" style="color:red;"></i>
 								<span th:text="${novel.likeCount}"></span>
-								<i class="bi bi-star-fill"></i>
+								<i class="bi bi-star-fill" style="color:yellow;"></i>
 								<span th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'">0.0</span>
 							</span>
 							<br/>
@@ -126,7 +140,7 @@
 			                <br/>
 			                <a class="btn btn-secondary mt-2" th:href="@{/novel/{id}/episode/create(id=${novel.id})}">회차작성</a><!-- 추가 -->
 			                <br/>
-			                <a class="btn btn-secondary mt-2" th:href="@{/premium/{id}(id=${novel.id})}">전환신청</a>
+			                <a class="btn btn-secondary mt-2" th:href="@{/novel/premium/{id}(id=${novel.id})}">전환신청</a>
 			                <br/>
 						</div>
 					</div>

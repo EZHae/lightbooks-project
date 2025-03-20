@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.EpisodeListDto;
 import com.itwill.lightbooks.dto.NovelCreateDto;
@@ -31,10 +33,12 @@ import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
+import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
+import com.itwill.lightbooks.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +55,7 @@ public class NovelController {
 	private final EpisodeService episodeService; //추가
 	private final NovelRatingService novelRatingService;
 	private final BookmarkService bookmarkService;
+	private final UserService userService;
 	
 	
     @GetMapping("/new")
@@ -132,6 +137,7 @@ public class NovelController {
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return "episode/listOfNovelDetails :: episodeListOfNovelDetails";
         }
+        
        return "novel/details";
     }
 
@@ -241,5 +247,37 @@ public class NovelController {
 	public ResponseEntity<Boolean> isLiked(@RequestParam Long userId, @PathVariable Long novelId) {
 		boolean liked = bookmarkService.isLiked(userId, novelId);
 		return ResponseEntity.ok(liked);
+	}
+	
+    @GetMapping("/premium/{novelId}")
+	public String premium(@PathVariable(name = "novelId") Long novelId, Model model) {
+		log.info("premium()");
+		
+		Novel novel = novelService.searchById(novelId);
+    	log.info("novels : {}", novel);
+    	Long count = episodeService.getEpisodeCountByNovelId(novelId);
+    	log.info("count : {}", count);
+    	
+    	model.addAttribute("novel", novel);
+    	model.addAttribute("count", count);
+    	
+		return "/novel/premium";
+	}
+    
+	/**
+	 *  해당 작품의 사용자가 유료/무료 신청을 할 때
+	 *  - novelId, userId, type(0: 무료, 1: 유료), status(0: 대기, 1: 승인, 2:거절)
+	 */
+    @ResponseBody
+	@PostMapping("/premium/apply")
+	public ResponseEntity<NovelGradeRequest> submitPremiumRequest(@RequestBody PremiumRequestDto dto) {
+		User user = userService.searchById(dto.getUserId());
+		Novel novel = novelService.searchById(dto.getNovelId());
+		
+		NovelGradeRequest ngReq = NovelGradeRequest.builder().novel(novel).user(user).type(dto.getType()).status(dto.getStatus()).build();
+		log.info("NovelGradeRequest : {}", ngReq);
+		novelService.saveGradeRequest(ngReq);
+		
+		return ResponseEntity.ok(ngReq);
 	}
 }
