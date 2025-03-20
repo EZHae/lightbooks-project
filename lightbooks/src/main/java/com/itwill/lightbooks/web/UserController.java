@@ -103,6 +103,12 @@ public class UserController {
     	return "/user/mileage-payment";
     }
     
+    @GetMapping("/bookmark")
+    public void bookmark(@RequestParam(name = "id") Long id) {
+    	log.info("bookmark(id={})", id);
+    	
+    }
+    
     /* ResponseBody */
     @ResponseBody
     @GetMapping("/checkLoginId")
