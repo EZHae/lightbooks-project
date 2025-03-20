@@ -48,6 +48,7 @@ public class NovelGradeRequests {
 	private Novel novel;
 	
 	private int type;
+	private int status;
 	
 	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
