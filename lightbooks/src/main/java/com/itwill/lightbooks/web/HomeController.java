@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.dto.NovelResponseDto;
+import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class HomeController {
 
 	private final NovelService novelService;
+	private final EpisodeService episodeService;
 	
 	@GetMapping("/")
 	public String home(Model model) {
@@ -50,8 +52,11 @@ public class HomeController {
 		
 		Novel novel = novelService.searchById(novelId);
     	log.info("novels : {}", novel);
+    	Long count = episodeService.getEpisodeCountByNovelId(novelId);
+    	log.info("count : {}", count);
     	
     	model.addAttribute("novel", novel);
+    	model.addAttribute("count", count);
 		return "premium";
 	}
     

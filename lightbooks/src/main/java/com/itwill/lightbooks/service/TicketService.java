@@ -22,13 +22,13 @@ public class TicketService {
         return ticketRepo.countNovelTickets(userId, novelId);
     }
 
-    // 모든 작품 공용 무료 이용권 갯수 조회
+    // 모든 작품 무료 이용권 갯수 조회
     @Transactional(readOnly = true)
     public int getGlobalTicketCount(Long userId) {
         return ticketRepo.countGlobalTickets(userId);
     }
     
- // 특정 작품 무료 이용권 사용
+    // 특정 작품 무료 이용권 사용
     @Transactional
     public void useNovelTicket(Long userId, Long novelId) {
         // 티켓 갯수 확인

@@ -4,14 +4,13 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
-	const btnLike = document.querySelector('button#btnLike');
+	const btnLike = document.getElementById("btnLike");
 	const novelId = btnLike.dataset.novelId;
 	const userId = btnLike.dataset.userId;
-	
+	const likeCountSpan = document.getElementById("likeCount");
 	console.log("로그인 유저 아이디: ",userId);
 
 	// 좋아요, 별점 새로 불러오기
-	loadLikeCount(novelId, userId);
 	fetchRating();
 	checkUserRating(novelId, userId);
 	
@@ -66,11 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// 기존 별점 조회 (모달창에서)
 	async function getUserRating(novelId, userId) {
-		console.log("📌 전달된 novelId:", novelId);
-	    console.log("📌 전달된 userId:", userId);
+		console.log("전달된 novelId:", novelId);
+	    console.log("전달된 userId:", userId);
 		
 		if (!novelId || !userId) {
-	       console.error("🚨 오류: novelId 또는 userId가 없습니다!", { novelId, userId });
+	       console.error("오류: novelId 또는 userId가 없습니다!", { novelId, userId });
 	       return;
 	   }
 		
@@ -190,9 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error("사용자 별점 조회 실패!!", error);
 		}
 	}
-		
-	// 좋아요 요청
+	
+	
+ 	loadLikeCount(novelId, userId);	
+	// ===================================== 좋아요 요청 ======================================
 	btnLike.addEventListener('click', async function() {
+		const btnLike = document.getElementById("btnLike");
+		const likeCountSpan = document.getElementById("likeCount");
+		
+		console.log("현재 버튼 : ", btnLike, likeCountSpan)
+		
 		// 비로그인 사용자는 로그인 페이지로 이동
 		if(!userId || userId === "0") {
 			alert("로그인이 필요합니다.")
@@ -207,47 +213,46 @@ document.addEventListener('DOMContentLoaded', () => {
 		// 연속 입력 방지
 		btnLike.disabled = true;
 		
-		const reqBody = {novelId, userId};
-		
-		// UI를 먼저 업데이트하여 즉각 반응하도록 수정
-		const likeCountSpan = btnLike.querySelector("span");
-		const isLiked = btnLike.classList.contains("btn-danger"); // 현재 좋아요 여부
-		const newLikeCount = isLiked ? parseInt(likeCountSpan.textContent) - 1 : parseInt(likeCountSpan.textContent) + 1;
-		
+
 		try {
-			const response = await axios.post(`/api/like`, reqBody, {withCredentials: true});
+			const reqBody = { novelId : Number(novelId), userId : Number(userId)}
+			console.log(reqBody);
+			const response = await axios.post(`/novel/${novelId}/like?userId=${userId}`, reqBody);
 			console.log(response);
 			
 			if (response.status !== 200) {
 				throw new Error("좋아요 실패!")
 			}
 			
-			const { liked, likeCount } = response.data;
+			const liked = response.data?.liked ?? false;
+			const likeCount = response.data?.likeCount ?? 0;
+			console.log("좋아요 상태:", liked);
+			console.log("좋아요 개수:", likeCount);
 			
 			// 좋아요 상태 업데이트
-			btnLike.classList.remove("btn-danger", "btn-outline-danger")
-			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
-			likeCountSpan.textContent = likeCount;
-			
-			loadLikeCount(novelId, userId);
+			btnLike.classList.remove("btn-danger", "btn-outline-danger");
+			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger");
+		if (likeCountSpan) {
+        likeCountSpan.textContent = likeCount;
+		} else {
+			console.error("좋아요 개수를 표시할 요소를 찾을 수 없습니다!");
+		}
+		
 		} catch (error) {
 			console.error("좋아요 처리 중 오류", error);
-			
-			//오류 발생 시 원래 상태로 되돌리기 (UI 복구)
-			btnLike.classList.remove("btn-danger", "btn-outline-danger")
-			btnLike.classList.add(isLiked ? "btn-danger" : "btn-outline-danger")
-			
-            likeCountSpan.textContent = isLiked ? newLikeCount + 1 : newLikeCount - 1;
 		} finally {
-			isProcessing = false;
+			window.isProcessing = false;
 			btnLike.disabled = false;
     	}
 	});
 	
 	async function loadLikeCount(novelId, userId) {
 		try {
-			const response = await axios.get(`/api/like/count/${novelId}?userId=${userId}`);
-			const { liked, likeCount } = response.data;
+			const response = await axios.get(`/novel/${novelId}/like/count?userId=${userId}`);
+			console.log("응답 요청:",response.data);
+			
+			const liked = response.data?.liked ?? false;
+			const likeCount = response.data?.likeCount ?? 0;
 			
 			const btnLike = document.querySelector("button#btnLike")
 			
@@ -256,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			btnLike.classList.remove("btn-danger", "btn-outline-danger")
 			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
 			
-			const likeCountSpan = btnLike.querySelector("span");
 			if(likeCountSpan) {
 				likeCountSpan.textContent = likeCount;
 			}

@@ -53,4 +53,16 @@ public class AdminController {
 		
 		return ResponseEntity.ok(null);
 	}
+	
+	
+	// 유료 무료 전환 프리미엄 페이지
+	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
+	@GetMapping("/premiumrequest")
+	public String premiumrequest(Model model) {
+		
+		List<CoinPaymentWaiting> waitings = adminService.searchAllCoinPaymentWaiting();
+		model.addAttribute("waitings", waitings);
+		
+		return "/admin/premium-request";
+	}
 }

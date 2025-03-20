@@ -1,16 +1,16 @@
 package com.itwill.lightbooks.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.NGenre;
@@ -30,6 +31,7 @@ import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
+import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
@@ -48,6 +50,8 @@ public class NovelController {
 	private final NovelService novelService;
 	private final EpisodeService episodeService; //추가
 	private final NovelRatingService novelRatingService;
+	private final BookmarkService bookmarkService;
+	
 	
     @GetMapping("/new")
     public void novelCreate() {
@@ -200,6 +204,42 @@ public class NovelController {
     	return "novel/search";
     }
     
-
- 
+    // 작품 좋아요 토클 (추가/취소)
+    @PostMapping("/{novelId}/like")
+    @ResponseBody
+	public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable(name = "novelId") Long novelId, 
+											@RequestParam(name = "userId") Long userId) {
+    	log.info("소설 아이디 : {}, 유저 아이디 : {}", novelId, userId);
+    	boolean isLiked = bookmarkService.toggleLike(userId, novelId);
+    	int likeCount = bookmarkService.getLikeCount(novelId);
+    	
+    	Map<String, Object> response = new HashMap<>();
+    	response.put("liked", isLiked);
+    	response.put("likeCount", likeCount);
+    	
+    	return ResponseEntity.ok(response);
+	}
+	
+	// 좋아요 개수 조회
+	@GetMapping("/{novelId}/like/count")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable(name = "novelId") Long novelId, @RequestParam(name = "userId") Long userId) {
+		Integer count = bookmarkService.getLikeCount(novelId);
+		boolean liked = bookmarkService.isLiked(userId, novelId); // 사용자가 좋아요 했는지 확인
+		
+	    Map<String, Object> response = Map.of(
+            "liked", liked,
+            "likeCount", count
+        );
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	// 사용자가 좋아요 했는지 확인
+	@GetMapping
+	@ResponseBody
+	public ResponseEntity<Boolean> isLiked(@RequestParam Long userId, @PathVariable Long novelId) {
+		boolean liked = bookmarkService.isLiked(userId, novelId);
+		return ResponseEntity.ok(liked);
+	}
 }
