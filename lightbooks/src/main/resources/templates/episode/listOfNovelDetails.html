@@ -50,7 +50,8 @@
                  <tbody>
                      <tr th:each="episode : ${episodes.content}" 
                      	th:data-episode-id="${episode.id}" 
-                     	th:data-novel-id="${episode.novelId}"  
+                     	th:data-novel-id="${episode.novelId}"
+                     	th:data-episode-num="${episode.episodeNum}"   
                      	th:data-is-owner="${novel.userId eq #authentication.principal.id}">
                          <td>
                              <div class="mb-2">
@@ -61,6 +62,8 @@
 								   th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${episode.novelId}, episodeId=${episode.id})}" 
 								   th:data-category="${episode.category}" 
 								   th:data-title="${episode.title}"
+								   th:data-episode-id="${episode.id}"
+								   th:data-episode-num="${episode.episodeNum}" 
 								   th:text="${episode.title}" 
 								   style="font-weight: bold;">
 								</a>
@@ -91,7 +94,7 @@
                                            th:href="@{/novel/{novelId}/episode/{episodeId}/modify(novelId=${episode.novelId}, episodeId=${episode.id})}">
                                            수정
                                         </a>
-                                        <!-- 삭제 버튼: AJAX 처리 (이미 처리 중) -->
+                                        <!-- 삭제 버튼: AJAX 처리 -->
                                         <button type="button" class="btn btn-danger btn-sm btn-delete"
                                                 th:data-episode-id="${episode.id}" 
                                                 th:data-novel-id="${episode.novelId}">

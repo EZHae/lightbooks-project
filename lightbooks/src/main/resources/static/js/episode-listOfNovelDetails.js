@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. episode-title 클릭 처리 (유료/무료 회차 및 작성자 확인)
             const episodeLink = event.target.closest(".episode-title");
+			console.log('확인', episodeLink);
             if (episodeLink) {
                 event.preventDefault(); // 기본 동작 방지
 
@@ -96,7 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (category === "2") {
                     // 유료 회차인 경우 구매 여부 확인
                     const episodeId = episodeLink.closest("tr").getAttribute("data-episode-id");
+					const episodeNum = episodeLink.getAttribute("data-episode-num");
+					const inputNovelTitle = document.querySelector('input#inputNovelTitle').value;
                     const novelId = episodeLink.closest("tr").getAttribute("data-novel-id");
+					console.log("회차 ID:", episodeId);
+					console.log("회차의 화:", episodeNum);
+					console.log("소설 ID:", novelId);
 
                     fetch(`/novel/${novelId}/episode/${episodeId}/check`)
                         .then(response => {
@@ -110,11 +116,30 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (!result) return;
 
                             if (result === "PURCHASED" || result === "FREE") {
+								console.log("구매된 회차입니다. 이동합니다.");
                                 window.location.href = episodeLink.getAttribute("href");
                             } else {//구매하지 않았는데 유료회차를 클릭한 경우(구매 모달창 뜨게)
-								const ex = document.querySelector('strong#nowCoin').textContent;
-								console.log(ex);
-                                alert(`유료 회차입니다. 구매 후 이용해주세요.${ex}`);
+								console.log("구매하지 않은 유료 회차입니다. 구매 팝업을 표시합니다.");
+								//const ex = document.querySelector('strong#nowCoin').textContent;
+								//console.log(ex);
+                               // alert(`유료 회차입니다. 구매 후 이용해주세요.${ex}`);
+							   const modalElement = document.getElementById('buyEpisodeModal');
+							       if (!modalElement) {
+							           console.error("buyEpisodeModal 요소를 찾을 수 없습니다.");
+							           return;
+							       }
+
+							       const buyEpisodeModal = new bootstrap.Modal(modalElement, {
+							           backdrop: 'static', // 클릭 시 닫히지 않도록 설정
+							           keyboard: false     // ESC 키로 닫히지 않도록 설정
+							       });
+								   
+								   //모달 열리기 전에 넣어야 모달에 반영되기때문에
+								   const modalTitle = document.querySelector('h5#modalTitle');
+								   modalTitle.textContent = `${inputNovelTitle}의 ${episodeNum}회차`;
+								   
+							       // 모달 열기
+							       buyEpisodeModal.show();
 								
                             }
                         })

@@ -40,7 +40,7 @@
 		
 						<div>
 							<label class="form-label" for="title">작품명</label>
-							<input type="text" name="title" class="form-control" th:value="*{title}" readonly>
+							<input id="inputNovelTitle" type="text" name="title" class="form-control" th:value="*{title}" readonly>
 						</div>
 						<div class="">
 							<label class="form-label" for="writer">작성자</label>
@@ -134,6 +134,28 @@
 			</div>
 			<input type = "hidden" id = "novelId" th:value = "${novel.id}">
 		</main>
+		
+		<!-------- 모달창 ----------->
+		<div class="modal fade" id="buyEpisodeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="modalTitle">Default Title</h5>
+		                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		            </div>
+		            <div class="modal-body">
+		                <div>
+		                	<span></span>
+		                </div>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		                <button type="button" class="btn btn-primary">구매하기</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
 
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
