@@ -148,7 +148,7 @@
 								<div>
 									<div class="novel-content">
 										<!-- 타이틀 -->
-										<span id="noveltitle" th:text="*{title}"></span>
+										<span id="inputNovelTitle" th:text="*{title}"></span>
 										
 										<span id="novelwriter" th:text="*{writer}"></span>
 										
@@ -169,16 +169,8 @@
 									</div>
 								</div>
 							</div>
-						</div>
 							
-						<!------ 회차 리스트 ------->
-						<div class="col-8 card p-3">
-							<div id="episodeListContainer ">
-							    <th:block th:replace="~{episode/listOfNovelDetails :: episodeListOfNovelDetails}"></th:block>
-							</div>
-						</div>
-					</div>
-						<!-- 좋아요 별점 버튼들 -->
+							<!-- 좋아요 별점 버튼들 -->
 						<div class="btnLikeWithRating mt-3">
 							<div class="btn-container">
 								<button id="btnLike" th:data-novel-id="*{id}" th:data-user-id="${#authentication.principal != null ? #authentication.principal.id : 0}" 
@@ -231,46 +223,101 @@
 								</div>
 							</div>
 						</div>
-						
-						
-						<!-- 댓글 기능 -->
-						<div>
+					
+						</div>
+							
+						<!------ 회차 리스트 ------->
+						<div class="col-8 card p-3">
+							<div id="episodeListContainer">
+							    <th:block th:replace="~{episode/listOfNovelDetails :: episodeListOfNovelDetails}"></th:block>
+							</div>
+							
+							<!-- 댓글 기능 -->
 							<div>
-								<label class="form-label" for="intro">댓글</label>
-								<textarea class="form-control" rows="5" name="intro"></textarea>
+								<div>
+									<label class="form-label" for="intro">댓글</label>
+									<textarea class="form-control" rows="5" name="intro"></textarea>
+								</div>
 							</div>
 						</div>
 					</div>
+				
+						
 				</div>
-			<input type = "hidden" id = "novelId" th:value = "${novel.id}">
-		</main>
-		
-		<!-------- 모달창 ----------->
-		<div class="modal fade" id="buyEpisodeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		    <div class="modal-dialog">
-		        <div class="modal-content">
-		            <div class="modal-header">
-		                <h5 class="modal-title" id="modalTitle">Default Title</h5>
-		                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		            </div>
-		            <div class="modal-body">
-		                <div>
-		                	<span></span>
-		                </div>
-		            </div>
-		            <div class="modal-footer">
-		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		                <button type="button" class="btn btn-primary">구매하기</button>
-		            </div>
-		        </div>
-		    </div>
-		</div>
-		
+			</div>
+		<input type="hidden" id="novelId" th:value="${novel.id}">
+	</main>
 
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-	</body>
+	<!--------구매 모달창 ----------->
+	<div class="modal fade" id="buyEpisodeModal" tabindex="-1"
+		aria-labelledby="buyEpisodeModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitle">회차 구매</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div
+						style="display: flex; align-items: center; gap: 10px; text-align: left;">
+						<span> 모든 작품 이용권 <span id="remainingGlobalTicket"> <strong
+								th:text="${globalTicketCount}"></strong>
+						</span>개
+						</span> <span>&middot;</span> <span> 특정 작품 이용권 <span
+							id="remainingIndividualTicket"> <strong
+								th:text="${novelTicketCount}"></strong>
+						</span>개
+						</span> <span>&middot;</span> <span><span id="remainingCoin"></span>코인</span>
+					</div>
+
+					<div class="row text-center pt-3 ps-3 pe-3">
+						<div id="divBuyGlobal" class="col card p-3 m-2">
+							<a id="selectProduct"
+								class="text-decoration-none text-dark d-flex flex-column align-items-center justify-content-center"
+								href="#" data-type="0"> <i class="fs-1 bi bi-ticket-perforated-fill"></i>
+								<div class="mt-3 text-center">
+									<span>모든 작품</span><br> <span>이용권 사용</span>
+								</div>
+							</a>
+						</div>
+						<div id="divBuyNovel" class="col card p-3 m-2">
+							<a id="selectProduct"
+								class="text-decoration-none text-dark d-flex flex-column align-items-center justify-content-center"
+								href="#" data-type="1"> <i class="fs-1 bi bi-ticket-detailed-fill"></i>
+								<div class="mt-3 text-center">
+									<span>특정 작품</span><br> <span>이용권 사용</span>
+								</div>
+							</a>
+						</div>
+						<div id="divBuyCoin" class="col card p-3 m-2">
+							<a id="selectProduct"
+								class="text-decoration-none text-dark d-flex flex-column align-items-center justify-content-center"
+								href="#" data-type="2"> <i class="fs-1 bi bi-coin"></i>
+								<div class="mt-3 text-center">
+									<span>코인 사용</span>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<div>
+						<a th:href="@{/coinshop}" th:text="'> 코인 충전하러가기'"></a>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+	<th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-	<script th:src="@{/js/novel-details.js}"></script>
 	<script th:src="@{/js/episode-listOfNovelDetails.js}"></script>
+	<script th:src="@{/js/novel-details.js}"></script>
+</body>
 </html>

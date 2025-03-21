@@ -42,6 +42,7 @@ import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
+import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,6 +61,7 @@ public class NovelController {
 	private final NovelRatingService novelRatingService;
 	private final BookmarkService bookmarkService;
 	private final UserService userService;
+	private final TicketService ticketService;//추가
 	
 	
     @GetMapping("/new")
@@ -137,7 +139,15 @@ public class NovelController {
         model.addAttribute("sort", sortStr.toString()); // 현재 정렬 방식 (문자열)
         model.addAttribute("firstEpisodeId", firstEpisodeId); // 첫 번째 에피소드의 ID
         model.addAttribute("novelId", id);
-       
+    
+        // 이용권 수 조회
+        Long globalTicketCount = ticketService.getGlobalTicketCount(auth);
+        Long novelTicketCount = ticketService.getNovelTicketCount(auth, id);
+
+        model.addAttribute("globalTicketCount", globalTicketCount);
+        model.addAttribute("novelTicketCount", novelTicketCount);
+        
+        
         // Ajax 요청인지 확인
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return "episode/listOfNovelDetails :: episodeListOfNovelDetails";
