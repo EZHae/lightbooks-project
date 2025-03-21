@@ -2,150 +2,157 @@
  * 소설상세보기의 회차 리스트
  */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[episode-list] 스크립트 로드됨');
+	console.log('[episode-list] 스크립트 로드됨');
 
-    const container = document.getElementById("episodeListContainer");
-    if (container) {
-        container.addEventListener("click", function (event) {
-            // 1. 삭제 버튼 클릭 처리
-            const deleteBtn = event.target.closest(".btn-delete");
-            if (deleteBtn) {
-                console.log("[삭제 버튼] 클릭됨:", deleteBtn);
+	const container = document.getElementById("episodeListContainer");
+	if (container) {
+		container.addEventListener("click", function(event) {
+			// 1. 삭제 버튼 클릭 처리
+			const deleteBtn = event.target.closest(".btn-delete");
+			if (deleteBtn) {
+				console.log("[삭제 버튼] 클릭됨:", deleteBtn);
 
-                // 중복 이벤트 처리 방지
-                event.preventDefault();
-                event.stopImmediatePropagation();
+				event.preventDefault();
+				event.stopImmediatePropagation();
 
-                const episodeId = deleteBtn.dataset.episodeId;
-                const novelId = deleteBtn.dataset.novelId;
+				const episodeId = deleteBtn.dataset.episodeId;
+				const novelId = deleteBtn.dataset.novelId;
 
-                if (confirm('정말로 삭제하시겠습니까?')) {
-                    fetch(`/novel/${novelId}/episode/${episodeId}/delete`, {
-                        method: 'POST'
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                alert('삭제되었습니다!');
-                                const row = document.querySelector(`tr[data-episode-id="${episodeId}"]`);
-                                if (row) row.remove();
-                            } else {
-                                alert('삭제 실패: 서버 오류가 발생했습니다.');
-                            }
-                        })
-                        .catch(error => console.error('삭제 중 오류 발생:', error));
-                }
-                return;
-            }
+				if (confirm('정말로 삭제하시겠습니까?')) {
+					fetch(`/novel/${novelId}/episode/${episodeId}/delete`, { method: 'POST' })
+						.then(response => {
+							if (response.ok) {
+								alert('삭제되었습니다!');
+								const row = document.querySelector(`tr[data-episode-id="${episodeId}"]`);
+								if (row) row.remove();
+							} else {
+								alert('삭제 실패: 서버 오류가 발생했습니다.');
+							}
+						})
+						.catch(error => console.error('삭제 중 오류 발생:', error));
+				}
+				return;
+			}
 
-            // 2. AJAX 링크 처리: ajax-link 클래스가 있는 <a> 태그
-            const targetAnchor = event.target.closest("a");
-            if (targetAnchor && targetAnchor.classList.contains("ajax-link")) {
-                event.preventDefault();
-                const url = targetAnchor.getAttribute("href");
-                if (!url) return;
+			// 2. AJAX 링크 처리
+			const targetAnchor = event.target.closest("a");
+			if (targetAnchor && targetAnchor.classList.contains("ajax-link")) {
+				event.preventDefault();
+				const url = targetAnchor.getAttribute("href");
+				if (!url) return;
 
-                console.log("[AJAX 링크] 클릭됨, URL:", url);
+				console.log("[AJAX 링크] 클릭됨, URL:", url);
 
-                fetch(url, {
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("네트워크 오류: " + response.statusText);
-                        }
-                        return response.text();
-                    })
-                    .then(html => {
-                        container.innerHTML = html;
-                        history.pushState(null, "", url);//브라우저의 URL(주소창에 표시되는 URL)을 변경하지만 페이지 전체를 다시 로드 안하게
-                    })
-                    .catch(error => console.error("회차 리스트 업데이트 중 오류 발생:", error));
-            }
+				fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+					.then(response => {
+						if (!response.ok) {
+							throw new Error("네트워크 오류: " + response.statusText);
+						}
+						return response.text();
+					})
+					.then(html => {
+						container.innerHTML = html;
+						history.pushState(null, "", url);
+					})
+					.catch(error => console.error("회차 리스트 업데이트 중 오류 발생:", error));
+			}
 
-            // 3. episode-title 클릭 처리 (유료/무료 회차 및 작성자 확인)
-            const episodeLink = event.target.closest(".episode-title");
+			// 3. episode-title 클릭 처리
+			const episodeLink = event.target.closest(".episode-title");
 			console.log('확인', episodeLink);
-            if (episodeLink) {
-                event.preventDefault(); // 기본 동작 방지
+			if (episodeLink) {
+				event.preventDefault();
 
-                const category = episodeLink.getAttribute("data-category"); // 공지/무료/유료 구분
-                const isOwner = episodeLink.closest("tr").getAttribute("data-is-owner") === "true"; // 작성자 여부
+				const category = episodeLink.getAttribute("data-category");
+				const isOwner = episodeLink.closest("tr").getAttribute("data-is-owner") === "true";
 
-                if (isOwner) {
-                    // 작성자인 경우 바로 상세 페이지로 이동
-                    console.log("작성자입니다. 상세 페이지로 이동합니다.");
-                    window.location.href = episodeLink.getAttribute("href");
-                    return;
-                }
+				if (isOwner || category === "0" || category === "1") {
+					console.log("무료 또는 작성자입니다. 상세 페이지로 이동합니다.");
+					window.location.href = episodeLink.getAttribute("href");
+					return;
+				}
 
-                if (category === "0") {
-                    // 공지사항인 경우 바로 이동
-                    console.log("공지사항입니다.");
-                    window.location.href = episodeLink.getAttribute("href");
-                    return;
-                }
-
-                if (category === "1") {
-                    // 무료 회차인 경우 바로 이동
-                    console.log("무료 회차입니다.");
-                    window.location.href = episodeLink.getAttribute("href");
-                    return;
-                }
-
-                if (category === "2") {
-                    // 유료 회차인 경우 구매 여부 확인
-                    const episodeId = episodeLink.closest("tr").getAttribute("data-episode-id");
+				if (category === "2") {
+					console.log("유료회차");
+					const episodeId = episodeLink.closest("tr").getAttribute("data-episode-id");
 					const episodeNum = episodeLink.getAttribute("data-episode-num");
 					const inputNovelTitle = document.querySelector('input#inputNovelTitle').value;
-                    const novelId = episodeLink.closest("tr").getAttribute("data-novel-id");
-					console.log("회차 ID:", episodeId);
-					console.log("회차의 화:", episodeNum);
-					console.log("소설 ID:", novelId);
+					const novelId = episodeLink.closest("tr").getAttribute("data-novel-id");
 
-                    fetch(`/novel/${novelId}/episode/${episodeId}/check`)
-                        .then(response => {
-                            if (response.status === 401) {
-                                alert("로그인이 필요합니다.");
-                                return null;
-                            }
-                            return response.text();
-                        })
-                        .then(result => {
-                            if (!result) return;
+					fetch(`/novel/${novelId}/episode/${episodeId}/check`)
+						.then(response => {
+							if (response.status === 401) {
+								alert("로그인이 필요합니다.");
+								return null;
+							}
+							return response.text();
+						})
+						.then(result => {
+							if (!result) return;
+							console.log('result', result);
 
-                            if (result === "PURCHASED" || result === "FREE") {
+							if (result === "PURCHASED" || result === "FREE") {
 								console.log("구매된 회차입니다. 이동합니다.");
-                                window.location.href = episodeLink.getAttribute("href");
-                            } else {//구매하지 않았는데 유료회차를 클릭한 경우(구매 모달창 뜨게)
+								window.location.href = episodeLink.getAttribute("href");
+							} else {
 								console.log("구매하지 않은 유료 회차입니다. 구매 팝업을 표시합니다.");
-								//const ex = document.querySelector('strong#nowCoin').textContent;
-								//console.log(ex);
-                               // alert(`유료 회차입니다. 구매 후 이용해주세요.${ex}`);
-							   const modalElement = document.getElementById('buyEpisodeModal');
-							       if (!modalElement) {
-							           console.error("buyEpisodeModal 요소를 찾을 수 없습니다.");
-							           return;
-							       }
+								const modalElement = document.getElementById('buyEpisodeModal');
+								if (!modalElement) {
+									console.error("buyEpisodeModal 요소를 찾을 수 없습니다.");
+									return;
+								}
 
-							       const buyEpisodeModal = new bootstrap.Modal(modalElement, {
-							           backdrop: 'static', // 클릭 시 닫히지 않도록 설정
-							           keyboard: false     // ESC 키로 닫히지 않도록 설정
-							       });
-								   
-								   //모달 열리기 전에 넣어야 모달에 반영되기때문에
-								   const modalTitle = document.querySelector('h5#modalTitle');
-								   modalTitle.textContent = `${inputNovelTitle}의 ${episodeNum}회차`;
-								   
-							       // 모달 열기
-							       buyEpisodeModal.show();
-								
-                            }
-                        })
-                        .catch(error => console.error("오류 발생:", error));
-                }
-            }
-        });
-    }
+								const buyEpisodeModal = new bootstrap.Modal(modalElement, {
+									backdrop: 'static',
+									keyboard: false
+								});
+
+								document.querySelector('h5#modalTitle').textContent = `${inputNovelTitle}의 ${episodeNum}화`;
+								document.getElementById('remainingCoin').innerHTML = `<strong>${document.querySelector('strong#nowCoin').textContent}</strong>`;
+
+								buyEpisodeModal.show();
+								console.log("모달창 열렸음");
+
+								document.querySelectorAll('a#selectProduct').forEach(btn => {
+									btn.addEventListener('click', () => {
+										let type = btn.dataset.type;
+										console.log(type);
+										let userId = document.querySelector('span#userId').textContent.trim();
+										console.log(userId);
+										let novelId = document.querySelector('input#novelId').value;
+										console.log(novelId);
+										const episodeId = episodeLink.closest("tr").getAttribute("data-episode-id");
+										console.log(episodeId);
+										let coin = Number(-100);
+										console.log(coin);
+
+										if (!userId || !novelId || !episodeId) {
+											console.error("필수 정보(userId, novelId, episodeId)가 누락되었습니다.");
+											return;
+										}
+
+										const data = { userId, novelId, episodeId, type, coin };
+
+										axios.post(`/novel/${novelId}/episode/buy`, data)
+											.then(response => {
+												console.log("구매 성공:", response.data);
+												
+												// 구매 성공 시 모달 창 닫기 및 페이지 새로고침
+												window.alert("구매가 완료되었습니다."); // 알림 메시지 표시
+												const modalElement = document.getElementById('buyEpisodeModal');
+												const buyEpisodeModal = bootstrap.Modal.getInstance(modalElement);
+												buyEpisodeModal.hide(); // 모달 창 닫기
+												window.location.reload(); // 페이지 새로고침
+											})
+											.catch(error => {
+												console.error("구매 중 오류 발생:", error);
+											});
+									});
+								});
+							}
+						});
+				}
+			}
+		});
+	}
 });
