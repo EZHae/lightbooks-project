@@ -59,4 +59,9 @@ public class HomeController {
     public void mileageshop() {
     	log.info("mileageshop");
     }
+    
+    @GetMapping("/error")
+    public void error() {
+    	log.info("error_page()");
+    }
 }

@@ -31,7 +31,7 @@
 							<td th:text="*{user.loginId}"></td>
 							<td th:text="*{user.username}"></td>
 							<td th:text="*{novel.title}"></td>
-							<td th:text="*{type == 0 ? '무료' : '유료'}"></td>
+							<td th:text="*{type == 0 ? '무료 신청' : '유료 신청'}"></td>
 							<td th:text="*{createdTime}"></td>
 							<td th:text="*{status == 0 ? '대기 중' : (status == 1 ? '완료' : '거절')}"></td>
 							<td class="text-center">

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -14,15 +13,16 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @DynamicInsert
@@ -100,5 +100,4 @@ public class Novel extends BaseTimeEntity{
 	public void updateGrade(Integer grade) {
 		this.grade = grade;
 	}
-
 }

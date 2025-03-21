@@ -3,6 +3,9 @@ package com.itwill.lightbooks.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -160,10 +163,16 @@ public class NovelController {
     	log.info("myWorks()");
     	log.info("현재 접속 아이디: {}", id);
     	
+    	// 유저의 소설 목록 가져오기
     	List<NovelResponseDto> novels = novelService.getNovelByUserId(id);
     	log.info("novels : {}", novels);
     	
+    	// 해당 유저의 프리미엄 신청 status 확인
+    	Map<Long, String> premiumStatus = novelService.getUserPremiumStatus(id);
+    	log.info("premiumStatus : {}", premiumStatus);
+    	
     	model.addAttribute("novels", novels);
+    	model.addAttribute("premiumStatus", premiumStatus);
     	
     	return "mypage/my-works";
     	
@@ -261,25 +270,59 @@ public class NovelController {
 		return ResponseEntity.ok(liked);
 	}
 	
-    @GetMapping("/premium/{novelId}")
-	public String premium(@PathVariable(name = "novelId") Long novelId, Model model) {
-		log.info("premium()");
-		
-		Novel novel = novelService.searchById(novelId);
-    	log.info("novels : {}", novel);
-    	Long count = episodeService.getEpisodeCountByNovelId(novelId);
-    	log.info("count : {}", count);
-    	
-    	model.addAttribute("novel", novel);
-    	model.addAttribute("count", count);
-    	
-		return "/novel/premium";
-	}
-    
+	
 	/**
 	 *  해당 작품의 사용자가 유료/무료 신청을 할 때
 	 *  - novelId, userId, type(0: 무료, 1: 유료), status(0: 대기, 1: 승인, 2:거절)
 	 */
+	
+    @GetMapping("/premium/{novelId}")
+	public String premium(@PathVariable(name = "novelId") Long novelId, Model model) {
+		log.info("premium()");
+		
+		// 해당 유저의 소설이 신청을 한 소설인지
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+       if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+           throw new IllegalStateException("로그인이 필요합니다."); // 로그인되지 않은 사용자 처리
+       }
+
+       // 현재 로그인된 사용자 ID 가져오기
+       User currentUser = (User) auth.getPrincipal(); // User 엔터티로 캐스팅
+       Long currentUserId = currentUser.getUserId();
+		
+       // 해당 유저의 소설이 신청을 한 소설인지
+       Optional<NovelGradeRequest> requstOut = novelService.getPremiumUserIdAndNovelId(currentUserId ,novelId);
+		if(requstOut.isPresent()) {
+			NovelGradeRequest request = requstOut.get();
+			if(request.getStatus() == 0 || request.getStatus() == 1) {
+				return "redirect:/error/404"; // 임의로 접근 했을 시 페이지 이동
+			}
+		}
+		
+		// 소설 정보
+		Novel novel = novelService.searchById(novelId);
+    	log.info("novels : {}", novel);
+    	Long count = episodeService.getEpisodeCountByNovelId(novelId);
+    	log.info("count : {}", count);
+    	boolean canApply = novelService.canApplyForPremiun(novelId);
+    	
+    	model.addAttribute("novel", novel);
+    	model.addAttribute("count", count);
+    	model.addAttribute("canApply", canApply);
+    	
+		return "/novel/premium";
+	}
+    
+    // 해당 소설이 신청 조건을 만족 하는 지 확인
+    @ResponseBody
+    @GetMapping("/premium/can-apply")
+    public ResponseEntity<Boolean> canApplyForPremiun(@RequestParam Long novelId){
+    	boolean canApply = novelService.canApplyForPremiun(novelId);
+    	return ResponseEntity.ok(canApply);
+    }
+    
+    // 사용자가 신청조건에 만족하면 admin의 신청 내역 테이블에 저장
     @ResponseBody
 	@PostMapping("/premium/apply")
 	public ResponseEntity<NovelGradeRequest> submitPremiumRequest(@RequestBody PremiumRequestDto dto) {

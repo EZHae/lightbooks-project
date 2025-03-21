@@ -5,11 +5,13 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class NovelResponseDto {
 	
 	private Long id;
@@ -21,6 +23,6 @@ public class NovelResponseDto {
 	private Integer state;
 	private Integer grade;
 	private List<String> genres;
-	
 	private BigDecimal rating;
+	
 }
