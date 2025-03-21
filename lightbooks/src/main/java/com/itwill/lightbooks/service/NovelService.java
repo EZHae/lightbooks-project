@@ -1,7 +1,9 @@
 package com.itwill.lightbooks.service;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.Genre;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
@@ -23,6 +26,7 @@ import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.dto.PremiumRequestDto;
+import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.itwill.lightbooks.repository.genre.GenreRepository;
 import com.itwill.lightbooks.repository.novel.NGenreRepository;
 import com.itwill.lightbooks.repository.novel.NovelGradeRequestRepository;
@@ -40,6 +44,7 @@ public class NovelService {
 	private final GenreRepository genreRepo;
 	private final NGenreRepository ngenreRepo;
 	private final NovelGradeRequestRepository novelGradeRequestRepo;
+	private final EpisodeRepository episodeRepo;
 	
 	// 작품 수정 페이지에 데이터를 가져옴
 	public Novel searchByIdWithGenre(Long id) {
@@ -184,4 +189,33 @@ public class NovelService {
     	
     	return result;
     }
+
+    // 유저
+	public Map<Long, String> getUserPremiumStatus(Long userId) {
+		List<NovelGradeRequest> result = novelGradeRequestRepo.findByUserId(userId);
+		log.info("유저 아이디 : {}", userId);
+		return result.stream()
+				.filter(req -> req.getStatus() != 2) // 거절은 무시
+				.collect(Collectors.toMap(
+						req -> req.getNovel().getId(),
+						req -> req.getStatus() == 0 ? "대기중" : "완료",
+								(existing, replacement) -> existing)); // 중복 시 기존 값 유지
+	}
+	
+    public boolean canApplyForPremiun(Long novelId) {
+    	// 소설 정보에 좋아요, 평점.
+    	Novel novel = novelRepo.searchById(novelId);
+    	
+    	// 해당 소설의 회차 데이터를 가져와야함
+    	Long episodeCount = episodeRepo.countNovelId(novelId);
+    	
+    	// 데시멀은 eq가 아닌 compartTo를 사용해야함 소수점까지 비교를 하기 때문
+    	boolean isApply = novel.getRating().compareTo(BigDecimal.valueOf(4.0)) >= 0 && episodeCount >= 10 && novel.getLikeCount() >= 500;
+    	
+    	return isApply;
+    }
+
+	public Optional<NovelGradeRequest> getPremiumUserIdAndNovelId(Long currentUserId, Long novelId) {
+		return novelGradeRequestRepo.findByUserIdAndNovelId(currentUserId,novelId);
+	}
 }

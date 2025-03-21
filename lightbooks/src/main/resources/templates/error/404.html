@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('404 - 페이지를 찾을 수 없습니다.')}"></head>
+	<style>
+ 		body.error-404-page {
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .error-404-container {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .error-404-container h1 {
+            font-size: 100px;
+            margin-bottom: 20px;
+            color: #ff5555;
+        }
+
+        .error-404-container .content {
+            font-size: 20px;
+        }
+
+        .go-home {
+            display: inline-block;
+            text-decoration: none;
+            background-color: black;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .go-home:hover {
+            background-color: gray;
+        }
+
+        .emoji {
+            font-size: 60px;
+            margin-top: 20px;
+        }
+        
+					  
+	</style>
+	<body class="error-404-page">
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+	        <div class="container error-404-container">
+	            <h1>404</h1>
+	            <p class="content">죄송합니다! 요청하신 페이지를 찾을 수 없습니다.</p>
+	            <a th:href="@{/}" class="go-home">메인으로 돌아가기</a>
+	            <div class="emoji">🚧</div>
+	        </div>
+	    </main>
+		
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

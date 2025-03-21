@@ -200,7 +200,9 @@
 						th:data-novel-id="${novel.id}"
 						th:data-novel-grade="${novel.grade}"
 						data-status="0"
-						type="submit" name="btnPremiumSubmit">신청하기</button>
+						type="submit" name="btnPremiumSubmit"
+						th:disabled="${!canApply}"
+						th:text="${canApply ? '신청하기' : '신청불가능'}"></button>
 					</div>
 				</div>
 			</div>

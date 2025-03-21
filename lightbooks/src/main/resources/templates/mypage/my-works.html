@@ -140,7 +140,10 @@
 			                <br/>
 			                <a class="btn btn-secondary mt-2" th:href="@{/novel/{id}/episode/create(id=${novel.id})}">회차작성</a><!-- 추가 -->
 			                <br/>
-			                <a class="btn btn-secondary mt-2" th:href="@{/novel/premium/{id}(id=${novel.id})}">전환신청</a>
+			                <button class="btn btn-secondary mt-2" th:onclick="'location.href=\'/novel/premium/' + ${novel.id} + '\''"
+			                 th:data-novel-id="${novel.id}"
+			                 th:disabled="${premiumStatus[novel.id] == '대기중' or premiumStatus[novel.id] == '완료'}"
+			                 th:text="${premiumStatus[novel.id] != null ? premiumStatus[novel.id] : '신청 가능'}"></button>
 			                <br/>
 						</div>
 					</div>
