@@ -125,6 +125,7 @@
       .btnNovelModify:hover, .btnNpisodeModify:hover {
          background-color: #800080;
       }
+<<<<<<< HEAD
       
       </style>
    
@@ -276,6 +277,160 @@
 
                <div class="row text-center pt-3 ps-3 pe-3">
                   <div id="divBuyGlobal" class="col card p-3 m-2">
+=======
+
+      
+      </style>
+   
+   <body>
+      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+      
+      <main>
+         <div class="card-body">
+            <div class="container-fluid">
+               <div class="row centered-row gx-4 mt-4">
+                  <div class="col-4" th:object="${novel}">
+                     <div class="novel-container card p-3">
+                        <div class="image-container">
+                           <div class="image-wrapper">
+                              <span id="novelgrade" th:text="*{grade == 0 ? '무료' : '유료'}"></span>
+                              <img th:src="@{/images/testimg.jpg}" alt="섬네일" style="width: 90%">
+                           </div>
+                        </div>
+                        
+                        <input id="inputNovelTitle" class="d-none" th:value="*{title}" /> <!-- 지우면 안됨!!!!!!!! -->
+
+                  
+                     
+                        <div>
+                           <div class="novel-content">
+                              <!-- 타이틀 -->
+                              <span id="inputNovelTitle" th:text="*{title}"></span>
+                              
+                              <span id="novelwriter" th:text="*{writer}"></span>
+                              
+                              <div class="novel-item">
+                                 <i class="bi bi-heart"></i>
+                                 <span th:text="${novel.likeCount}"></span>
+                                 <i class="bi bi-star"></i>
+                                 <span th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'">0.0</span>
+                              </div>
+                           </div>
+                        </div>
+                        <div th:if="*{userId eq #authentication.principal.id}" class="btnUserModify">
+                           <div class="btnNovelModify">
+                              <a th:href="@{/novel/modify/{id}(id=${novel.id})}" >작품 수정</a>
+                           </div>
+                           <div class="btnNpisodeModify">
+                              <a th:href="@{/novel/{id}/episode/create(id=${id})}" >회차 작성</a>
+                           </div>
+                        </div>
+                     </div>
+                     
+                     <!-- 좋아요 별점 버튼들 -->
+                  <div class="btnLikeWithRating mt-3">
+                     <div class="btn-container">
+                        <button id="btnLike" th:data-novel-id="*{id}" th:data-user-id="${#authentication.principal != null ? #authentication.principal.id : 0}" 
+                           class="btn btn-outline-danger p-4 h-2 me-3">
+                           <i class="bi bi-heart-fill"></i>
+                           <span id="likeCount" th:text="${likeCount}"></span>
+                        </button>
+                     </div>
+   
+   
+                     <div>
+                        <button id="openRatingBtn" 
+                           class="btn btn-outline-warning p-4 h-2"
+                           data-bs-toggle="modal" data-bs-target="#ratingModal">
+                           <i class="bi bi-star-fill"></i>
+                           <span id="averageRating">0.0</span> / 5.0
+                        </button>
+                     </div>
+   
+                  <!-- 별점 기능 -->
+                  <!-- Modal -->
+                     <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h1 class="modal-title fs-5 text-center">
+                                     <i class="bi bi-star-fill text-warning"></i> 
+                                     별점 등록 
+                                     <i class="bi bi-star-fill text-warning"></i>
+                                 </h1>
+                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body text-center">
+                                 <h3>별을 클릭하세요</h3>
+                                 <div id="stars">
+                                    <span class="bi bi-star star" data-value="1"></span>
+                                    <span class="bi bi-star star" data-value="2"></span>
+                                    <span class="bi bi-star star" data-value="3"></span>
+                                    <span class="bi bi-star star" data-value="4"></span>
+                                    <span class="bi bi-star star" data-value="5"></span>
+                                 </div>
+                                 <input type="hidden" id="selectedRating" name="rating" value="0">
+                              </div>
+      
+                              <div class="modal-footer">
+                                 <button type="button" id="btnRatingSubmit" class="btn btn-success form-control">확인</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               
+                  </div>
+                     
+                  <!------ 회차 리스트 ------->
+                  <div class="col-8 card p-3">
+                     <div id="episodeListContainer">
+                         <th:block th:replace="~{episode/listOfNovelDetails :: episodeListOfNovelDetails}"></th:block>
+                     </div>
+                     
+                     <!-- 댓글 기능 -->
+                     <div>
+                        <div>
+                           <label class="form-label" for="intro">댓글</label>
+                           <textarea class="form-control" rows="5" name="intro"></textarea>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            
+                  
+            </div>
+         </div>
+      <input type="hidden" id="novelId" th:value="${novel.id}">
+   </main>
+
+   <!--------구매 모달창 ----------->
+   <div class="modal fade" id="buyEpisodeModal" tabindex="-1"
+      aria-labelledby="buyEpisodeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="modalTitle">회차 구매</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <div
+                  style="display: flex; align-items: center; gap: 10px; text-align: left;">
+                  <span> 모든 작품 이용권 <span id="remainingGlobalTicket"> <strong
+                        th:text="${globalTicketCount}"></strong>
+                  </span>개
+                  </span> <span>&middot;</span> <span> 해당 작품 이용권 <span
+                     id="remainingIndividualTicket"> <strong
+                        th:text="${novelTicketCount}"></strong>
+                  </span>개
+                  </span> <span>&middot;</span> <span><span id="remainingCoin"></span>코인</span>
+               </div>
+
+               <div class="row text-center pt-3 ps-3 pe-3">
+                  <div id="divBuyGlobal" class="col card p-3 m-2" >
+>>>>>>> 25501ab93b8215c7d6087ba567dadfe68f233e98
                      <a id="selectProduct"
                         class="text-decoration-none text-dark d-flex flex-column align-items-center justify-content-center"
                         href="#" data-type="0"> <i class="fs-1 bi bi-ticket-perforated-fill"></i>
@@ -283,13 +438,22 @@
                            <span>모든 작품</span><br> <span>이용권 사용</span>
                         </div>
                      </a>
+<<<<<<< HEAD
                   </div>
                   <div id="divBuyNovel" class="col card p-3 m-2">
+=======
+                  </div> 
+                  <div id="divBuyNovel" class="col card p-3 m-2" >
+>>>>>>> 25501ab93b8215c7d6087ba567dadfe68f233e98
                      <a id="selectProduct"
                         class="text-decoration-none text-dark d-flex flex-column align-items-center justify-content-center"
                         href="#" data-type="1"> <i class="fs-1 bi bi-ticket-detailed-fill"></i>
                         <div class="mt-3 text-center">
+<<<<<<< HEAD
                            <span>특정 작품</span><br> <span>이용권 사용</span>
+=======
+                           <span>해당 작품</span><br> <span>이용권 사용</span>
+>>>>>>> 25501ab93b8215c7d6087ba567dadfe68f233e98
                         </div>
                      </a>
                   </div>

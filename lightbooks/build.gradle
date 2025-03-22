@@ -56,12 +56,6 @@ dependencies {
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     
-    // - 유효성 검사 -
-    // @Valid	유효성 검사 수행 트리거
-    // @Size(max = 200)	글자 수 제한 (200자 이하)
-    // @NotBlank	null, 빈 문자열, 공백 입력 방지
-    // @Valid + BindingResult	유효성 검사 트리거 및 결과 처리
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
