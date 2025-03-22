@@ -1,6 +1,7 @@
 package com.itwill.lightbooks.domain;
 
-import jakarta.persistence.Column;
+import org.hibernate.annotations.DynamicInsert;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@DynamicInsert
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @NoArgsConstructor
@@ -40,5 +42,10 @@ public class CommentLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment; // 좋아요 대상 댓글
+
+	public void toEntity(User user, Comment comment) {
+		this.user = user;
+		this.comment = comment;
+	}
 
 }

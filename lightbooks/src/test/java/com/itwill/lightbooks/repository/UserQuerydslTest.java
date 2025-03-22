@@ -16,7 +16,7 @@ public class UserQuerydslTest {
     @Autowired
     private UserRepository userRepo;
 
-//    @Test
+    @Test
     public void testSearchById() {
         User user = userRepo.searchById(1L);
         log.info("user(id=1): {}", user);

@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					console.log("유료회차");
 					const episodeId = episodeLink.closest("tr").getAttribute("data-episode-id");
 					const episodeNum = episodeLink.getAttribute("data-episode-num");
-					const inputNovelTitle = document.querySelector('span#inputNovelTitle').value;
+					const inputNovelTitle = document.querySelector('input#inputNovelTitle').value;
 					const novelId = episodeLink.closest("tr").getAttribute("data-novel-id");
 
 					fetch(`/novel/${novelId}/episode/${episodeId}/check`)
