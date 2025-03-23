@@ -20,14 +20,13 @@
 						    	
 						    	<!-- 장르 + 작가 -->
 							  	<p class="meta-line">
-							    	<span th:if="${novel.genres}" th:text="'장르: ' + ${novel.genres}"></span>
+							    	<span th:if="${novel.genres}" th:text=" ${novel.genres}"></span>
 							    	<span th:text="'작가: ' + (${novel.writer} ?: '미상')"></span>
 							  	</p>
 							  	
 							  	<!-- 좋아요 + 평점 -->
 							  	<p class="meta-line">
 								  	<span th:if="${novel.likeCount != null}" th:text="'❤️ ' + ${novel.likeCount}"></span>
-								  	&nbsp;
 								  	<span th:if="${novel.rating != null}" th:text="'평점: ' + ${novel.rating} + '⭐'"></span>
 								</p>
 								
@@ -37,9 +36,7 @@
 								          th:text=" ${#temporals.format(novel.modifiedTime, 'yyyy-MM-dd') + '업데이트'}">
 								    </span>
 								    <span th:if="${novel.state != null}"
-								          th:text="(${novel.state} == 0 ? '완결' : 
-								                   (novel.state == 1 ? '연재중' : 
-								                   (novel.state == 2 ? '휴재' : '완결 예정')))">
+								          th:text="${novel.state == 0 ? '완결' : (novel.state == 1 ? '연재중' : (novel.state == 2 ? '휴재' : '완결 예정'))}">
 								    </span>
 							  	</p>
 						

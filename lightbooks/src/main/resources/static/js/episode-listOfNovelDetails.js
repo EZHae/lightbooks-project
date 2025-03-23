@@ -100,34 +100,41 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 							buyEpisodeModal.hide();
 						};
 
+						
 						const closeButton = modalElement.querySelector('.btn-close[data-bs-dismiss="modal"]');
 						if (closeButton) {
 							closeButton.addEventListener('click', closeModal);
 						} else {
-							console.error('Close button not found in buyEpisodeModal');
+							console.error('buyEpisodeModal의 닫기 버튼을 찾을 수 없습니다.(header)');
 						}
 
 						const closeFooterButton = modalElement.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
 						if (closeFooterButton) {
 							closeFooterButton.addEventListener('click', closeModal);
 						} else {
-							console.error('Close footer button not found in buyEpisodeModal');
+							console.error(' buyEpisodeModal의 닫기버튼을 찾을 수 없습니다.(footer)');
 						}
 
 						document.querySelector('h5#modalTitle').textContent = `${inputNovelTitle}의 ${episodeNum}화`;
 
 						const updateRemainingCoin = () => {
-							const nowCoinElement = document.querySelector('strong#nowCoin');
-							if (nowCoinElement) {
-								document.getElementById('remainingCoin').innerHTML = `<strong>${nowCoinElement.textContent}</strong>`;
-								updateButtonStates();
-							} else {
-								setTimeout(updateRemainingCoin, 100);
+						    const nowCoinElement = document.querySelector('strong#nowCoin') || document.querySelector('span#remainingCoin');
+
+						    console.log('nowCoinElement:', nowCoinElement);
+
+						    if (nowCoinElement) {
+						        const coinValue = nowCoinElement.textContent || "0";
+						        console.log('strong#nowCoin textContent:', coinValue);
+
+						        document.getElementById('remainingCoin').innerHTML = `<strong>${coinValue}</strong>`;
+						        updateButtonStates();
+						    } else {
+						        console.error('코인 잔액 요소를 찾을 수 없습니다.');
+						        document.getElementById('remainingCoin').innerHTML = '<strong>0</strong>';
 							}
 						};
-						updateRemainingCoin();
-
-						buyEpisodeModal.show();
+						updateRemainingCoin(); // 코인 값 업데이트
+						buyEpisodeModal.show(); // 모달 표시
 						console.log("모달창 열렸음");
 
 						updateButtonStates();
@@ -195,70 +202,75 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 }
 
 document.addEventListener("click", function(event) { //지우면 안됨!!!!!!!!!
-   console.log("클릭된 요소:", event.target);
-   const episodeItem = event.target.closest(".episode-item");
-   if (episodeItem) {
-      console.log('episodeItem:', episodeItem);
-      event.preventDefault();
-      handleEpisodePurchase(episodeItem);
-   }
+	console.log("클릭된 요소:", event.target);
+	const episodeItem = event.target.closest(".episode-item");
+	if (episodeItem) {
+		console.log('episodeItem:', episodeItem);
+		event.preventDefault();
+		handleEpisodePurchase(episodeItem);
+	}
 });
 
 document.addEventListener('DOMContentLoaded', () => { //지우면 안됨!!!!!!!!!!!
-    console.log('[episode-list] 스크립트 로드됨');
+	const pageHeader = document.querySelector('nav[th\\:fragment="pageHeader"]');
+	    if (pageHeader) {
+	        pageHeader.classList.add('d-none');
+	    }
+	
+	console.log('[episode-list] 스크립트 로드됨');
 
-    const container = document.getElementById("episodeListContainer");
-    if (container) {
-        container.addEventListener("click", function(event) {
-            // 1. 삭제 버튼 클릭 처리
-            const deleteBtn = event.target.closest(".btn-delete");
-            if (deleteBtn) {
-                console.log("[삭제 버튼] 클릭됨:", deleteBtn);
+	const container = document.getElementById("episodeListContainer");
+	if (container) {
+		container.addEventListener("click", function(event) {
+			// 1. 삭제 버튼 클릭 처리
+			const deleteBtn = event.target.closest(".btn-delete");
+			if (deleteBtn) {
+				console.log("[삭제 버튼] 클릭됨:", deleteBtn);
 
-                event.preventDefault();
-                event.stopImmediatePropagation();
+				event.preventDefault();
+				event.stopImmediatePropagation();
 
-                const episodeId = deleteBtn.dataset.episodeId;
-                const novelId = deleteBtn.dataset.novelId;
+				const episodeId = deleteBtn.dataset.episodeId;
+				const novelId = deleteBtn.dataset.novelId;
 
-                if (confirm('정말로 삭제하시겠습니까?')) {
-                    fetch(`/novel/${novelId}/episode/${episodeId}/delete`, { method: 'POST' })
-                        .then(response => {
-                            if (response.ok) {
-                                alert('삭제되었습니다!');
-                                const row = document.querySelector(`tr[data-episode-id="${episodeId}"]`);
-                                if (row) row.remove();
-                            } else {
-                                alert('삭제 실패: 서버 오류가 발생했습니다.');
-                            }
-                        })
-                        .catch(error => console.error('삭제 중 오류 발생:', error));
-                }
-                return;
-            }
+				if (confirm('정말로 삭제하시겠습니까?')) {
+					fetch(`/novel/${novelId}/episode/${episodeId}/delete`, { method: 'POST' })
+						.then(response => {
+							if (response.ok) {
+								alert('삭제되었습니다!');
+								const row = document.querySelector(`tr[data-episode-id="${episodeId}"]`);
+								if (row) row.remove();
+							} else {
+								alert('삭제 실패: 서버 오류가 발생했습니다.');
+							}
+						})
+						.catch(error => console.error('삭제 중 오류 발생:', error));
+				}
+				return;
+			}
 
-            // 2. AJAX 링크 처리
-            const targetAnchor = event.target.closest("a.ajax-link");
-            if (targetAnchor) {
-                event.preventDefault();
-                const url = targetAnchor.getAttribute("href");
-                if (!url) return;
+			// 2. AJAX 링크 처리
+			const targetAnchor = event.target.closest("a.ajax-link");
+			if (targetAnchor) {
+				event.preventDefault();
+				const url = targetAnchor.getAttribute("href");
+				if (!url) return;
 
-                console.log("[AJAX 링크] 클릭됨, URL:", url);
+				console.log("[AJAX 링크] 클릭됨, URL:", url);
 
-                fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error("네트워크 오류: " + response.statusText);
-                        }
-                        return response.text();
-                    })
-                    .then(html => {
-                        container.innerHTML = html;
-                        history.pushState(null, "", url);
-                    })
-                    .catch(error => console.error("회차 리스트 업데이트 중 오류 발생:", error));
-            }
-        });
-    }
+				fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+					.then(response => {
+						if (!response.ok) {
+							throw new Error("네트워크 오류: " + response.statusText);
+						}
+						return response.text();
+					})
+					.then(html => {
+						container.innerHTML = html;
+						history.pushState(null, "", url);
+					})
+					.catch(error => console.error("회차 리스트 업데이트 중 오류 발생:", error));
+			}
+		});
+	}
 });
