@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.repository.comment;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -18,6 +19,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long>{
 	Page<Comment> findByEpisode(Episode episode, Pageable pageable);
 	
 	Comment findByIdAndEpisodeId(Long id, Long episodeId);
+	
+	List<Comment> findByEpisodeId(Long episodeId);
 	
 //	Comment findByIdAndUserIdAndSpoiler(Long id, Long userId, int spoiler);
 }

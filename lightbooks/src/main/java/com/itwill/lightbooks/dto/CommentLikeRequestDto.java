@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentLikeDto {
-	private Long Id;
-	private Long episodeId;
-	private int likeCount;
-	
-	private boolean likedByUser;
-	
+public class CommentLikeRequestDto {
+	private Long userId;
 }

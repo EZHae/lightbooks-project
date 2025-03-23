@@ -1,9 +1,13 @@
 package com.itwill.lightbooks.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +76,19 @@ public class EpisodeCommentService {
 		
 		Page<Comment> page= commentRepo.findByEpisode(episode, pageable);
 		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Long currentUserId = ((User) auth.getPrincipal()).getUserId();
+       
+		// 현재 유저가 좋아요한 댓글 ID 리스트
+		List<Long> likedIds = commentLikeRepo.findLikedCommentIdsByUser(currentUserId);
+
+		// 각 댓글에 likedByUser 설정
+		page.getContent().forEach(comment -> {
+		    if (likedIds.contains(comment.getId())) {
+		        comment.setLikedByUser(true);
+		    }
+		});
+		
 		return page;
 	}
 	
@@ -86,6 +103,18 @@ public class EpisodeCommentService {
 		
 		Page<Comment> page= commentRepo.findByNovel(novel, pageable);
 		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Long currentUserId = ((User) auth.getPrincipal()).getUserId();
+       
+		// 현재 유저가 좋아요한 댓글 ID 리스트
+		List<Long> likedIds = commentLikeRepo.findLikedCommentIdsByUser(currentUserId);
+
+		// 각 댓글에 likedByUser 설정
+		page.getContent().forEach(comment -> {
+		    if (likedIds.contains(comment.getId())) {
+		        comment.setLikedByUser(true);
+		    }
+		});
 		return page;
 	}
 	
@@ -109,31 +138,39 @@ public class EpisodeCommentService {
 	// 댓글 좋아요 - 해당 댓글을 찾아서 해당 댓글을 업데이트?
 	// 좋아요
 	@Transactional
-	public void like(Long userId, Long commentId) {
-		if(commentLikeRepo.existsByUserIdAndCommentId(commentId, userId)) {
-			throw new IllegalStateException("이미 좋아요를 눌렀습니다.");
-		}
+	public boolean toggleLike(Long userId, Long commentId) {
 		
-		Comment entity = commentRepo.findById(commentId).orElseThrow();
-		entity.setLikeState(true);
-		
+		Comment comment = commentRepo.findById(commentId).orElseThrow();
 		User user = userRepo.findById(userId).orElseThrow();
 		
-		CommentLike like = new CommentLike();
-		like.toEntity(user, entity);
+		CommentLike existing = commentLikeRepo.findByUserAndComment(user, comment);
 		
-		commentLikeRepo.save(like);
+		if(existing != null) {
+			commentLikeRepo.delete(existing); // 좋아요 취소
+			comment.setLikeState(false); // 좋아요 감소
+			return false;
+		} else {
+			CommentLike like = new CommentLike();
+			like.toEntity(user, comment);
+			commentLikeRepo.save(like); // 좋아요 추가
+			comment.setLikeState(true); // 좋아요 증가
+			return true;
+		}
 	}
-	// 좋아요 취소
+	// 좋아요 카운트
 	@Transactional
-	public void unlike(Long userId, Long commentId) {
-		CommentLike like = commentLikeRepo.findByUserIdAndCommentId(userId, commentId);
-		commentLikeRepo.delete(like);
-		
-		Comment entity = commentRepo.findById(commentId).orElseThrow();
-		entity.setLikeState(false);
+	public int getLikeCount(Long commentId) {
+		return commentLikeRepo.countByCommentId(commentId);
 	}
 	
+	// 해당 유저가 좋아요 했는지
+	@Transactional
+	public boolean isLikeByUser(Long userId, Long commentId) {
+		return commentLikeRepo.existsByUserIdAndCommentId(userId, commentId);
+	}
+	
+	
+		
 	// 스포일러 여부
 	@Transactional
 	public void setSpoiler(Long userId, Long commentId, int isSpoiler) {
@@ -143,6 +180,13 @@ public class EpisodeCommentService {
 			throw new IllegalArgumentException("댓글 작성자만 스포일러 여부를 수정할 수 있습니다.");
 		}
 		comment.setSpoiler(isSpoiler);
+	}
+	
+
+	public List<Long> findLikedCommentIdsByUser(Long currentUserId) {
+		commentLikeRepo.findLikedCommentIdsByUser(currentUserId);
+		
+		return null;
 	}
 	
 }

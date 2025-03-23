@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwill.lightbooks.domain.Comment;
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
@@ -39,6 +41,7 @@ import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.service.BookmarkService;
+import com.itwill.lightbooks.service.EpisodeCommentService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelRatingService;
 import com.itwill.lightbooks.service.NovelService;
@@ -62,7 +65,7 @@ public class NovelController {
 	private final BookmarkService bookmarkService;
 	private final UserService userService;
 	private final TicketService ticketService;//추가
-	
+	private final EpisodeCommentService episodeCommentService;
 	
     @GetMapping("/new")
     public void novelCreate() {
@@ -343,5 +346,26 @@ public class NovelController {
 		List<NovelItemDto> novels = novelService.getPaidNovelByKeyword(keyword);
 		
 		return ResponseEntity.ok(novels);
+	}
+	
+	// 회차 전체의 댓글 리스트
+	@GetMapping("/{novelId}/comments")
+	@ResponseBody
+	public ResponseEntity<PagedModel<Comment>> commentList(@PathVariable(name = "novelId") Long novelId,
+													   @RequestParam(name = "p", defaultValue = "0") int pageNo) {
+		log.info("comment page()");
+		log.info("getCommentList(novelId={}, pageNo={})", novelId, pageNo);
+		
+		Novel novel = novelService.searchById(novelId);
+		log.info("novel = {}", novel);
+		
+		Page<Comment> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("modifiedTime").descending());
+		log.info("페이지 수 = {}", page.getTotalPages());
+		log.info("페이지 번호 = {}", page.getNumber());
+		log.info("현재 페이지의 댓글 개수 = {}", page.getNumberOfElements());
+		
+       // 로그인 유저가 좋아요 누른 댓글 ID 목록
+		
+		return ResponseEntity.ok(new PagedModel<>(page));
 	}
 }
