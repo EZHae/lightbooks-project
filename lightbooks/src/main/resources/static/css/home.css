@@ -1,0 +1,121 @@
+@charset "UTF-8";
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh; /* 전체 화면을 차지하도록 설정 */
+}
+
+.container {
+	max-width: 900px; /* 원하는 최대 너비 지정 가능 */
+	margin: 0 auto; /* 중앙 정렬 */
+}
+
+/* 스와이퍼 */
+.swiper-container{
+	margin-top:10px;
+	margin-bottom:10px;	
+}
+
+.swiper {
+	width: 850px;
+	height: 100%;
+	border-radius: 12px;
+}
+
+.swiper-slide {
+	width: 800px;
+	height: 450px;
+	max-width: 800px;
+	transition: transform 0.3s ease;
+	margin: auto;
+	
+	overflow: hidden;
+	border-radius: 12px;
+}
+
+.swiper img {
+	max-width: 100%;
+	width: 800px;
+	height: 100%;
+	object-fit: cover;
+}
+
+
+.swiper-button-next, .swiper-button-prev {
+	background: rgba(0, 0, 0, 0.4); /* 검정 + 40% 투명도 */
+	color: white;
+	border-radius: 50%; /* 원형 버튼 */
+	width: 35px;
+	height: 35px; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+}	
+
+
+.swiper-pagination-bullet{
+	background: white;
+}
+	.novel-container > div {
+		margin-top: 8px; 
+		}
+	.novel-container {
+		background: white;
+		height: 100%;
+		width: 860px;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		margin: 20px auto 0 auto; /* 위 20px, 좌우 auto, 아래 0 */	
+	}
+	
+	.novelImgs {
+		border-radius: 12px;
+		aspect-ratio: 2 / 3;
+		object-fit: cover;
+		height: 200px;
+		margin-right: 6px;
+	}
+	
+	.navbar-category {
+		top: 40px; 
+		background: white;
+		padding: 5px;
+		width: 100%;
+	}
+	
+	/* 카테고리 장르 */
+	.navbar-category div {
+		display: inline-block;
+		margin: 5px;
+	}
+	
+	.navbar-category a {
+		border: 1px solid white;
+		border-radius: 20px;
+		padding: 8px;
+		font-size: 12px;
+		color: white;
+		background: #007fff;
+		text-decoration: none;
+	}
+	/* -------------- */
+	
+	div.notice{
+		background-color: #001933;
+		color:gold;
+		border: 0px solid gray;
+		border-radius: 10px;
+		padding: 5px;
+		padding-left: 10px;
+		width: 850px;
+		margin: auto;
+		font-size: 15px;
+	}

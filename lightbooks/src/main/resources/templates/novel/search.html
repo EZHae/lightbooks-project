@@ -26,8 +26,13 @@
 							  	
 							  	<!-- 좋아요 + 평점 -->
 							  	<p class="meta-line">
-								  	<span th:if="${novel.likeCount != null}" th:text="'❤️ ' + ${novel.likeCount}"></span>
-								  	<span th:if="${novel.rating != null}" th:text="'평점: ' + ${novel.rating} + '⭐'"></span>
+							  		<i class="bi bi-heart"></i>
+								  	<span th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
+								  	<i class="bi bi-star"></i>
+								  	<span th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
+								  	<i class="bi bi-person-plus-fill"></i>
+								  	<span th:if="${viewsMap != null and viewsMap.get(novel.id) != null}"
+    								  th:text="${viewsMap.get(novel.id)}"></span>
 								</p>
 								
 								<!-- 수정시간 + 상태 -->
