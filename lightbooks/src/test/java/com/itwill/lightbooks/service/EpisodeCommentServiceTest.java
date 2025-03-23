@@ -19,47 +19,47 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Rollback(false)
 public class EpisodeCommentServiceTest {
-	
-	@Autowired
-	private EpisodeCommentService episodeCommentService;
+//	
+//	@Autowired
+//	private EpisodeCommentService episodeCommentService;
+//	
+//	@Test
+//	public void testCreate() {
+//		EpisodeCommentRegisterDto dto = new EpisodeCommentRegisterDto(6L, 62L, 35L, "댓글 8번", 0, "최호철", 0);
+//		Comment comment = episodeCommentService.create(dto);
+//	}
 	
 //	@Test
-	public void testCreate() {
-		EpisodeCommentRegisterDto dto = new EpisodeCommentRegisterDto(6L, 62L, 35L, "댓글 8번", 0, "최호철", 0);
-		Comment comment = episodeCommentService.create(dto);
-	}
+//	public void testDelete() {
+//		episodeCommentService.deleteComment(8L);
+//	}
 	
 //	@Test
-	public void testDelete() {
-		episodeCommentService.deleteComment(8L);
-	}
+//	public void dummyData() {
+//		for(int i=1; i <= 10; i++) {
+//			EpisodeCommentRegisterDto dto = new EpisodeCommentRegisterDto(6L, 62L, 35L, "댓글 "+ i + "번", 0, "최호철", 0);
+//			Comment comment = episodeCommentService.create(dto);
+//			assertThat(comment).isNotNull();
+//		}
+//	}
 	
 //	@Test
-	public void dummyData() {
-		for(int i=1; i <= 10; i++) {
-			EpisodeCommentRegisterDto dto = new EpisodeCommentRegisterDto(6L, 62L, 35L, "댓글 "+ i + "번", 0, "최호철", 0);
-			Comment comment = episodeCommentService.create(dto);
-			assertThat(comment).isNotNull();
-		}
-	}
+//	public void testUpdate() {
+//		CommentUpdateDto dto = new CommentUpdateDto();
+//		dto.setId(6l);
+//		dto.setSpoiler(0);
+//		dto.setText("텟트");
+//		episodeCommentService.update(dto);	
+//	}
 	
 //	@Test
-	public void testUpdate() {
-		CommentUpdateDto dto = new CommentUpdateDto();
-		dto.setId(6l);
-		dto.setSpoiler(0);
-		dto.setText("텟트");
-		episodeCommentService.update(dto);	
-	}
+//	public void testLike() {
+//		episodeCommentService.like(6l, 21l);
+//	}	
 	
 //	@Test
-	public void testLike() {
-		episodeCommentService.like(6l, 21l);
-	}	
-	
-//	@Test
-	public void testUnLike() {
-		episodeCommentService.unlike(6l, 21l);
-	}
+//	public void testUnLike() {
+//		episodeCommentService.unlike(6l, 21l);
+//	}
 	
 }

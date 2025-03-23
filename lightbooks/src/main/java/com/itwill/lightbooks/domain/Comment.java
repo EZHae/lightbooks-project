@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,7 +69,10 @@ public class Comment extends BaseTimeEntity {
 	
 	@Column(nullable = false)
 	private int spoiler = 0;
-
+	
+	@Transient
+	private boolean likedByUser; 
+	
 	public Comment update(String text, int spoiler) {
 		this.text = text;
 		this.spoiler = spoiler;
@@ -81,12 +85,21 @@ public class Comment extends BaseTimeEntity {
 		if(liked) {
 			this.likeCount++;
 		} else {
-			this.likeCount--;
+			this.likeCount = Math.max(0, this.likeCount - 1);
 		}
 	}
 
 	public void setSpoiler(int spoiler) {
 		this.spoiler = spoiler;
 	}
+
+	public boolean isLikedByUser() {
+	    return likedByUser;
+	}
+
+	public void setLikedByUser(boolean likedByUser) {
+	    this.likedByUser = likedByUser;
+	}
+	
 	
 }

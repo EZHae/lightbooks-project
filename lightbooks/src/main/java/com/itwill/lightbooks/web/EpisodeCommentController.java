@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwill.lightbooks.domain.Comment;
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.dto.CommentLikeDto;
+import com.itwill.lightbooks.dto.CommentLikeRequestDto;
 import com.itwill.lightbooks.dto.CommentUpdateDto;
 import com.itwill.lightbooks.dto.EpisodeCommentRegisterDto;
+import com.itwill.lightbooks.repository.comment.CommentRepository;
 import com.itwill.lightbooks.service.EpisodeCommentService;
 import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
@@ -37,6 +40,7 @@ public class EpisodeCommentController {
 	private final NovelService novelService;
 	private final EpisodeService episodeService;
 	private final EpisodeCommentService episodeCommentService;
+	private final CommentRepository commentRepo;
 	
 	// 해당 회차 댓글 페이지로 이동
 	@GetMapping("comment")
@@ -53,6 +57,7 @@ public class EpisodeCommentController {
 		return "episode/comment";
 	}
 	
+	// 해당 회차의 댓글 리스트
 	@GetMapping("comment/list")
 	@ResponseBody
 	public ResponseEntity<PagedModel<Comment>> comment(@PathVariable(name = "novelId") Long novelId,
@@ -71,8 +76,11 @@ public class EpisodeCommentController {
 		log.info("페이지 번호 = {}", page.getNumber());
 		log.info("현재 페이지의 댓글 개수 = {}", page.getNumberOfElements());
 		
+       // 로그인 유저가 좋아요 누른 댓글 ID 목록
+		
 		return ResponseEntity.ok(new PagedModel<>(page));
 	}
+
 	
 	// 댓글 작성
 	@PostMapping("comment")
@@ -86,6 +94,7 @@ public class EpisodeCommentController {
 	
 	// 댓글 삭제
 	@DeleteMapping("comment/{commentId}")
+	@ResponseBody
 	public ResponseEntity<Long> deleteComment(@PathVariable Long commentId) {
 		episodeCommentService.deleteComment(commentId);
 		return ResponseEntity.ok(commentId);	
@@ -93,28 +102,34 @@ public class EpisodeCommentController {
 	
 	// 댓글 수정
 	@PutMapping("comment/{commentId}")
+	@ResponseBody
 	public ResponseEntity<Long> updateComment(@PathVariable Long commentId,@RequestBody CommentUpdateDto dto) {
+		log.info("updateComment id: {}", commentId);
+		
+		dto.setId(commentId);	
 		episodeCommentService.update(dto);
+		
 		return ResponseEntity.ok(commentId);
 	}
 	
-	// 댓글 좋아요
+	// 댓글 좋아요/취소
 	@PostMapping("comment/{commentId}/like")
-	public ResponseEntity<Long> likeComment(@PathVariable Long commentId, Long userId) {
-		episodeCommentService.like(userId, commentId);
+	@ResponseBody
+	public ResponseEntity<CommentLikeDto> toggleLike(@PathVariable Long commentId, @RequestBody CommentLikeRequestDto dto) {
 		
-		return ResponseEntity.ok(commentId);
+		boolean liked = episodeCommentService.toggleLike(dto.getUserId(), commentId);
+		int likeCount = episodeCommentService.getLikeCount(commentId);
+		Comment comment = commentRepo.findById(commentId).orElseThrow();
+		
+		CommentLikeDto response = new CommentLikeDto(
+				comment.getId(), comment.getEpisode().getId(), likeCount, liked);
+
+		return ResponseEntity.ok(response);
 	}
 	
-	// 댓글 취소
-	@DeleteMapping("comment/{commentId}/like")
-	public ResponseEntity<Long> unlike (@PathVariable Long commentId, Long userId) {
-		episodeCommentService.like(commentId, userId);
-		
-		return ResponseEntity.ok(commentId);
-	}
 	// 댓글 스포일러
 	@PutMapping("comment/{commentId}/spoiler")
+	@ResponseBody
 	public ResponseEntity<Long> spoiler(@PathVariable Long commentId,@RequestParam Long userId,@RequestParam int spoiler) {
 		episodeCommentService.setSpoiler(userId, commentId, spoiler);
 		

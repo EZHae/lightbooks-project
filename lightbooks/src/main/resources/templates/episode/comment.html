@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{/layout/fragments :: htmlHead('댓글')}"></head>
+	
 	<style>
 			/* 상단 바 스타일 */
 			.global-menu-bar {
@@ -73,7 +74,7 @@
 			    right: 10px;
 			    bottom: 10px;
 			    padding: 5px 10px;
-			    background-color: #007bff;
+			    background-color:black;
 			    color: white;
 			    border: none;
 			    border-radius: 4px;
@@ -101,28 +102,33 @@
 		        color: #555;
 		        margin-bottom: 0.3rem;
 		    }
-		
-		    .spoiler-label {
-		        color: red;
-		        font-weight: bold;
-		        margin-left: 0.5rem;
+		    .comment-bottom{
+		    	display: flex;
+			  justify-content: space-between;
 		    }
 		
+		    input#spoiler {
+		   		cursor: pointer;
+		    }
+		    .spoiler-text {
+		   		cursor: pointer;
+		   		font-size: 0.9rem;
+		    }
 		    .comment-body {
 		        font-size: 1rem;
 		        margin-bottom: 0.5rem;
 		    }
-		
 		    .comment-footer {
 		        font-size: 0.9rem;
 		        color: #888;
 		    }
-		
-		  .char-count {
+		  	.char-count {
 			  font-size: 0.85rem;
 			  color: #888;
 			  text-align: right;
 			}
+			
+			
 	</style>
 	
 	<body>
@@ -153,37 +159,40 @@
 						        <button id="btnRegisterComment" type="submit" class="submit-btn">등록</button>
 					        </div>
 				        </div>
-			            <div class="char-count">
-					    	<span id="charCount">0</span>/200자
-					    </div>
-				        <div>
-				            <label>
-							  <input id="spoiler" name="spoiler" type="checkbox" th:value="1" /> 댓글에 스포일러 포함
-							</label>
+				        <div class="comment-bottom">
+					        <div>
+					            <label for="spoiler">
+								  <input id="spoiler" name="spoiler" type="checkbox" th:value="1" /> 
+								  <span class="spoiler-text">댓글에 스포일러 포함</span>
+								</label>
+					        </div>
+				            <div class="char-count">
+						    	<span id="charCount">0</span>/200자
+						    </div>
 				        </div>
 				        <input type="hidden" id="userId"  name="userId" th:value="${#authentication.principal.id}"/>
 						<input type="hidden" id="nickname" name="nickname" th:value="${#authentication.principal.nickname}" />
 				        <input type="hidden" id="novelId" name="novelId" th:value="${novel.id}" />
 				        <input type="hidden" id="episodeId" name="episodeId" th:value="${episode.id}" />
+				        <span id="authNickname" class="d-none" sec:authentication="principal.nickname"></span>
+				        <input type="hidden" id="novelTitle" th:value="${novel.title}">
+						<input type="hidden" id="episodeTitle" th:value="${episode.episodeNum}">
 				</div>
         		<!-- 댓글 리스트 영역 -->
-				<div class="comment-section">
-				    <ul class="comment-list" id="commentList">
-					    <!-- 댓글 항목 JS -->
-					</ul>
-				
-				    <!-- 페이지네이션 -->
-				</div>
+        		<th:block th:fragment="commentListBox">
+					<div class="comment-section">
+					    <div class="comment-list" id="commentList">
+						    <!-- 댓글 항목 JS -->
+						</div>
+					</div>
+				</th:block>
         	</div>
         </main>
 		
 		
-		
-		
-		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-        
         <script src="/js/comment.js"></script>
+        <link rel="stylesheet" th:href="@{/css/comment.css}" />
 	</body>
 </html>

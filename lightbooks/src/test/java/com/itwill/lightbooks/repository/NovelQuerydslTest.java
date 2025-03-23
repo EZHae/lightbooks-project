@@ -22,7 +22,7 @@ public class NovelQuerydslTest {
 	private NovelRepository novelRepo;
 
 //	@Test
-	@Transactional
+//	@Transactional
 	public void testSearchById() {
 		Novel entity = novelRepo.searchByIdWithGenre(1L);
 			

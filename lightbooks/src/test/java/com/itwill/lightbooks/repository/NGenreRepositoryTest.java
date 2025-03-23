@@ -20,7 +20,7 @@ public class NGenreRepositoryTest {
 	private NGenreRepository ngenreRepo;
 	
 //	@Test
-	@Transactional
+//	@Transactional
 	public void testFindAll() {
 		List<NGenre> savedGenres = ngenreRepo.findAll();
 		log.info("저장된 소설 장르 리스트 = {}", savedGenres);

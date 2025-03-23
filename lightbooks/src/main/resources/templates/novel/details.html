@@ -235,12 +235,12 @@
                      </div>
                      
                      <!-- 댓글 기능 -->
-                     <div>
-                        <div>
-                           <label class="form-label" for="intro">댓글</label>
-                           <textarea class="form-control" rows="5" name="intro"></textarea>
-                        </div>
-                     </div>
+					<div class="comment-section">
+				  	 	<div class="comment-list" id="commentList"></div>
+  	 
+						<input type="hidden" id="novelId" th:value="${novel.id}" />
+						<input type="hidden" id="userId" th:value="${#authentication.principal.id}" />
+					</div>
                   </div>
                </div>
             
@@ -339,5 +339,7 @@
    <th:block th:replace="~{/layout/fragments :: footer}"></th:block>
    <script th:src="@{/js/episode-listOfNovelDetails.js}"></script>
    <script th:src="@{/js/novel-details.js}"></script>
+   <script th:src="@{/js/commentList.js}"></script>
+   <link rel="stylesheet" th:href="@{/css/comment.css}" />
 </body>
 </html>

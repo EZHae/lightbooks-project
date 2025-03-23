@@ -179,7 +179,7 @@
                                 <div class="d-flex align-items-center">
                                     <img th:src="@{/images/profile_icon_example.jpg}" alt="Profile" class="profile-img" />
                                     <div class="ms-3">
-                                        <h6 class="mb-0" sec:authentication="principal.nickname"></h6>
+                                        <h6 class="mb-0" id="authNickname" sec:authentication="principal.nickname"></h6>
                                         <span class="d-none" id="userId" sec:authentication="principal.id"></span>
                                         <a th:href="@{/user/details(id=${#authentication.principal.id})}">
                                             <small class="text-muted">내 정보</small>
