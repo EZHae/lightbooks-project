@@ -70,6 +70,9 @@ public class EpisodeController {
         //최대 episodeNum 조회(회차 새글 작성시 episodeNum 입력창에서 조건 부여하기 위해)
         Integer maxEpisodeNum = epiService.findMaxEpisodeNumByNovelId(novelId);
         model.addAttribute("maxEpisodeNum", maxEpisodeNum);
+        
+        // episodeNum 기본값 설정 (최대값 + 1)
+        episodeCreateDto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
      
 		model.addAttribute("novelId", novelId);
 		
@@ -80,7 +83,15 @@ public class EpisodeController {
 	public String createEpisode(@PathVariable Long novelId, EpisodeCreateDto dto,
 			RedirectAttributes redirectAttributes) {
 		log.info("POST create(dto={})", dto);
-		
+
+		// 현재 최대 episodeNum 조회 및 설정
+	    Integer maxEpisodeNum = epiService.findMaxEpisodeNumByNovelId(novelId);
+	    
+	    // 작성자가 직접 번호를 입력할 수 있도록 하고, 번호를 입력하지 않을 경우 자동으로 차례대로 부여
+	    if (dto.getEpisodeNum() == null) {
+	        dto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
+	    }
+
 		Novel novel = novelService.searchById(novelId);
 		
 		Episode episode = epiService.createEpisode(novelId, dto);
@@ -98,42 +109,67 @@ public class EpisodeController {
     		Model model, HttpSession session) {
         Episode episode = epiService.getEpisodeById(episodeId);
         
-        //조회수 증가(로그인 사용자만 조회수 올릴 수 있음, 세션 만료될때까지는 조회수 중복 불가능)
+     // 조회수 증가 (로그인 사용자만, 세션 만료 전 중복 불가)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()
-                && !authentication.getPrincipal().equals("anonymousUser")) {
-        	
-        	// 현재 로그인한 사용자 정보 가져오기
-            Object principal = authentication.getPrincipal();
-            Long currentUserId = null;
-            if (principal instanceof User) {
-                currentUserId = ((User) principal).getUserId();
-                System.out.println("현재 로그인된 사용자 pk(id): " + currentUserId);
-            }
+        Long currentUserId = null;
 
-            // 세션에서 조회한 에피소드 ID 목록을 가져옴(없으면 새로 생성)
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User) {
+            currentUserId = ((User) authentication.getPrincipal()).getUserId();
+            System.out.println("현재 로그인된 사용자 ID: " + currentUserId);
+
+            // 세션에서 조회한 에피소드 ID 목록 관리
             Set<Long> viewedEpisodes = (Set<Long>) session.getAttribute("viewedEpisodes");
             if (viewedEpisodes == null) {
                 viewedEpisodes = new HashSet<>();
                 session.setAttribute("viewedEpisodes", viewedEpisodes);
             }
 
-            // 현재 에피소드 ID가 목록에 없으면 조회수 증가 + 목록에 추가
-            if (!viewedEpisodes.contains(episodeId) && episode.getNovel() != null
-                    && !episode.getNovel().getUserId().equals(currentUserId)) {
+            // 현재 에피소드 ID가 목록에 없으면 조회수 증가 및 목록에 추가
+            if (!viewedEpisodes.contains(episodeId) && episode.getNovel() != null && !episode.getNovel().getUserId().equals(currentUserId)) {
                 epiService.increaseViewCount(episodeId);
                 viewedEpisodes.add(episodeId);
             }
         }
 
-        // 이전/다음 회차 ID 가져오기
+        // 작성자 여부 확인
+        boolean isOwner = (currentUserId != null) && novelService.isUserOwnerOfNovel(novelId, currentUserId);
+        model.addAttribute("isOwner", isOwner);
+
+        // 소설 정보 조회
+        Novel novel = novelService.searchById(novelId);
+        log.info("novel id = {}", novel);
+        model.addAttribute("novel", novel);
+
+        // 이전/다음 회차 ID 조회 (공지 제외)
         Long previousEpisodeId = epiService.findPreviousEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
         Long nextEpisodeId = epiService.findNextEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
 
+        // 이전/다음 회차 정보 조회
+        Episode previousEpisode = (previousEpisodeId != null) ? epiService.getEpisodeById(previousEpisodeId) : null;
+        Episode nextEpisode = (nextEpisodeId != null) ? epiService.getEpisodeById(nextEpisodeId) : null;
+        model.addAttribute("previousEpisode", previousEpisode);
+        model.addAttribute("nextEpisode", nextEpisode);
+        
+        // 이전/다음 회차 구매 여부 확인
+        boolean previousEpisodeIsPurchased = (currentUserId != null) && (previousEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, previousEpisodeId);
+        boolean nextEpisodeIsPurchased = (currentUserId != null) && (nextEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, nextEpisodeId);
+
         model.addAttribute("episode", episode);
-        model.addAttribute("previousEpisodeId", previousEpisodeId); //이전 회차
-        model.addAttribute("nextEpisodeId", nextEpisodeId); // 다음 회차
+        model.addAttribute("previousEpisodeId", previousEpisodeId);
+        model.addAttribute("nextEpisodeId", nextEpisodeId);
         model.addAttribute("novelId", novelId);
+
+        // 이용권 수 조회
+        Long globalTicketCount = ticketService.getGlobalTicketCount(authentication);
+        Long novelTicketCount = ticketService.getNovelTicketCount(authentication, novelId);
+        model.addAttribute("globalTicketCount", globalTicketCount);
+        model.addAttribute("novelTicketCount", novelTicketCount);
+
+        // 이전/다음 회차 무료/구매 여부
+        model.addAttribute("previousEpisodeIsFree", (previousEpisode != null) && (previousEpisode.getCategory() == 1));
+        model.addAttribute("nextEpisodeIsFree", (nextEpisode != null) && (nextEpisode.getCategory() == 1));
+        model.addAttribute("previousEpisodeIsPurchased", previousEpisodeIsPurchased);
+        model.addAttribute("nextEpisodeIsPurchased", nextEpisodeIsPurchased);
 
         return "episode/details";
     }

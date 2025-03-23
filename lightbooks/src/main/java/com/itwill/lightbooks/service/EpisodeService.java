@@ -55,19 +55,31 @@ public class EpisodeService {
 	}
 	
 	//다음 회차 번호 찾기
-	@Transactional(readOnly = true)
-    public Long findNextEpisodeId(Long novelId, Integer currentEpisodeNum) {
-        return episodeRepo.findFirstByNovelIdAndEpisodeNumGreaterThanOrderByEpisodeNumAsc(novelId, currentEpisodeNum)
-                .map(Episode::getId)
-                .orElse(null);
-    }
+//	@Transactional(readOnly = true)
+//    public Long findNextEpisodeId(Long novelId, Integer currentEpisodeNum) {
+//        return episodeRepo.findFirstByNovelIdAndEpisodeNumGreaterThanOrderByEpisodeNumAsc(novelId, currentEpisodeNum)
+//                .map(Episode::getId)
+//                .orElse(null);
+//    }
+//	
+//	//이전 회차 번호 찾기
+//	@Transactional(readOnly = true)
+//    public Long findPreviousEpisodeId(Long novelId, Integer currentEpisodeNum) {
+//		return episodeRepo.findFirstByNovelIdAndEpisodeNumLessThanOrderByEpisodeNumDesc(novelId, currentEpisodeNum)
+//                .map(Episode::getId)
+//                .orElse(null);
+//    }
 	
-	//이전 회차 번호 찾기
-	@Transactional(readOnly = true)
-    public Long findPreviousEpisodeId(Long novelId, Integer currentEpisodeNum) {
-		return episodeRepo.findFirstByNovelIdAndEpisodeNumLessThanOrderByEpisodeNumDesc(novelId, currentEpisodeNum)
-                .map(Episode::getId)
-                .orElse(null);
+	//지우지마세요!
+	//현재 회차 번호보다 작은 번호 중에서 공지가 아닌 가장 큰 회차번호 찾기(이전화, 다음화 버튼)
+	public Long findPreviousEpisodeId(Long novelId, int currentEpisodeNum) {
+        return episodeRepo.findPreviousEpisodeId(novelId, currentEpisodeNum);
+    }
+
+	//지우지마세요!
+	//현재 회차 번호보다 큰 번호 중에서 공지가 아닌 가장 작은 회차번호 찾기(이전화, 다음화 버튼)
+    public Long findNextEpisodeId(Long novelId, int currentEpisodeNum) {
+        return episodeRepo.findNextEpisodeId(novelId, currentEpisodeNum);
     }
 	
 	//에피소드 마지막 회차번호 찾기

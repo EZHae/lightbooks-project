@@ -89,110 +89,110 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
                             return;
                         }
 
-                  console.log("bootstrap:", bootstrap); // 추가
-                        const buyEpisodeModal = new bootstrap.Modal(modalElement, {
-                            backdrop: 'true',
-                            keyboard: false
-                        });
-                  
-                  const closeModal = () => {
-                     console.log('Modal closed');
-                     buyEpisodeModal.hide();
-                  };
+                  		console.log("bootstrap:", bootstrap); // 추가
+						const buyEpisodeModal = new bootstrap.Modal(modalElement, {
+							backdrop: 'true',
+							keyboard: false
+						});
 
-                  const closeButton = modalElement.querySelector('.btn-close[data-bs-dismiss="modal"]');
-                  if (closeButton) {
-                     closeButton.addEventListener('click', closeModal);
-                  } else {
-                     console.error('Close button not found in buyEpisodeModal');
-                  }
+						const closeModal = () => {
+							console.log('Modal closed');
+							buyEpisodeModal.hide();
+						};
 
-                  const closeFooterButton = modalElement.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
-                  if (closeFooterButton) {
-                     closeFooterButton.addEventListener('click', closeModal);
-                  } else {
-                     console.error('Close footer button not found in buyEpisodeModal');
-                  }
+						const closeButton = modalElement.querySelector('.btn-close[data-bs-dismiss="modal"]');
+						if (closeButton) {
+							closeButton.addEventListener('click', closeModal);
+						} else {
+							console.error('Close button not found in buyEpisodeModal');
+						}
 
-                  document.querySelector('h5#modalTitle').textContent = `${inputNovelTitle}의 ${episodeNum}화`;
+						const closeFooterButton = modalElement.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
+						if (closeFooterButton) {
+							closeFooterButton.addEventListener('click', closeModal);
+						} else {
+							console.error('Close footer button not found in buyEpisodeModal');
+						}
 
-                  const updateRemainingCoin = () => {
-                     const nowCoinElement = document.querySelector('strong#nowCoin');
-                     if (nowCoinElement) {
-                        document.getElementById('remainingCoin').innerHTML = `<strong>${nowCoinElement.textContent}</strong>`;
-                        updateButtonStates();
-                     } else {
-                        setTimeout(updateRemainingCoin, 100);
-                     }
-                  };
-                  updateRemainingCoin();
-                  
-                        buyEpisodeModal.show();
-                        console.log("모달창 열렸음");
+						document.querySelector('h5#modalTitle').textContent = `${inputNovelTitle}의 ${episodeNum}화`;
 
-                        updateButtonStates();
+						const updateRemainingCoin = () => {
+							const nowCoinElement = document.querySelector('strong#nowCoin');
+							if (nowCoinElement) {
+								document.getElementById('remainingCoin').innerHTML = `<strong>${nowCoinElement.textContent}</strong>`;
+								updateButtonStates();
+							} else {
+								setTimeout(updateRemainingCoin, 100);
+							}
+						};
+						updateRemainingCoin();
 
-                        document.querySelectorAll('a#selectProduct').forEach(btn => {
-                            btn.addEventListener('click', () => {
-                                const type = btn.dataset.type;
-                        console.log(type);
-                                const userId = document.querySelector('span#userId').textContent.trim();
-                        console.log(userId);
-                                const novelId = document.querySelector('input#novelId').value;
-                        console.log(novelId);
-                                const episodeId = element.dataset.episodeId;
-                        console.log(episodeId);
-                                const coin = Number(-100);
-                        console.log(coin);
+						buyEpisodeModal.show();
+						console.log("모달창 열렸음");
 
-                                if (!userId || !novelId || !episodeId) {
-                                    console.error("필수 정보(userId, novelId, episodeId)가 누락되었습니다.");
-                                    return;
-                                }
+						updateButtonStates();
 
-                                const data = { userId, novelId, episodeId, type, coin };
-                        
-                        // 버튼 광클릭시 중복 구매 방지
-                                btn.disabled = true;
-                                btn.textContent = '구매 중...';
+						document.querySelectorAll('a#selectProduct').forEach(btn => {
+							btn.addEventListener('click', () => {
+								const type = btn.dataset.type;
+								console.log(type);
+								const userId = document.querySelector('span#userId').textContent.trim();
+								console.log(userId);
+								const novelId = document.querySelector('input#novelId').value;
+								console.log(novelId);
+								const episodeId = element.dataset.episodeId;
+								console.log(episodeId);
+								const coin = Number(-100);
+								console.log(coin);
 
-                                axios.post(`/novel/${novelId}/episode/buy`, data)
-                                    .then(response => {
-                                        console.log("구매 성공:", response.data);
+								if (!userId || !novelId || !episodeId) {
+									console.error("필수 정보(userId, novelId, episodeId)가 누락되었습니다.");
+									return;
+								}
 
-                                        const successModal = new bootstrap.Modal(document.getElementById('customSuccessModal'));
-                                        successModal.show();//구매완료 창 띄우기
+								const data = { userId, novelId, episodeId, type, coin };
 
-                                        const modalElement = document.getElementById('buyEpisodeModal');
-                                        const buyEpisodeModal = bootstrap.Modal.getInstance(modalElement);
-                                        buyEpisodeModal.hide(); //모달창 숨기기
+								// 버튼 광클릭시 중복 구매 방지
+								btn.disabled = true;
+								btn.textContent = '구매 중...';
 
-                              // 구매회차 페이지로 이동
-                                        setTimeout(() => {
-                                            window.location.href = element.getAttribute("href");
-                                        }, 1000); // 1초 후 이동
+								axios.post(`/novel/${novelId}/episode/buy`, data)
+									.then(response => {
+										console.log("구매 성공:", response.data);
 
-                              // 버튼 활성화 및 상태 복원
-                                        btn.disabled = false;
-                                        btn.textContent = '구매'; // 원래 버튼 텍스트로 복원
+										const successModal = new bootstrap.Modal(document.getElementById('customSuccessModal'));
+										successModal.show();//구매완료 창 띄우기
 
-                              // 페이지 새로고침 대신 필요한 부분 업데이트
-                                        const episodeRow = document.querySelector(`a[data-episode-id="${episodeId}"]`);
-                                        if (episodeRow) {
-                                            episodeRow.setAttribute('data-category', '1');
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error("구매 중 오류 발생:", error);
-                                        btn.disabled = false;// 오류 발생 시 버튼 활성화 및 상태 복원
-                                        btn.textContent = '구매';// 원래 버튼 텍스트로 복원
-                                    });
-                            });
-                        });
-                    }
-                });
-        }
-    }
+										const modalElement = document.getElementById('buyEpisodeModal');
+										const buyEpisodeModal = bootstrap.Modal.getInstance(modalElement);
+										buyEpisodeModal.hide(); //모달창 숨기기
+
+										// 구매회차 페이지로 이동
+										setTimeout(() => {
+											window.location.href = element.getAttribute("href");
+										}, 1000); // 1초 후 이동
+
+										// 버튼 활성화 및 상태 복원
+										btn.disabled = false;
+										btn.textContent = '구매'; // 원래 버튼 텍스트로 복원
+
+										// 페이지 새로고침 대신 필요한 부분 업데이트
+										const episodeRow = document.querySelector(`a[data-episode-id="${episodeId}"]`);
+										if (episodeRow) {
+											episodeRow.setAttribute('data-category', '1');
+										}
+									})
+									.catch(error => {
+										console.error("구매 중 오류 발생:", error);
+										btn.disabled = false;// 오류 발생 시 버튼 활성화 및 상태 복원
+										btn.textContent = '구매';// 원래 버튼 텍스트로 복원
+									});
+							});
+						});
+					}
+				});
+	}
+}
 
 document.addEventListener("click", function(event) { //지우면 안됨!!!!!!!!!
    console.log("클릭된 요소:", event.target);

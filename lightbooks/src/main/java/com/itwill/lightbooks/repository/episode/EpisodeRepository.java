@@ -20,11 +20,13 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	@Query("SELECT e FROM Episode e JOIN FETCH e.novel WHERE e.id = :episodeId")
 	Optional<Episode> findByIdWithNovel(@Param("episodeId") Long episodeId);
 	
-	//회차 상세 보기 페이지에서 "다음 화" 버튼을 구현하는 데 사용
-	Optional<Episode> findFirstByNovelIdAndEpisodeNumGreaterThanOrderByEpisodeNumAsc(Long novelId, Integer episodeNum);
-	
-	//회차 상세 보기 페이지에서 "이전 화" 버튼을 구현하는 데 사용
-	Optional<Episode> findFirstByNovelIdAndEpisodeNumLessThanOrderByEpisodeNumDesc(Long novelId, Integer episodeNum);
+	//회차 상세 보기 페이지에서 "이전화" 버튼을 구현하는 데 사용(지우지마세요!!!!!!!!!!!!!!)
+	@Query("SELECT e.id FROM Episode e WHERE e.novel.id = :novelId AND e.episodeNum < :currentEpisodeNum AND e.category != 0 ORDER BY e.episodeNum DESC LIMIT 1")
+    Long findPreviousEpisodeId(@Param("novelId") Long novelId, @Param("currentEpisodeNum") int currentEpisodeNum);
+
+	//회차 상세 보기 페이지에서 "다음화" 버튼을 구현하는 데 사용(지우지마세요!!!!!!!!!!!!!!!)
+    @Query("SELECT e.id FROM Episode e WHERE e.novel.id = :novelId AND e.episodeNum > :currentEpisodeNum AND e.category != 0 ORDER BY e.episodeNum ASC LIMIT 1")
+    Long findNextEpisodeId(@Param("novelId") Long novelId, @Param("currentEpisodeNum") int currentEpisodeNum);
 	
 	//Novel에서 등록된 최대 회차넘버를 셀렉
 	@Query("select max(e.episodeNum) from Episode e where e.novel.id = :novelId")
