@@ -139,7 +139,7 @@ public class NovelService {
 	// 제목, 작성자로 소설 검색과 페이징
 	public Page<NovelListItemDto> search(NovelSearchDto dto, Sort sort) {
 		
-		Pageable pageable = PageRequest.of(dto.getP(), 10, sort);
+		Pageable pageable = PageRequest.of(dto.getP(), 6, sort);
 		Page<Novel> result = novelRepo.searchByKeyword(dto , pageable);
 		
 		return result.map(NovelListItemDto::fromEntity);
