@@ -191,7 +191,7 @@
 			    color: inherit; /* 기본 텍스트 색상 유지 */
 			}
 			
-			.dark-mode .global-menu-bar button {
+			.dark-mode .global-menu-bar button{
 			    background-color: #e9ecef; /* 항상 동일한 버튼 배경 */
 			    color: #000000; /* 항상 검정 텍스트 유지 */
 			    border: 1px solid #ced4da;
@@ -212,7 +212,9 @@
             </h1>
             <div>
                 <button>가로보기</button>
-                <button>댓글</button>
+                <div>
+	                <a class="button" th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">댓글</a>
+                </div>
             </div>
         </div>
 

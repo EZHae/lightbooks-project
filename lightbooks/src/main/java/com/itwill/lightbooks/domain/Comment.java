@@ -1,5 +1,9 @@
 package com.itwill.lightbooks.domain;
 
+import org.hibernate.annotations.DynamicInsert;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@DynamicInsert
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @NoArgsConstructor
@@ -33,18 +38,21 @@ public class Comment extends BaseTimeEntity {
 	
 	//관계매핑
 	@ToString.Exclude
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
 	//관계매핑
 	@ToString.Exclude
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "novel_id", nullable = false)
 	private Novel novel;
 	
 	//관계매핑
 	@ToString.Exclude
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "episode_id")
 	private Episode episode;
@@ -60,4 +68,25 @@ public class Comment extends BaseTimeEntity {
 	
 	@Column(nullable = false)
 	private int spoiler = 0;
+
+	public Comment update(String text, int spoiler) {
+		this.text = text;
+		this.spoiler = spoiler;
+		
+		return this;
+	}
+
+	// 좋아요 증가/감소 
+	public void	setLikeState(boolean liked) {
+		if(liked) {
+			this.likeCount++;
+		} else {
+			this.likeCount--;
+		}
+	}
+
+	public void setSpoiler(int spoiler) {
+		this.spoiler = spoiler;
+	}
+	
 }
