@@ -234,6 +234,14 @@ public class NovelController {
     	Page<NovelListItemDto> page = novelService.search(dto, Sort.by("id").descending());
     	model.addAttribute("page", page);
     	
+    	//소설 조회수 보여주기
+    	Map<Long, Integer> viewsMap = new HashMap<>();
+    	for(NovelListItemDto novel : page.getContent()) {
+    		Integer totalViews = episodeService.getTotalViewsByNovelId(novel.getId());
+    		viewsMap.put(novel.getId(), totalViews);
+    	}
+    	
+    	model.addAttribute("viewsMap", viewsMap);
     	// pagination 프래그먼트의 링크(버튼)의 요청 주소로 사용할 문자열을 모델 속성으로 저장.
         model.addAttribute("baseUrl", "/novel/search/result");
         model.addAttribute("keyword", dto.getKeyword());
