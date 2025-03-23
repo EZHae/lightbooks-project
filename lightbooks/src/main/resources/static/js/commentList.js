@@ -102,10 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	  const button = event.currentTarget;
 	  const commentId = button.getAttribute('data-id');
 	  const novelId = document.querySelector('#novelId').value;
-	  const episodeId = document.querySelector('#episodeId').value;
 	  const userId = document.querySelector('input#userId')?.value;
 
-	  const url = `/novel/${novelId}/episode/${episodeId}/comment/${commentId}/like`;
+	  const url = `/novel/comment/${commentId}/like`;
 	  const data = { userId };
 
 	  try {

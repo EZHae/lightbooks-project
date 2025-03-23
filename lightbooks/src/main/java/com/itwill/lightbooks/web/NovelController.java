@@ -32,6 +32,8 @@ import com.itwill.lightbooks.domain.NGenre;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.dto.CommentLikeDto;
+import com.itwill.lightbooks.dto.CommentLikeRequestDto;
 import com.itwill.lightbooks.dto.EpisodeListDto;
 import com.itwill.lightbooks.dto.NovelCreateDto;
 import com.itwill.lightbooks.dto.NovelItemDto;
@@ -40,6 +42,7 @@ import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelUpdateDto;
 import com.itwill.lightbooks.dto.PremiumRequestDto;
+import com.itwill.lightbooks.repository.comment.CommentRepository;
 import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeCommentService;
 import com.itwill.lightbooks.service.EpisodeService;
@@ -66,6 +69,7 @@ public class NovelController {
 	private final UserService userService;
 	private final TicketService ticketService;//추가
 	private final EpisodeCommentService episodeCommentService;
+	private final CommentRepository commentRepo; 
 	
     @GetMapping("/new")
     public void novelCreate() {
@@ -367,5 +371,20 @@ public class NovelController {
        // 로그인 유저가 좋아요 누른 댓글 ID 목록
 		
 		return ResponseEntity.ok(new PagedModel<>(page));
+	}
+	
+	// 댓글 좋아요/취소
+	@PostMapping("comment/{commentId}/like")
+	@ResponseBody
+	public ResponseEntity<CommentLikeDto> toggleLike(@PathVariable Long commentId, @RequestBody CommentLikeRequestDto dto) {
+		
+		boolean liked = episodeCommentService.toggleLike(dto.getUserId(), commentId);
+		int likeCount = episodeCommentService.getLikeCount(commentId);
+		Comment comment = commentRepo.findById(commentId).orElseThrow();
+		
+		CommentLikeDto response = new CommentLikeDto(
+				comment.getId(), comment.getEpisode().getId(), likeCount, liked);
+
+		return ResponseEntity.ok(response);
 	}
 }
