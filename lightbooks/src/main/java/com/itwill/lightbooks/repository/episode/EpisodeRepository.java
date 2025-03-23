@@ -65,6 +65,8 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	@Query("SELECT SUM(e.views) FROM Episode e WHERE e.novel.id = :novelId AND e.category != 0")
     Integer sumViewsByNovelIdExcludingNotices(@Param("novelId") Long novelId);
 	
+	//ggg
+	
 	
 	
 	

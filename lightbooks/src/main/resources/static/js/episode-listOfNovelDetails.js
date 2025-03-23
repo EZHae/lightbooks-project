@@ -34,11 +34,11 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
       console.log("category:", category); 
       let isOwner;
 
-      // 회차 제목인 경우 closest('tr')을 통해 값을 가져온다.
+      // 회차 제목인 경우
       if (element.classList.contains('episode-title')) {
          isOwner = element.closest("tr").dataset.isOwner === "true";
       }
-      // 이전화/다음화 버튼일 경우 element.dataset을 통해 값을 가져온다.
+      // 이전화/다음화 버튼일 경우
       else {
          isOwner = element.dataset.isOwner === "true";
       }
