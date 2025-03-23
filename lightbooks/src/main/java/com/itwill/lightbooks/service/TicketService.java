@@ -1,13 +1,23 @@
 package com.itwill.lightbooks.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.Ticket;
+import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.dto.EpisodeBuyDto;
+import com.itwill.lightbooks.dto.TicketReadDto;
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.repository.episode.EpisodeRepository;
+import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.ticket.TicketRepository;
+import com.itwill.lightbooks.repository.ticketpayment.TicketPaymentRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 public class TicketService {
 	
 	private final TicketRepository ticketRepo;
+	private final TicketPaymentRepository ticketPaymentRepo;
+	private final EpisodeRepository epiRepo;
+	private final NovelRepository novelRepo;
 	
 	//수정
 	public Long getNovelTicketCount(Authentication authentication, Long novelId) {
@@ -80,4 +93,33 @@ public class TicketService {
     	return ticketId;
     }
     
+    @Transactional
+    public Page<TicketPayment> readTicketPaymenByUserId(Long userId, int page, int size, int type) {
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+    	Page<TicketPayment> result = ticketPaymentRepo.findByUserId(userId, pageable);
+        result.getContent().forEach(ticketPayment -> {
+        	if (epiRepo.findById(ticketPayment.getEpisodeId()).isPresent()) {
+        		ticketPayment.setEpisodeNum(epiRepo.findById(ticketPayment.getEpisodeId()).orElseThrow().getEpisodeNum().toString());
+        	} else {
+        		ticketPayment.setEpisodeNum("알 수 없음");
+        	}
+        	
+        	if (novelRepo.findById(ticketPayment.getNovelId()).isPresent()) {
+        		ticketPayment.setNovelTitle(novelRepo.findById(ticketPayment.getNovelId()).orElseThrow().getTitle());
+        	} else {
+        		ticketPayment.setNovelTitle("알 수 없음");
+        	}
+        	
+        });
+    	
+    	return result;
+    }
+    
+    @Transactional
+    public Page<TicketReadDto> readTicketByUserId(Long userId, int page, int size, int type) {
+    	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+    	Page<Ticket> result = ticketRepo.findByUserId(userId, pageable);
+    	
+    	return result.map(TicketReadDto::fromEntity);
+    }
 }
