@@ -58,15 +58,17 @@
                                 <span class="episode-number" th:if="${episode.category == 1 || episode.category == 2}" 
                                    th:text="${episode.episodeNum} + '화 '"></span>
                                  <!-- 회차 제목: 전체 페이지 이동 -->
-                                 <a class="episode-title" 
+                                 <a class="episode-title episode-item"  
 								   th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${episode.novelId}, episodeId=${episode.id})}" 
 								   th:data-category="${episode.category}" 
 								   th:data-title="${episode.title}"
 								   th:data-episode-id="${episode.id}"
+								   th:data-novel-id="${episode.novelId}"
 								   th:data-episode-num="${episode.episodeNum}" 
 								   th:text="${episode.title}" 
+								   data-is-owner="${novel.userId eq #authentication.principal.id}"
 								   style="font-weight: bold;">
-								</a>
+								</a><!-- 지우지마세요 -->
 
                              </div>
                              <div>

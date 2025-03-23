@@ -52,28 +52,28 @@ public class NovelService {
 		return novel;
 	}
 	
-	// 내 작품 페이지에 유저 아이디로 데이터를 가져옴
-	public List<NovelResponseDto> getNovelByUserId(Long userId) {
-		List<Novel> novels = novelRepo.searchByUserIdWithGenre(userId);
-		
-		log.info("해당 유저 소설 : {}", novels);
-		
-		return novels.stream().map(novel -> new NovelResponseDto(
-				novel.getId(),
-				novel.getTitle(),
-				novel.getIntro(),
-				novel.getWriter(),
-				novel.getCoverSrc(),
-				novel.getLikeCount(),
-				novel.getState(),
-				novel.getGrade(),
-				novel.getNovelGenre()
-				.stream().map(novelGenre -> novelGenre.getGenre().getName())
-				.collect(Collectors.toList()),
-				novel.getRating() // 데시멀이라서 stream할 필요없음
-				))
-				.collect(Collectors.toList());
-	}
+	 // 내 작품 페이지에 유저 아이디로 데이터를 가져옴
+	   public List<NovelResponseDto> getNovelByUserId(Long userId) {
+	      List<Novel> novels = novelRepo.searchByUserIdWithGenre(userId);
+	      
+	      log.info("해당 유저 소설 : {}", novels);
+	      
+	      return novels.stream().map(novel -> new NovelResponseDto(
+	            novel.getId(),
+	            novel.getTitle(),
+	            novel.getIntro(),
+	            novel.getWriter(),
+	            novel.getCoverSrc(),
+	            novel.getLikeCount(),
+	            novel.getState(),
+	            novel.getGrade(),
+	            novel.getNovelGenre()
+	            .stream().map(novelGenre -> novelGenre.getGenre().getName())
+	            .collect(Collectors.toList()),
+	            novel.getRating() // 데시멀이라서 stream할 필요없음
+	            ))
+	            .collect(Collectors.toList());
+	   }
 	
 	// 소설 하나만 가져오는 기능
 	public Novel searchById(Long id) {
