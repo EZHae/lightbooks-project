@@ -43,6 +43,12 @@ public class HomeController {
 		
 		// 그냥 주석달았음: 이지해
 		
+		 model.addAttribute("bestNovels",novelService.getRandemBestNovels(12));
+		 model.addAttribute("freeNovels",novelService.getNovelsByFreeGrade(6));
+		 model.addAttribute("paidNovels",novelService.getNovelsByPaidGrade(6));
+		 model.addAttribute("genreNovelsMap",novelService.getFixedGenreNovels(6));
+		 model.addAttribute("eventNovels",novelService.getEventNovels(6));
+		
 		List<Novel> novels = novelService.searchAll();
 		model.addAttribute("novels", novels);
 		

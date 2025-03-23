@@ -2,6 +2,7 @@ package com.itwill.lightbooks.service;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -217,5 +218,34 @@ public class NovelService {
 
 	public Optional<NovelGradeRequest> getPremiumUserIdAndNovelId(Long currentUserId, Long novelId) {
 		return novelGradeRequestRepo.findByUserIdAndNovelId(currentUserId,novelId);
+	}
+
+	
+	// ===================================== 소설 리스트 ======================================
+	public List<Novel> getRandemBestNovels(int count) {
+		return novelRepo.findRandomBestNovels(count);
+	}
+
+	public List<Novel> getNovelsByFreeGrade(int limit) {
+		return novelRepo.findFreeNovels(limit);
+	}
+
+	public List<Novel> getNovelsByPaidGrade(int limit) {
+		return novelRepo.findPaidNovels(limit);
+	}
+
+	public Map<String, List<Novel>> getFixedGenreNovels(int limit) {
+		List<String> genreNames = List.of("판타지", "로맨스", "무협", "로판", "현판", "드라마");
+		Map<String, List<Novel>> result = new LinkedHashMap<>();
+		
+		for(String genreName : genreNames) {
+			List<Novel> novels = novelRepo.findNovelsByGenreName(genreName, limit);
+			result.put(genreName, novels);
+		}
+		return result;
+	}
+
+	public List<Novel> getEventNovels(int limit) {
+		return novelRepo.findRandomNovels(limit);
 	}
 }

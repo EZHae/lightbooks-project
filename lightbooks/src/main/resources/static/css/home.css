@@ -58,64 +58,102 @@
   font-weight: 600 !important;
 }	
 
-
 .swiper-pagination-bullet{
 	background: white;
 }
-	.novel-container > div {
-		margin-top: 8px; 
-		}
-	.novel-container {
-		background: white;
-		height: 100%;
-		width: 860px;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		margin: 20px auto 0 auto; /* 위 20px, 좌우 auto, 아래 0 */	
-	}
-	
-	.novelImgs {
-		border-radius: 12px;
-		aspect-ratio: 2 / 3;
-		object-fit: cover;
-		height: 200px;
-		margin-right: 6px;
-	}
-	
-	.navbar-category {
-		top: 40px; 
-		background: white;
-		padding: 5px;
-		width: 100%;
-	}
-	
-	/* 카테고리 장르 */
-	.navbar-category div {
-		display: inline-block;
-		margin: 5px;
-	}
-	
-	.navbar-category a {
-		border: 1px solid white;
-		border-radius: 20px;
-		padding: 8px;
-		font-size: 12px;
-		color: white;
-		background: #66b2ff;
-		text-decoration: none;
-	}
-	/* -------------- */
-	
-	div.notice{
-		background-color: #f6f6f6;
-		color:black;
-		border: 0px solid gray;
-		border-radius: 10px;
-		padding: 5px;
-		padding-left: 10px;
-		width: 850px;
-		margin: auto;
-		font-size: 15px;
-	}
+
+.novel-container>div {
+	margin-top: 8px;
+}
+
+.novel-container {
+	background: white;
+	height: 100%;
+	width: 860px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 20px auto 0 auto; /* 위 20px, 좌우 auto, 아래 0 */
+}
+
+.novelImgs {
+	border-radius: 12px;
+	aspect-ratio: 2/3;
+	object-fit: cover;
+	height: 200px;
+	margin-right: 6px;
+}
+
+.navbar-category {
+	top: 40px;
+	background: white;
+	padding: 5px;
+	width: 100%;
+}
+
+/* 카테고리 장르 */
+.navbar-category div {
+	display: inline-block;
+	margin: 5px;
+}
+
+.navbar-category a {
+	border: 1px solid white;
+	border-radius: 20px;
+	padding: 8px;
+	font-size: 12px;
+	color: white;
+	background: #66b2ff;
+	text-decoration: none;
+}
+/* -------------- */
+div.notice {
+	background-color: #f6f6f6;
+	color: black; border : 0px solid gray; border-radius : 10px; padding :
+	5px; padding-left : 10px; width : 850px; margin : auto;
+	font-size: 15px;
+	margin: auto;
+	width: 850px;
+	padding-left: 10px;
+	padding: 5px;
+	border-radius: 10px;
+	border: 0px solid gray;
+}
+
+
+/* 세션별 */
+.novel-section {
+	width: 860px;
+	margin: 40px auto;
+}
+.subTitle{
+	top: 0;
+   	left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+	border-bottom: 1px solid #66b2ff;
+	margin-top: 20px;
+}
+span.font {
+	font-size: 18px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.novel-grid {
+	margin-top: 10px;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 3px;
+}
+
+.novel-card {
+	background: white;
+	border-radius: 12px;
+	text-align: center;
+	font-size: 14px;
+}
