@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title th:text="${episode.title} + ' - ' + ${episode.novel.title}">회차 상세 보기</title>
+    <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 지우지마세요 -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> <!-- 지우지마세요 -->
         <style>
+        	#pageHeader { /*추가!!!!!!!*/
+			    display: none; /* 기본적으로 숨김 */
+			}
+        
             /* 기본 설정 */
 			html, body {
 			    margin: 0;
@@ -200,6 +200,8 @@
         </style>
     </head>
     <body>
+    	<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+    
     	<input type="hidden" id="inputNovelTitle" th:value="${episode.novel.title}" class="d-none"><!-- 지우면 안됨!!!!!!!!!!! -->
     	<input type="hidden" id="novelId" th:value="${novel.id}"><!-- 지우면 안됨!!!! -->
     	
@@ -227,7 +229,7 @@
                 <hr>
                 <div class="episode-content" th:utext="${episode.content}"></div>
                 <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <a th:if="${previousEpisodeId != null}"
+                    <a th:if="${previousEpisodeId != null && episode.category != 0}"
                         th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${previousEpisodeId})}"
                         class="btn btn-secondary episode-item previous-episode"
                         th:data-is-free="${previousEpisodeIsFree}" 
@@ -238,7 +240,7 @@
                         th:data-novel-id="${episode.novel.id}"
                         th:data-is-owner="${novel.userId eq #authentication.principal.id}"
                         >이전 화</a><!-- 수정본임 수정본임 지우지마세요 -->
-                    <a th:if="${nextEpisodeId != null}"
+                    <a th:if="${nextEpisodeId != null && episode.category != 0}"
                         th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
                         class="btn btn-secondary episode-item next-episode" 
                         th:data-is-free="${nextEpisodeIsFree}"
@@ -293,7 +295,6 @@
 		                        th:text="${novelTicketCount}"></strong>
 		                  </span>개
 		                  </span> <span>&middot;</span> <span><span id="remainingCoin"></span>코인</span>
-		                  <strong id="nowCoin" class="d-none"></strong><!-- 추가추가추가추가추가추가!!!!!-->
 		               </div>
 		
 		               <div class="row text-center pt-3 ps-3 pe-3">
@@ -346,7 +347,7 @@
 			            <h5 class="modal-title" id="customSuccessModalLabel">구매 완료</h5>
 			            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			         </div>
-			         <div class="modal-body">
+			         <div class="modal-body" style="text-align: center;">
 			            구매가 완료되었습니다. 즐겁게 이용해 주세요!
 			         </div>
 			         <div class="modal-footer">
@@ -356,6 +357,8 @@
 			   </div>
 			</div>
 
+		<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+   		<th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 		<script src="/js/episode-listOfNovelDetails.js"></script>
         <script src="/js/episode-details.js"></script>
     </body>
