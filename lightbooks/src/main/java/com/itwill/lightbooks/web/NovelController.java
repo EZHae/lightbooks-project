@@ -154,6 +154,9 @@ public class NovelController {
         model.addAttribute("globalTicketCount", globalTicketCount);
         model.addAttribute("novelTicketCount", novelTicketCount);
         
+        //소설 조회수 보여주기
+        Integer totalViews = episodeService.getTotalViewsByNovelId(id);
+        model.addAttribute("totalViews", totalViews);
         
         // Ajax 요청인지 확인
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {

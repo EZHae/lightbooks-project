@@ -61,7 +61,9 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	@Query("SELECT COUNT(e) FROM Episode e WHERE e.novel.id = :novelId") 
 	Long countNovelId(Long novelId);
 	
-	
+	//소설의 조회수 보여주기(공지를 제외한 유/무료 회차의 조회수만 더해서)
+	@Query("SELECT SUM(e.views) FROM Episode e WHERE e.novel.id = :novelId AND e.category != 0")
+    Integer sumViewsByNovelIdExcludingNotices(@Param("novelId") Long novelId);
 	
 	
 	

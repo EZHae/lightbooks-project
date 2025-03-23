@@ -209,4 +209,10 @@ public class EpisodeService {
     public Long getEpisodeCountByNovelId(Long novelId) {
     	return episodeRepo.countNovelId(novelId);
     }
+    
+    //소설의 조회수(유/무료 회차 조회수만 sum)
+    public Integer getTotalViewsByNovelId(Long novelId) {
+        Integer totalViews = episodeRepo.sumViewsByNovelIdExcludingNotices(novelId);
+        return totalViews != null ? totalViews : 0;
+    }
 }

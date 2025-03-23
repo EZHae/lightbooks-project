@@ -159,6 +159,9 @@
                                  <span th:text="${novel.likeCount}"></span>
                                  <i class="bi bi-star"></i>
                                  <span th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'">0.0</span>
+                                 <br>
+                                 <i class="bi bi-person-plus-fill"></i><!-- 조회수 추가! -->
+                                 <span th:text="${totalViews}"></span><!-- 조회수 추가! -->
                               </div>
                            </div>
                         </div>
