@@ -1,0 +1,114 @@
+@charset "UTF-8";
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  margin-top: 3rem;
+  padding: 0 2rem;
+}
+
+
+.searchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  justify-items: center;
+}
+
+.searchBox {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.8rem;
+  max-width: 420px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.search-img {
+  width: 110px;
+  height: auto;
+  margin-right: 0.8rem;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.searchContent {
+  position: relative; /* 기준 위치 설정 */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2.5rem; /* 버튼 영역 확보 */
+}
+
+.searchContent h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.searchContent p span {
+  margin-right: 10px;
+}
+
+.meta-line {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.gray-text {
+  color: #888;
+}
+
+.small-text {
+  font-size: 0.8rem;
+}
+
+.intro-text {
+  margin-top: 0.5rem;
+  color: #333;
+}
+
+.search-detail-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #007fff;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.search-detail-btn:hover {
+  background-color: #66b2ff;
+}
+
+
+/* 페이징 */
+.pagination .page-link {
+    color: #333;
+    font-weight: 500;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}

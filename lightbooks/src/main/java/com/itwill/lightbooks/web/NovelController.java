@@ -235,7 +235,7 @@ public class NovelController {
     	model.addAttribute("page", page);
     	
     	// pagination 프래그먼트의 링크(버튼)의 요청 주소로 사용할 문자열을 모델 속성으로 저장.
-        model.addAttribute("baseUrl", "/search/result");
+        model.addAttribute("baseUrl", "/novel/search/result");
         model.addAttribute("keyword", dto.getKeyword());
     	
     	return "novel/search";
@@ -366,7 +366,7 @@ public class NovelController {
 		Novel novel = novelService.searchById(novelId);
 		log.info("novel = {}", novel);
 		
-		Page<Comment> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("modifiedTime").descending());
+		Page<Comment> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("likeCount").descending());
 		log.info("페이지 수 = {}", page.getTotalPages());
 		log.info("페이지 번호 = {}", page.getNumber());
 		log.info("현재 페이지의 댓글 개수 = {}", page.getNumberOfElements());

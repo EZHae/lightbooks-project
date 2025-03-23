@@ -2,65 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
 	<body>
-	
-	    <h2 th:text="'검색 결과: ' + ${keyword}"></h2>
-
-	    <div th:if="${page.totalElements > 0}">
-	        <ul>
-	            <li th:each="novel : ${page.content}">
-	                <a th:href="@{/novel/{id}(id=${novel.id})}">
-	                    <img th:src="${novel.coverSrc}" alt="표지 이미지" width="100">
-	                    <span th:text="${novel.title}"></span> - 
-	                    <span th:text="${novel.writer}"></span>
-	                </a>
-	            </li>
-	        </ul>
-	        <div class="card-body">
-                    <table class="mt-2 table table-hover">
-                        <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>수정시간</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="novel : ${page}" th:object="${novel}">
-                                <td th:text="*{id}"></td>
-                                <td>
-                                    <a th:href="@{/novel/details(id=*{id})}"
-                                        th:text="*{title}"></a>
-                                </td>
-                                <td>
-                                    <a th:text="*{writer}"></a>
-                                </td>
-                                <td th:text="*{#temporals.format(modifiedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-	    </div>
-	
-	    <div th:if="${page.totalElements == 0}">
-	        <p>검색 결과가 없습니다.</p>
-	    </div>
-	
-		<div>
-	        <a th:if="${page.hasPrevious()}" 
-	           th:href="@{${baseUrl}(keyword=${keyword}, p=${page.number - 1})}">이전</a>
-	
-	        <span th:text="${page.number + 1}"></span> / <span th:text="${page.totalPages}"></span>
-	
-	        <a th:if="${page.hasNext()}" 
-	           th:href="@{${baseUrl}(keyword=${keyword}, p=${page.number + 1})}">다음</a>
-	    </div>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
-	    <a href="/">홈으로</a>
+		<div class="wrapper">
+		<main>
+			    <h2 th:text="|'${keyword}'로 검색된 결과|"></h2>
+		
+			    <div th:if="${page.totalElements > 0}">
+			    
+			    
+				    <div class="searchGrid">
+						<div class="searchBox" th:each="novel : ${page.content}">
+						    <img th:src="${novel.coverSrc} ?: '/images/default.jpg'" alt="표지 이미지" class="search-img">
+						    
+						    <div class="searchContent">
+						    	<h3 th:text="${novel.title} ?: '제목 없음'">소설 제목</h3>
+						    	
+						    	<!-- 장르 + 작가 -->
+							  	<p class="meta-line">
+							    	<span th:if="${novel.genres}" th:text=" ${novel.genres}"></span>
+							    	<span th:text="'작가: ' + (${novel.writer} ?: '미상')"></span>
+							  	</p>
+							  	
+							  	<!-- 좋아요 + 평점 -->
+							  	<p class="meta-line">
+								  	<span th:if="${novel.likeCount != null}" th:text="'❤️ ' + ${novel.likeCount}"></span>
+								  	<span th:if="${novel.rating != null}" th:text="'평점: ' + ${novel.rating} + '⭐'"></span>
+								</p>
+								
+								<!-- 수정시간 + 상태 -->
+								<p class="meta-line gray-text small-text">
+								    <span th:if="${novel.modifiedTime != null}" 
+								          th:text=" ${#temporals.format(novel.modifiedTime, 'yyyy-MM-dd') + '업데이트'}">
+								    </span>
+								    <span th:if="${novel.state != null}"
+								          th:text="${novel.state == 0 ? '완결' : (novel.state == 1 ? '연재중' : (novel.state == 2 ? '휴재' : '완결 예정'))}">
+								    </span>
+							  	</p>
+						
+								<a class="search-detail-btn"
+								   th:href="@{/novel/{id}(id=${novel.id})}">자세히 보기</a>
+							</div>
+						</div>
+					</div>
+				    
+					
+				</div>
 				
+				<div th:if="${page.totalPages > 0}">
+				    <ul class="pagination justify-content-center mt-4">
+				        <li class="page-item" th:classappend="${!page.hasPrevious} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/novel/search/result(keyword=${keyword}, p=0)}">처음</a>
+				        </li>
+				        <li class="page-item" th:classappend="${!page.hasPrevious} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/novel/search/result(keyword=${keyword}, p=${page.number - 1})}">이전</a>
+				        </li>
+				        
+				        <li class="page-item"
+				            th:each="pageNo : ${#numbers.sequence(0, page.totalPages - 1)}"
+				            th:classappend="${pageNo == page.number} ? 'active'">
+				            <a class="page-link"
+				               th:href="@{/novel/search/result(keyword=${keyword}, p=${pageNo})}"
+				               th:text="${pageNo + 1}">1</a>
+				        </li>
+				        
+				        <li class="page-item" th:classappend="${!page.hasNext} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/novel/search/result(keyword=${keyword}, p=${page.number + 1})}">다음</a>
+				        </li>
+				        <li class="page-item" th:classappend="${!page.hasNext} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/novel/search/result(keyword=${keyword}, p=${page.totalPages - 1})}">끝</a>
+				        </li>
+				    </ul>
+				</div>
+					
+		</main>
+			
+			<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
 		
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		</div>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <link rel="stylesheet" th:href="@{/css/novel-search.css}" />
 	</body>
 </html>

@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.itwill.lightbooks.domain.NGenre;
@@ -21,11 +22,17 @@ public class NovelListItemDto {
 	private Long id;
 	private String title;
 	private String writer;
+	private String intro;
 	private String coverSrc;
 	private Integer likeCount;
 	private Integer state;
 	private String genres;
+	private BigDecimal rating;
+	private Integer grade;
+	private Integer ageLimit;
 	private LocalDateTime modifiedTime;
+	
+	
 	
 	public static NovelListItemDto fromEntity(Novel entity) {
 		String firstGenre = "";
@@ -39,10 +46,14 @@ public class NovelListItemDto {
 				.id(entity.getId())
 				.title(entity.getTitle())
 				.writer(entity.getWriter())
+				.intro(entity.getIntro())
 				.coverSrc(entity.getCoverSrc())
 				.likeCount(entity.getLikeCount())
 				.state(entity.getState())
 				.genres(firstGenre)
+				.rating(entity.getRating())
+				.grade(entity.getGrade())
+				.ageLimit(entity.getAgeLimit())
 				.modifiedTime(entity.getModifiedTime())
 				.build();
 	}

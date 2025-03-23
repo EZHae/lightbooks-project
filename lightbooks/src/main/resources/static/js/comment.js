@@ -3,9 +3,9 @@
  */
 let isLastPage = false; // 마지막 페이지 여부
 let isLoading = false; // 중복 방지
+const renderedCommentIds = new Set(); 
 
 document.addEventListener('DOMContentLoaded', () => {
-	const renderedCommentIds = new Set(); 
 	const commentText = document.querySelector('textarea#commentText');
 	const counter = document.getElementById('charCount');
 	const novelTitle = document.querySelector('#novelTitle')?.value;
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	const maxLength = 200;
 	
-	getAllComments(0,true);
 	renderedCommentIds.clear();
+	getAllComments(0,true);
 	console.log(counter);
 	
 	// 댓글 입력창
@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (isLoading || isLastPage) return; // 이미 로딩 중이거나 마지막이면 종료
 			isLoading = true; // 호출 시작
 			
+		if (reset) {
+		   	renderedCommentIds.clear(); 
+		 }
 		// 댓글이 등록될 소설 아이디
 		const novelId = document.querySelector('input#novelId').value;
 		// 댓글이 등록될 회차 아이디
@@ -79,6 +82,63 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 	
+	// 댓글 [등록] 버턴에 클릭 이벤트 리스너를 설정
+	const btnRegisterComment = document.querySelector('button#btnRegisterComment');
+	btnRegisterComment.addEventListener('click', registerComment);
+
+	// 댓글 등록 함수
+	async function registerComment() {
+		
+		// 댓글에 등록될 유저 아이디
+		const userId = document.querySelector('input#userId').value;
+		// 댓글이 등록될 소설 아이디
+		const novelId = document.querySelector('input#novelId').value;
+		// 댓글이 등록될 회차 아이디
+		const episodeId = document.querySelector('input#episodeId').value;
+		// 댓글 내용
+		const text = document.querySelector('textarea#commentText').value;
+		// 댓글 작성자
+		const nickname = document.querySelector('input#nickname').value;
+		// 댓글 스포일러 여부
+		const spoiler = document.querySelector('#spoiler').checked ? 1 : 0;
+
+		console.log("user: " ,userId);
+		console.log("novelId: " ,novelId);
+		console.log("text: " ,text);
+		console.log("nickname: " ,nickname);
+		console.log("spoiler: ",spoiler)
+		
+		if (text.replace(/\s/g, '') === '') {
+		    alert('댓글 내용은 반드시 입력해야 합니다.');
+		    return;
+		}
+	    
+	    // Ajax 요청에서 Request Body에 포함시켜서 전송할 데이터
+	    const reqBody = {novelId, episodeId, userId, text, nickname, spoiler};
+	    
+	    // Ajax 요청을 보내고, 응답/에러 처리
+	    try {
+			
+	        const { data } = await axios.post(`/novel/${novelId}/episode/${episodeId}/comment`, reqBody);
+	        console.log(data);
+	        // 댓글 입력 textarea의 내용을 지움.
+	        document.querySelector('textarea#commentText').value = '';
+			// 스크롤 최상단 이동
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			
+			isLastPage = false;
+			currentPageNo = 0;	
+			renderedCommentIds.clear();
+			
+	        // 댓글 목록을 다시 그림.
+	        getAllComments(0, true);
+	        
+	    } catch (error) {
+	        console.log(error);
+	    }
+	}
+	
+	// 댓글 목록을 만들어주는 이벤튼	
 	function makeCommentElements(data, reset = false){
 		// 로그인 사용자 아이디 -> 댓글 삭제/수정 버튼을 만들 지 여부를 결정하기 위해서.
 		const authUser = document.querySelector('#authNickname').innerText;
@@ -163,58 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		btnLikes.forEach((btn) => btn.addEventListener('click', handleLikeClick));
 	}
 	
-	// 댓글 [등록] 버턴에 클릭 이벤트 리스너를 설정
-	const btnRegisterComment = document.querySelector('button#btnRegisterComment');
-	btnRegisterComment.addEventListener('click', registerComment);
-		
-	
-	// 댓글 등록 함수
-	async function registerComment() {
-		
-		// 댓글에 등록될 유저 아이디
-		const userId = document.querySelector('input#userId').value;
-		// 댓글이 등록될 소설 아이디
-		const novelId = document.querySelector('input#novelId').value;
-		// 댓글이 등록될 회차 아이디
-		const episodeId = document.querySelector('input#episodeId').value;
-		// 댓글 내용
-		const text = document.querySelector('textarea#commentText').value;
-		// 댓글 작성자
-		const nickname = document.querySelector('input#nickname').value;
-		// 댓글 스포일러 여부
-		const spoiler = document.querySelector('#spoiler').checked ? 1 : 0;
-
-		console.log("user: " ,userId);
-		console.log("novelId: " ,novelId);
-		console.log("text: " ,text);
-		console.log("nickname: " ,nickname);
-		console.log("spoiler: ",spoiler)
-		
-		if (text.replace(/\s/g, '') === '') {
-		    alert('댓글 내용은 반드시 입력해야 합니다.');
-		    return;
-		}
-	    
-	    // Ajax 요청에서 Request Body에 포함시켜서 전송할 데이터
-	    const reqBody = {novelId, episodeId, userId, text, nickname, spoiler};
-	    
-	    // Ajax 요청을 보내고, 응답/에러 처리
-	    try {
-	        const { data } = await axios.post(`/novel/${novelId}/episode/${episodeId}/comment`, reqBody);
-	        console.log(data);
-	        
-	        // 댓글 입력 textarea의 내용을 지움.
-	        document.querySelector('textarea#commentText').value = '';
-			// 스크롤 최상단 이동
-			window.scrollTo({ top: 0, behavior: 'smooth' });
-	        // 댓글 목록을 다시 그림.
-	        getAllComments(0, true);
-	        
-	    } catch (error) {
-	        console.log(error);
-	    }
-	}
-	
 	
 	// 댓글 삭제
 	async function deleteComment(event) {
@@ -231,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		try{
 			const response = await axios.delete(uri);
 			console.log(`deleted comment id = ${response.data}`);
+			
 			alert('댓글이 삭제됐습니다.');
 			getAllComments(0,true);
 		} catch(error){
@@ -330,8 +339,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		const data = { text: updatedText, spoiler, nickname };
 		
 		try {
+			
 			const response = await axios.put(uri, data);
 			console.log(`update comment id = ${response.data}`);
+			
 			alert('댓글이 수정됐습니다.');
 			
 			renderedCommentIds.clear(); // 기존 댓글 ID 캐시 초기화
