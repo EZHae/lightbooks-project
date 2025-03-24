@@ -20,6 +20,7 @@ import com.itwill.lightbooks.service.EpisodeService;
 import com.itwill.lightbooks.service.NovelService;
 import com.itwill.lightbooks.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class HomeController {
 	private final UserService userService;
 	
 	@GetMapping("/")
-	public String home(Model model) {
+	public String home(HttpServletRequest request, Model model) {
 		log.info("home()");
 		
 		// session.setAttribute("signedInUserId", 1);
@@ -43,15 +44,16 @@ public class HomeController {
 		
 		// 그냥 주석달았음: 이지해
 		
-		 model.addAttribute("bestNovels",novelService.getRandemBestNovels(12));
-		 model.addAttribute("freeNovels",novelService.getNovelsByFreeGrade(6));
-		 model.addAttribute("paidNovels",novelService.getNovelsByPaidGrade(6));
-		 model.addAttribute("genreNovelsMap",novelService.getFixedGenreNovels(6));
-		 model.addAttribute("eventNovels",novelService.getEventNovels(6));
-		
+		model.addAttribute("bestNovels", novelService.getRandemBestNovels(12));
+		model.addAttribute("freeNovels", novelService.getNovelsByFreeGrade(6));
+		model.addAttribute("paidNovels", novelService.getNovelsByPaidGrade(6));
+		model.addAttribute("genreNovelsMap", novelService.getFixedGenreNovels(6));
+		model.addAttribute("eventNovels", novelService.getEventNovels(6));
+
+		model.addAttribute("requestURI", request.getRequestURI());
 		List<Novel> novels = novelService.searchAll();
 		model.addAttribute("novels", novels);
-		
+
 		return "home";
 	}
 	

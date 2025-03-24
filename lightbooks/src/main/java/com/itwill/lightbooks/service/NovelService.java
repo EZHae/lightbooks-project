@@ -140,10 +140,19 @@ public class NovelService {
 	// 제목, 작성자로 소설 검색과 페이징
 	public Page<NovelListItemDto> search(NovelSearchDto dto, Sort sort) {
 		
-		Pageable pageable = PageRequest.of(dto.getP(), 6, sort);
+		Pageable pageable = PageRequest.of(dto.getP(), 8, sort);
 		Page<Novel> result = novelRepo.searchByKeyword(dto , pageable);
 		
-		return result.map(NovelListItemDto::fromEntity);
+		 //소설 ID 목록 추출
+		List<Long> novelIds = result.stream()
+				.map(Novel::getId)
+				.collect(Collectors.toList());
+		
+		//소설별 총 조회수 Map 조회
+		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
+		
+		//조회수 포함 dto로 변환
+		return result.map(novel -> NovelListItemDto.fromEntity(novel, viewsMap.getOrDefault(novel.getId(), 0L)));
 	}
 	
 	//추가
@@ -225,15 +234,12 @@ public class NovelService {
 	public List<Novel> getRandemBestNovels(int count) {
 		return novelRepo.findRandomBestNovels(count);
 	}
-
 	public List<Novel> getNovelsByFreeGrade(int limit) {
 		return novelRepo.findFreeNovels(limit);
 	}
-
 	public List<Novel> getNovelsByPaidGrade(int limit) {
 		return novelRepo.findPaidNovels(limit);
 	}
-
 	public Map<String, List<Novel>> getFixedGenreNovels(int limit) {
 		List<String> genreNames = List.of("판타지", "로맨스", "무협", "로판", "현판", "드라마");
 		Map<String, List<Novel>> result = new LinkedHashMap<>();
@@ -244,7 +250,6 @@ public class NovelService {
 		}
 		return result;
 	}
-
 	public List<Novel> getEventNovels(int limit) {
 		return novelRepo.findRandomNovels(limit);
 	}

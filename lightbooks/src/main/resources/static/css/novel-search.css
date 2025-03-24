@@ -1,114 +1,126 @@
 @charset "UTF-8";
 
 html, body {
-  height: 100%;
-  margin: 0;
+	height: 100%;
+	margin: 0;
 }
 
 .wrapper {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 main {
-  flex: 1;
-  margin-top: 3rem;
-  padding: 0 2rem;
+	flex: 1;
+	margin-top: 3rem;
+	padding: 0 2rem;
 }
-
-
+/* 전체 그리드 (2행 4열 자동 생성) */
 .searchGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
-  justify-items: center;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 2rem;
+	padding: 2rem;
+	justify-items: center; /* 각 카드 가운데 정렬 */
+	text-decoration: none; /* 🔥 밑줄 제거 */
 }
 
+/* 카드 컨테이너 */
 .searchBox {
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 0.8rem;
-  max-width: 420px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 320px;
+	height: 220px;
+	padding: 1rem;
+	text-decoration: none; /* 🔥 밑줄 제거 */
 }
 
+
+.searchBox-link {
+	display: block; /* 이거만 있으면 됨 */
+	text-decoration: none; /* 🔥 밑줄 제거 */
+	color: inherit;
+}
+
+.searchBox a {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* 이미지 */
 .search-img {
-  width: 110px;
-  height: auto;
-  margin-right: 0.8rem;
-  border-radius: 8px;
-  object-fit: cover;
+	width: 120px;
+	height: 180px;
+	object-fit: cover;
+	border-radius: 6px;
+	margin-right: 0.4rem;
+	flex-shrink: 0;
 }
 
+/* 텍스트 콘텐츠 */
 .searchContent {
-  position: relative; /* 기준 위치 설정 */
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 2.5rem; /* 버튼 영역 확보 */
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 1rem;
+	height: 100%;
+	text-decoration: none; /* 🔥 밑줄 제거 */
 }
 
 .searchContent h3 {
-  margin-top: 0;
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.searchContent p span {
-  margin-right: 10px;
+	margin-top:5px;
+	font-size: 1.2rem;
+	font-weight: bold;
+	color: #222;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-decoration: none; /* 🔥 밑줄 제거 */
 }
 
 .meta-line {
-  margin: 0.2rem 0;
-  font-size: 0.9rem;
+	font-size: 0.85rem;
+	margin-top: 5px;
+	color: #444;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	text-decoration: none; /* 🔥 밑줄 제거 */
 }
 
+/* 아이콘과 함께 나오는 줄 (좋아요/별점/조회수) */
+.meta-line i {
+	margin-right: 4px;
+	vertical-align: middle;
+	color: #888;
+}
+
+/* 마지막 줄 스타일 */
 .gray-text {
-  color: #888;
+	color: #888;
+	display: flex;
+	justify-content: space-between; /* 날짜 - 연재중 양쪽 정렬 */
+	width: 100%;
+	font-size: 0.78rem;
 }
 
 .small-text {
-  font-size: 0.8rem;
+	font-size: 0.78rem;
+	text-decoration: none; /* 🔥 밑줄 제거 */
 }
-
-.intro-text {
-  margin-top: 0.5rem;
-  color: #333;
-}
-
-.search-detail-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: #007fff;
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.search-detail-btn:hover {
-  background-color: #66b2ff;
-}
-
 
 /* 페이징 */
 .pagination .page-link {
-    color: #333;
-    font-weight: 500;
+	color: #333;
+	font-weight: 500;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
+	background-color: #007bff;
+	border-color: #007bff;
+	color: white;
 }

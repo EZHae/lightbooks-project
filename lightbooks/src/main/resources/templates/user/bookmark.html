@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
-	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
-		
-		<span>북마크페이지</span>
-		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+   <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+   <style>
+		.as {
+	    background: olive;
+	    display: flex;
+	    justify-content: space-between;
+	    max-width: 900px;
+	    width: 800px;
+	    margin: 0 auto;
+	    padding: 20px;
+	  }
+	
+	  .box {
+	    width: 48%;
+	    background: white;
+	    padding: 10px;
+	    text-align: center;
+	  }
+   </style>
+   
+   <body>
+      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+         <main>
+               <div>
+                  <div class="as">
+                     <div class="box">
+                     	<strong>내 보관함</strong>
+                     	  <div style="background: white; width: 200px;">왼쪽</div>
+  							
+                     </div>
+                     <div class="box">
+							<div style="background: white; width: 200px;">오른쪽</div>
+                     </div>
+                  </div>
+               </div>
+         </main>
+       	<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	</body>
 </html>

@@ -125,8 +125,12 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 		
 		String keyword = dto.getKeyword();
 		
-		 builder.and(novel.title.containsIgnoreCase(keyword)
-	               .or(novel.writer.containsIgnoreCase(keyword)));
+		if("t".equals(dto.getCategory())) {
+			builder.and(novel.title.containsIgnoreCase(keyword));
+			
+		} else if ("w".equals(dto.getCategory())) {
+			builder.and(novel.writer.containsIgnoreCase(keyword));
+		}
 
 		query.where(builder);
 		

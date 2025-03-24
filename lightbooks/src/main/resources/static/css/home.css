@@ -85,26 +85,30 @@
 	margin-right: 6px;
 }
 
+/* 카테고리 */
 .navbar-category {
 	top: 40px;
-	background: white;
 	padding: 5px;
 	width: 100%;
 }
 
-/* 카테고리 장르 */
 .navbar-category div {
 	display: inline-block;
 	margin: 5px;
 }
 
+a.category-link.active  {
+	background: #66b2ff !important;
+	color: white !important;
+	text-decoration: underline !important; /* 밑줄 추가 */
+	/* !important를 붙여야 Bootstrap 기본 스타일보다 우선 적용됨. */
+}
+
 .navbar-category a {
-	border: 1px solid white;
 	border-radius: 20px;
 	padding: 8px;
-	font-size: 12px;
-	color: white;
-	background: #66b2ff;
+	font-size: 14px;
+	background: white;
 	text-decoration: none;
 }
 /* -------------- */

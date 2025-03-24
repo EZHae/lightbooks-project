@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('Home')}"></head>
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 올라잇')}"></head>
 	<!-- 스와이퍼 -->
 	<link
 	  rel="stylesheet"
@@ -13,10 +13,12 @@
 					<div class="navbar-category">
 						<div>		
 							<div>
-								<a th:text="오늘신작" th:href="@{/}"></a>
+								<a class="category-link" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/'} ? ' active' : ''"
+									th:href="@{/}" > 올 라잇 </a>
 							</div>
 							<div>
-								<a th:text="오늘신작" th:href="@{/}"></a>
+								<a class="category-link" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/menu/light/'} ? ' active' : ''"
+									th:href="@{/menu/light/}">라잇 신작</a>
 							</div>
 						</div>
 					</div>
