@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}">
+	<style>
+		html, body {
+		  height: 100%;
+		  margin: 0;
+		}
+		main {
+		  flex: 1;
+		  margin-top: 3rem;
+		  padding: 0 2rem;
+		}
+		
+      .centered-row {
+       max-width: 1200px;
+        margin: 0 auto;
+      }
+      .row{
+          display: flex; /* ✅ 있어야 함 */
+         flex-wrap: wrap;
+      }
+	</style>
+	</head>
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
-		
-		<span>북마크페이지</span>
-		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+
+		<main>
+			<div class="card-body">
+				<div class="container-fluid">
+					<div class="row centered-row gx-4 mt-4">
+						<div><strong>내 보관함</strong></div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+
+		<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
 	</body>
 </html>
