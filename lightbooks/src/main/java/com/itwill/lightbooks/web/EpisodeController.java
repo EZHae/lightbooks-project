@@ -283,6 +283,9 @@ public class EpisodeController {
 		// 북마크 테이블 추가, 구매하면 북마크에는 무조건 들어가니 if문 밖에 설정
 		bookmarkService.saveBookmarkFromEpisodeBuyDto(dto); 
 		
+		// TODO
+		// 북마크 테이블 최근 본 항목을 insert/update 뭘 할지 서비스에서 결정해서 처리
+		
 		
 		return ResponseEntity.ok(null);
 	}

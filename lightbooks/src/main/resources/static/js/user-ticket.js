@@ -49,12 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		TicketHoldList.forEach(item => {
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-2 ${item.grade === '전체 이용권' ? 'fw-bold text-primary' : ''}">${item.grade}</td>
 					<td class="col-7">${item.novelTitle}</td>
-					<td class="col-3">${item.createdTime}</td>
+					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -78,12 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		ticketUseList.forEach(item => {
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-7">${item.novelTitle}</td>
 					<td class="col-2">${item.episodeNum}</td>
-					<td class="col-3">${item.createdTime}</td>
+					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -191,5 +193,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	    li.appendChild(button);
 	    return li;
+	}
+	
+	function formatDateTime(dateTimeString) {
+	    const date = new Date(dateTimeString);
+	    return date.toLocaleString('ko-KR', { 
+	        year: 'numeric', 
+	        month: '2-digit', 
+	        day: '2-digit', 
+	        hour: '2-digit', 
+	        minute: '2-digit', 
+	    });
 	}
 });

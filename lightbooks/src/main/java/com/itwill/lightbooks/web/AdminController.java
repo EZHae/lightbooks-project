@@ -7,19 +7,24 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
-import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
+import com.itwill.lightbooks.domain.Post;
+import com.itwill.lightbooks.dto.PostCreateDto;
+import com.itwill.lightbooks.dto.PostUpdateDto;
+import com.itwill.lightbooks.dto.PostUpdateHighlightDto;
 import com.itwill.lightbooks.service.AdminService;
 import com.itwill.lightbooks.service.NovelService;
 import com.itwill.lightbooks.service.OrderService;
+import com.itwill.lightbooks.service.PostService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +38,7 @@ public class AdminController {
 	private final AdminService adminService;
 	private final OrderService orderService;
 	private final NovelService novelService;
+	private final PostService postService;
 
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'")  // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/waitingpayment")
@@ -91,4 +97,61 @@ public class AdminController {
 		return ResponseEntity.ok(null);
 	}
 	
+	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'")  // 로그인된 계정의 login_id가 admin일 때만 접근 가능
+	@GetMapping("/post/create")
+	public String postCreate() {
+		log.info("postCreate()");
+		
+		return "/post/create";
+	}
+	
+	@PostMapping("/post/create")
+	public String postCreated(@ModelAttribute PostCreateDto dto) {
+		log.info("postCreated()");
+		log.info("dto={}", dto);
+		
+		postService.savePost(dto);
+		
+		return "redirect:/post/notice";
+	}
+	
+	@PostMapping("/post/update/highlight")
+	public String postUpdateHighlight(@RequestBody PostUpdateHighlightDto dto) {
+		log.info("postUpdateHighlight()");
+
+		postService.updatePostHighlight(dto);
+		
+		return "redirect:/post/notice";
+	}
+	
+	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
+	@GetMapping("/post/delete")
+	public String postDelete(@RequestParam(name = "id") Long id) {
+		log.info("postDelete(id={})", id);
+		
+		postService.deletePostById(id);
+		
+		return "redirect:/post/notice";
+	}
+	
+	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
+	@GetMapping("/post/update")
+	public String postUpdate(Model model, @RequestParam(name = "id") Long id) {
+		log.info("postUpdate(id={})", id);
+		
+		Post post = postService.read(id);
+		
+		model.addAttribute("post", post);
+		
+		return "/post/update";
+	}
+	
+	@PostMapping("/post/update")
+	public String postUpdated(PostUpdateDto dto) {
+		log.info("postUpdated(id={})", dto.getId());
+		
+		postService.updatePost(dto);
+		
+		return "redirect:/post/notice/details?id=" + dto.getId();
+	}
 }

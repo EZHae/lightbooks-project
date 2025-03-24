@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 공지사항 작성')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+			<div class="container-sm">
+				<h4>공지사항 작성</h4>
+				<form method="post" th:action="@{/admin/post/create}">
+					<div class="d-none">
+						<input id="writer" name="writer" th:value="${#authentication.principal.nickname}">
+					</div>
+					<div class="mt-4">
+						<label class="form-label" for="title">제목</label>
+						<input class="form-control" id="title" name="title" maxlength="100" required>
+					</div>
+					<div class="mt-4">
+						<label class="form-label" for="content">내용</label>
+						<textarea class="form-control" rows="20" id="content" name="content" maxlength="1000" required></textarea>
+					</div>
+					<div class="mt-2 d-flex justify-content-center">
+						<input class="btn btn-sm btn-outline-primary" type="submit" value="작성">
+					</div>
+				</form>
+				
+			</div>
+		</main>
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

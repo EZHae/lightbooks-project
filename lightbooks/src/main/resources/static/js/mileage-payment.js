@@ -48,13 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		mileageEarnList.forEach(item => {
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6">적립</td>
 					<td class="col-2">${item.mileage}</td>
 					<td class="col-6">${item.descrip}</td>
-					<td class="col-3">${item.createdTime}</td>
+					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -78,13 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		mileageUseList.forEach(item => {
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6">사용</td>
 					<td class="col-2 text-danger">${item.mileage}</td>
 					<td class="col-6">${item.descrip}</td>
-					<td class="col-3">${item.createdTime}</td>
+					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -187,5 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	    li.appendChild(button);
 	    return li;
+	}
+	
+	function formatDateTime(dateTimeString) {
+	    const date = new Date(dateTimeString);
+	    return date.toLocaleString('ko-KR', { 
+	        year: 'numeric', 
+	        month: '2-digit', 
+	        day: '2-digit', 
+	        hour: '2-digit', 
+	        minute: '2-digit', 
+	    });
 	}
 });
