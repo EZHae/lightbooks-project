@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import com.itwill.lightbooks.dto.TicketReadDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
+import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
@@ -44,6 +47,7 @@ public class UserController {
 	private final UserService userService;
 	private final OrderService orderService;
 	private final TicketService ticketService;
+	private final BookmarkService bookmarkService;
     
     @GetMapping("/signup")
     public void signup() {
@@ -109,9 +113,41 @@ public class UserController {
     }
     
     @GetMapping("/bookmark")
-    public void bookmark(@RequestParam(name = "id") Long id) {
-    	log.info("bookmark(id={})", id);
-    	
+    @ResponseBody
+    public ResponseEntity<?> bookmark(
+            @RequestParam(name = "id") Long id,
+            @RequestParam(name = "type") String type,
+            @RequestParam(name = "p", defaultValue = "0") int pageNo,
+            @RequestParam(name = "s", defaultValue = "novel.likeCount", required = false) String sortBy,
+            @RequestParam(name = "d", defaultValue = "DESC", required = false) String direction) {
+
+        log.info("bookmark(id={}, type={}, pageNo={}, sortBy={}, direction={})", id, type, pageNo, sortBy, direction);
+
+        if (!sortBy.equals("novel.likeCount") && !sortBy.equals("otherValidField")) {
+            return ResponseEntity.badRequest().body("Invalid sortBy parameter");
+        }
+
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        switch (type) {
+            case "liked":
+                return ResponseEntity.ok(bookmarkService.getLikedNovels(id, pageNo, sort));
+            case "watched":
+                return ResponseEntity.ok(bookmarkService.getRecentlyWatchedEpisodes(id, pageNo, sort));
+            case "purchased":
+                return ResponseEntity.ok(bookmarkService.getPurchasedNovels(id, pageNo, sort));
+            default:
+                return ResponseEntity.badRequest().body("Invalid type parameter");
+        }
+    }
+    
+    @PostMapping("/episode/{episodeId}/access")
+    @ResponseBody
+    public ResponseEntity<Void> updateAccessTime(
+            @RequestParam("userId") Long userId,
+            @PathVariable Long episodeId) {
+
+        bookmarkService.updateAccessTime(userId, episodeId);
+        return ResponseEntity.ok().build();
     }
     
     @GetMapping("/ticket")

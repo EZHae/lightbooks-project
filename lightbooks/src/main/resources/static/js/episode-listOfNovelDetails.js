@@ -44,9 +44,23 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
       }
       
       console.log("isOwner:", isOwner);
+	  
+	  const episodeId = element.dataset.episodeId;
+	  const novelId = element.dataset.novelId;
+
+	  const updateAccessTime = () => {
+	      axios.post(`/novel/${novelId}/episode/${episodeId}/access`)
+	           .then(response => {
+	                console.log("access_time 업데이트 성공:", response.data);
+	            })
+	            .catch(error => {
+	                console.error("access_time 업데이트 실패:", error);
+	            });
+	      };
       
       if (isOwner || category === "0" || category === "1") {
               console.log("공지거나 무료회차 또는 작성자 또는 구매한 경우입니다. 상세 페이지로 이동합니다.");
+			  updateAccessTime(); // access_time 업데이트
               window.location.href = element.getAttribute("href");
               return;
           }
@@ -80,6 +94,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 
                     if (result === "PURCHASED" || result === "FREE") {
                         console.log("구매된 회차입니다. 이동합니다.");
+						updateAccessTime(); // access_time 업데이트
                         window.location.href = element.getAttribute("href");
                     } else {
                         console.log("구매하지 않은 유료 회차입니다. 구매 팝업을 표시합니다.");

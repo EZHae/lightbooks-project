@@ -55,11 +55,16 @@ public class Bookmark {
 	private Episode episode;
 	
 	@Column(nullable = false)
-	private Integer type; //0: 좋아요, 1: 최근 본, 2: 구매 작품, 3: 알림 설정
+	private Integer type; //0: 좋아요 누른 작품, 1: 최근 본 회차, 2: 구매 작품, 3: 알림 설정
 	
 	@Column(name = "access_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime accessTime;
 	
 	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
+	
+	// accessTime 업데이트 메서드
+    public void updateAccessTime(LocalDateTime accessTime) {
+        this.accessTime = accessTime;
+    }
 }
