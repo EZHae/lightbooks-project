@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.repository.novel;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import com.itwill.lightbooks.domain.QNGenre;
 import com.itwill.lightbooks.domain.QNovel;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -142,6 +145,81 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 		Page<Novel> result = new PageImpl<Novel>(list, pageable, count);
 		
 		return result;
+	}
+
+	
+	// 베스트 소설 조회
+	@Override
+	public List<Novel> findRandomBestNovels(int count) {
+		QNovel novel = QNovel.novel;
+		
+		// 조건이 좋아요 100이상, 평점 4.0이상, 조회수 1000이상
+		BooleanExpression condition = novel.likeCount.goe(100)
+				.and(novel.rating.goe(BigDecimal.valueOf(4.0)));
+		
+		return queryFactory.selectFrom(novel)
+				.where(condition)
+				.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc()) // function('rand')는 DB에서 랜덤 정렬
+				.limit(count)
+				.fetch();
+	}
+
+
+	// 무료 소설 조회
+	@Override
+	public List<Novel> findFreeNovels(int limit) {
+		QNovel novel = QNovel.novel;
+		
+	    return queryFactory
+	            .selectFrom(novel)
+	            .where(novel.grade.eq(0)) // 무료
+	            .orderBy(novel.modifiedTime.desc()) // 최신순
+	            .limit(limit)
+	            .fetch();
+		
+	}
+
+	// 유료 소설 조회
+	@Override
+	public List<Novel> findPaidNovels(int limit) {
+		QNovel novel = QNovel.novel;
+		
+	    return queryFactory
+	            .selectFrom(novel)
+	            .where(novel.grade.eq(1)) // 유료
+	            .orderBy(novel.modifiedTime.desc()) // 최신순
+	            .limit(limit)
+	            .fetch();
+	}
+
+
+	// 장르별 소설 조회
+	@Override
+	public List<Novel> findNovelsByGenreName(String genreName, int limit) {
+	    QNovel novel = QNovel.novel;
+	    QNGenre nGenre = QNGenre.nGenre;
+	    QGenre genre = QGenre.genre;
+	    
+	    return queryFactory
+	            .selectFrom(novel)
+	            .join(novel.novelGenre, nGenre)
+	            .join(nGenre.genre, genre)
+	            .where(genre.name.eq(genreName))
+	            .orderBy(novel.modifiedTime.desc())
+	            .limit(limit)
+	            .fetch();
+	}
+
+
+
+	@Override
+	public List<Novel> findRandomNovels(int limit) {
+		QNovel novel = QNovel.novel;
+		return queryFactory
+				.selectFrom(novel)
+				.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+				.limit(limit)
+				.fetch();
 	}
 
 	

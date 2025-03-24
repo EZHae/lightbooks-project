@@ -29,12 +29,52 @@
 				}
 				
 				.footer {
-					background: black;
-					height: 200px;
+					background-color: white;
+					padding: 30px 20px;
+					color: #333;
+					font-size: 14px;
+					line-height: 1.6;
+					text-align: center;
+				}
+				
+				.footer-logo {
+					font-weight: bold;
+					margin-bottom: 10px;
+				}
+				
+				.footer-desc {
+					margin-bottom: 15px;
+					color: #666;
+					font-size: 15px;
+				}
+				
+				.footer-info {
 					display: flex;
+					flex-wrap: wrap;
 					justify-content: center;
-					color: white;
-					margin-top: 5px;
+					gap: 12px 24px;
+					margin: 6px 0;
+					color: #555;
+				}
+				
+				.footer-info span {
+					white-space: nowrap;
+				}
+				
+				.footer-links {
+					margin-top: 16px;
+					font-size: 14px;
+					color: #444;
+				}
+				
+				.footer-links a {
+					color: #007bff;
+					text-decoration: none;
+					padding: 0 5px;
+				}
+				
+				.footer-links a:hover {
+					text-decoration: underline;
 				}
 				
             	
@@ -236,7 +276,7 @@
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/user/ticket(id=${#authentication.principal.id})}">
                                             <img th:src="@{/images/dropdown_icon_example.jpg}" /> <br>
                                             이용권
                                         </a>
@@ -269,7 +309,28 @@
             <script th:src="@{/js/fragments.js}"></script>
         </nav>
 		<footer class="footer" th:fragment="footer">
-			<p>© 2025 LightBooks. All Rights Reserved.</p>
+			<p class="footer-logo">© 2025 LightBooks. All Rights Reserved.</p>
+			
+			<p class="footer-desc">작가와 독자가 함께 만드는 이야기 공간, 라잇북스</p>
+		
+			<p class="footer-info">
+				<span>상호명: (주)라잇북스</span>
+				<span>대표자: 이최허</span>
+				<span>사업자등록번호: 123-45-67890</span>
+				<span>통신판매업신고: 2025-서울강남-1234</span>
+			</p>
+		
+			<p class="footer-info">
+				<span>주소: 서울특별시 강남구 상상대로 123, 라잇타워 5층</span>
+				<span>대표번호: 02-1234-5678</span>
+				<span>이메일: contact@lightbooks.co.kr</span>
+			</p>
+		
+			<p class="footer-links">
+				<a href="/terms">이용약관</a> · 
+				<a href="/privacy">개인정보처리방침</a> · 
+				<a href="/contact">고객센터</a>
+			</p>
 	  	</footer>	
 	  	
         <!-- 부트스트랩 -->

@@ -19,4 +19,11 @@ public interface NovelQuerydsl {
 	void updateNovel(Long novelId, String title, String intro, String coverSrc, Integer ageLimit, Integer state, List<String> days, Integer genreId);
 	
 	Page<Novel> searchByKeyword(NovelSearchDto dto, Pageable pageable);
+	
+	List<Novel> findRandomBestNovels(int count);
+	List<Novel> findFreeNovels(int limit);
+	List<Novel> findPaidNovels(int limit);
+	List<Novel> findNovelsByGenreName(String genreName, int limit);
+	List<Novel> findRandomNovels(int limit);
+	
 }

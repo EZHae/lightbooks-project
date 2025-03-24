@@ -18,13 +18,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.MileagePayment;
+import com.itwill.lightbooks.domain.Ticket;
+import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
+import com.itwill.lightbooks.dto.TicketReadDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.service.OrderService;
+import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +43,7 @@ public class UserController {
 	
 	private final UserService userService;
 	private final OrderService orderService;
+	private final TicketService ticketService;
     
     @GetMapping("/signup")
     public void signup() {
@@ -107,6 +112,11 @@ public class UserController {
     public void bookmark(@RequestParam(name = "id") Long id) {
     	log.info("bookmark(id={})", id);
     	
+    }
+    
+    @GetMapping("/ticket")
+    public void ticket(@RequestParam(name = "id") Long id) {
+    	log.info("ticket(id={})", id);
     }
     
     /* ResponseBody */
@@ -284,5 +294,29 @@ public class UserController {
     	userService.saveMileagePaymentWithTicket(dto);
     	
     	return ResponseEntity.ok("/");
+    }
+    
+    @ResponseBody
+    @GetMapping("/ticket/read")
+    public ResponseEntity<Page<TicketReadDto>> readTicket(@RequestParam(name = "userId") Long userId,
+		    @RequestParam(name = "page", defaultValue = "0") int page,
+		    @RequestParam(name = "size", defaultValue = "5") int size) {
+    	log.info("readTicket()");
+		    	
+    	Page<TicketReadDto> result = ticketService.readTicketByUserId(userId, page, size, size);
+    	
+    	return ResponseEntity.ok(result);
+	}
+    
+    @ResponseBody
+    @GetMapping("/ticketpayment/read")
+    public ResponseEntity<Page<TicketPayment>> readTicetPayment(@RequestParam(name = "userId") Long userId,
+		    @RequestParam(name = "page", defaultValue = "0") int page,
+		    @RequestParam(name = "size", defaultValue = "5") int size) {
+    	log.info("readTicetPayment()");
+    	
+    	Page<TicketPayment> result = ticketService.readTicketPaymenByUserId(userId, page, size, size);
+    	
+    	return ResponseEntity.ok(result);
     }
 }

@@ -27,4 +27,5 @@ public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQueryd
 	// 마일리지 교환샵에서 사용할 메서드, 유료 소설만 키워드로 검색하기
 	@Query("SELECT n FROM Novel n WHERE n.grade = 1 AND LOWER(n.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
 	List<Novel> searchPaidAndKeyword(@Param("keyword") String keyword);
+
 }

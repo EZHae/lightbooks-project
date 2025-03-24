@@ -1,7 +1,8 @@
 package com.itwill.lightbooks.repository.ticket;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -33,4 +34,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long>{
     @Query(value = "SELECT id FROM TICKETS WHERE user_id = :userId AND novel_id = :novelId AND grade = :grade ORDER BY created_time ASC LIMIT 1", nativeQuery = true)
     Long findOldestNovelTicketId(@Param("userId") Long userId, @Param("novelId") Long novelId, @Param("grade") int grade);
     
+    Page<Ticket> findByUserId(Long userId, Pageable pageable);
 }
