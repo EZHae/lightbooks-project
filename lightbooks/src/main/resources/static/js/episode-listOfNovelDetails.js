@@ -60,7 +60,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
       
       if (isOwner || category === "0" || category === "1") {
               console.log("공지거나 무료회차 또는 작성자 또는 구매한 경우입니다. 상세 페이지로 이동합니다.");
-			  updateAccessTime(); // access_time 업데이트
+			  updateAccessTime(); // TODO:access_time 업데이트
               window.location.href = element.getAttribute("href");
 			  // axios.post 북마크 테이블 insert/update을 서비스 계층에서 결정
               return;
@@ -95,7 +95,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 
                     if (result === "PURCHASED" || result === "FREE") {
                         console.log("구매된 회차입니다. 이동합니다.");
-						updateAccessTime(); // access_time 업데이트
+						updateAccessTime(); //TODO: access_time 업데이트?????????잠시만 유료일때 넣어야하는데
                         window.location.href = element.getAttribute("href");
                     } else {
                         console.log("구매하지 않은 유료 회차입니다. 구매 팝업을 표시합니다.");
