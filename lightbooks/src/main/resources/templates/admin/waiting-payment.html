@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 결제 대기')}"></head>
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
@@ -28,7 +28,7 @@
 							<td th:text="*{type == 0 ? '코인 충전' : type == 1 ? '코인 사용' : type == 2 ? '코인 환불/환전' : type == 3 ? '작품후원' : ''}"></td>
 							<td th:text="*{coin}"></td>
 							<td th:text="*{cash}"></td>
-							<td th:text="*{createdTime}"></td>
+							<td th:text="*{#temporals.format(createdTime, 'yyyy년 MM월 dd일 HH시 mm분')}"></td>
 							<td th:text="*{con == 0 ? '대기 중' : '완료'}"></td>
 							<td class="text-center">
 								<button th:if="*{con == 0}" th:attr="data-id=*{id}" id="btnCheck" class="btn btn-primary btn-sm">확인</button>
@@ -39,6 +39,8 @@
 				</table>
 			</div>
 		</main>
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
 		
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>

@@ -89,7 +89,7 @@
                 .wallet-now {
                     background-color: #e5ebfd;
                 }
-                .navbar-nav .nav-link.active {
+                .navbar-nav .nav-link .active {
                     color: #3b3bff !important;  /* 글자색 파란색 */
                     text-decoration: underline !important; /* 밑줄 추가 */
                     /* !important를 붙여야 Bootstrap 기본 스타일보다 우선 적용됨. */
@@ -282,7 +282,7 @@
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/post/notice}">
                                             <img th:src="@{/images/dropdown_icon_example.jpg}" /> <br>
                                             공지사항
                                         </a>
