@@ -165,7 +165,7 @@
 	                        </button>
                     	</div>
                     	<div sec:authorize="isAuthenticated()">
-                    		<a class="btn btn-outline-primary" th:href="@{/user/bookmark(id=${#authentication.principal.id})}">
+                    		<a class="btn btn-outline-primary" th:href="@{/user/bookmark(id=${#authentication.principal.id}, type='liked')}">
                     			<i class="bi bi-box-seam-fill"></i>
                     		</a>
                     	</div>

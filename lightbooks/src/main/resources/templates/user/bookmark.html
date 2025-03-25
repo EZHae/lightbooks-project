@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<<<<<<< HEAD
    <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
    <style>
 		.as {
@@ -37,6 +38,105 @@
                </div>
          </main>
        	<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+=======
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		
+		main {
+			flex: 1;
+			margin-top: 3rem;
+			padding: 0 2rem;
+		}
+		
+		.centered-row {
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.row {
+			display: flex; /* ✅ 있어야 함 */
+			flex-wrap: wrap;
+		}
+		
+		.navbar-category {
+			top: 40px;
+			background: white;
+			padding: 5px;
+			width: 100%;
+		}
+		
+		/* 버튼 3개*/
+		.navbar-category div {
+			display: inline-block;
+			margin: 5px;
+		}
+		
+		.navbar-category button {
+			border: 1px solid white;
+			border-radius: 20px;
+			padding: 8px;
+			font-size: 12px;
+			color: white;
+			background: #66b2ff;
+			text-decoration: none;
+			cursor: pointer; /* 버튼임을 명시 */
+		}
+		
+		.item {
+			display: flex;
+			margin-bottom: 20px;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 10px;
+		}
+		
+		.item img {
+			width: 100px;
+			height: auto;
+			margin-right: 20px;
+		}
+		
+		.item h3 {
+			margin-top: 0;
+		}
+	</style>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+
+		<main>
+		    <div class="container">
+		        <div class="row centered-row gx-4 mt-4">
+		            <div>
+		                <strong>내 보관함</strong>
+		                <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
+		            </div>
+		
+		            <div class="navbar-category">
+		                <div>
+		                    <div>
+		                        <button id="likedBtn">좋아요한 작품</button>
+		                    </div>
+		                    <div>
+		                        <button id="watchedBtn">최근 본 작품</button>
+		                    </div>
+		                    <div>
+		                        <button id="purchasedBtn">구매한 작품</button>
+		                    </div>
+		                </div>
+		            </div>
+		            <hr/>
+		            <div id="itemList"></div>
+		        </div>
+		    </div>
+		</main>
+
+
+		<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+>>>>>>> 40f054e2d6a3774aeee0fadf88d4d2b1072e394e
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/bookmark.js}"></script>
 	</body>
 </html>
