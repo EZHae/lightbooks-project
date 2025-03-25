@@ -58,4 +58,9 @@ public class NovelListItemDto {
 				.totalViews(totalViews)					// 조회수 포함
 				.build();
 	}
+	
+	// 조회수 없는 버전
+	public static NovelListItemDto fromEntity(Novel entity) {
+	    return fromEntity(entity, 0L); // 👈 요게 필요했던 거야!
+	}
 }
