@@ -84,54 +84,54 @@ public class HomeController {
 	    model.addAttribute("mainCategory", "recommend");
 	    model.addAttribute("currentURI", request.getRequestURI());
 
-	    return handleRecommend(screenId, model, request);
-	}
+       return handleRecommend(screenId, model, request);
+   }
 
-	@GetMapping("/free/{menuId}/screen/{screenId}")
-	public String freeRouter(@PathVariable Integer menuId,
-	                         @PathVariable Integer screenId,
-	                         Model model,
-	                         HttpServletRequest request) {
-	    model.addAttribute("menuId", menuId);
-	    model.addAttribute("screenId", screenId);
-	    model.addAttribute("mainCategory", "free");
-	    model.addAttribute("currentURI", request.getRequestURI());
+   @GetMapping("/free/{menuId}/screen/{screenId}")
+   public String freeRouter(@PathVariable Integer menuId,
+                            @PathVariable Integer screenId,
+                            Model model,
+                            HttpServletRequest request) {
+       model.addAttribute("menuId", menuId);
+       model.addAttribute("screenId", screenId);
+       model.addAttribute("mainCategory", "free");
+       model.addAttribute("currentURI", request.getRequestURI());
 
-	    return handleFree(screenId, model, request);
-	}
-	
-	@GetMapping("/paid/{menuId}/screen/{screenId}")
-	public String paidRouter(@PathVariable Integer menuId,
-	                         @PathVariable Integer screenId,
-	                         Model model,
-	                         HttpServletRequest request) {
-	    model.addAttribute("menuId", menuId);
-	    model.addAttribute("screenId", screenId);
-	    model.addAttribute("mainCategory", "paid");
-	    model.addAttribute("currentURI", request.getRequestURI());
+       return handleFree(screenId, model, request);
+   }
+   
+   @GetMapping("/paid/{menuId}/screen/{screenId}")
+   public String paidRouter(@PathVariable Integer menuId,
+                            @PathVariable Integer screenId,
+                            Model model,
+                            HttpServletRequest request) {
+       model.addAttribute("menuId", menuId);
+       model.addAttribute("screenId", screenId);
+       model.addAttribute("mainCategory", "paid");
+       model.addAttribute("currentURI", request.getRequestURI());
 
-	    return handlePaid(screenId, model, request);
-	}
-	
+       return handlePaid(screenId, model, request);
+   }
+   
 
 
-	@GetMapping("/coinshop")
-	public void coinshop() {
-		log.info("coinshop()");
-		
-	}
-	
+   @GetMapping("/coinshop")
+   public void coinshop() {
+      log.info("coinshop()");
+      
+   }
+   
     @GetMapping("/mileageshop")
     public void mileageshop() {
-    	log.info("mileageshop");
+       log.info("mileageshop");
     }
     
     @GetMapping("/error")
     public void error() {
-    	log.info("error_page()");
+       log.info("error_page()");
     }
     
-	
+   
     // 데이터 case 처리
     // 메인 홈 데이터
 	private void loadHomeData(HttpServletRequest request, Model model) {
@@ -242,28 +242,30 @@ public class HomeController {
 		}
 	}
 
-	// 추천
-	private String handleRecommend(Integer screenId, Model model, HttpServletRequest request) {
-			switch (screenId) {
-			case 1 -> {
-				// 올라잇
-				loadHomeData(request, model);
-				return "home"; // templates/home.html
-			}
-			case 2 -> {
-				// 베스트
-				model.addAttribute("novels", novelService.getRecommendedBest());
-				return "recommend/screen/recommendbest";
-			}
-			case 3 -> {
-				// 오늘신작
-				Map<LocalDate, List<Novel>> novelsByDate = novelService.getRecommendedNew();
-				model.addAttribute("novels", novelsByDate);
-				return"recommend/screen/recommendnew";
-			}
-			default -> {
-				return "error/404";
-			}
-		}
-	}
+   // 추천
+   private String handleRecommend(Integer screenId, Model model, HttpServletRequest request) {
+         switch (screenId) {
+         case 1 -> {
+            // 올라잇
+            loadHomeData(request, model);
+            return "home"; // templates/home.html
+         }
+         case 2 -> {
+            // 베스트
+            model.addAttribute("novels", novelService.getRecommendedBest());
+            return "recommend/screen/recommendbest";
+         }
+         case 3 -> {
+            // 오늘신작
+            Map<LocalDate, List<Novel>> novelsByDate = novelService.getRecommendedNew();
+            model.addAttribute("novels", novelsByDate);
+            return"recommend/screen/recommendnew";
+         }
+         default -> {
+            return "error/404";
+         }
+      }
+   }
 }
+
+

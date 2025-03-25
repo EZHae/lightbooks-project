@@ -8,19 +8,30 @@ import lombok.Data;
 @Data
 public class RecentlyWatchedEpisodeDto {
 	
+	private Long novelId;
+	
 	private Long episodeId;
 	
-	private Integer episodeNum;
+	private Integer novelGrade;//
 	
-	private String episodeTitle;
+	private Integer episodeNum;//
 	
-	private LocalDateTime accessTime;
+	private String episodeTitle;//
 	
-	private String novelTitle;
+	private LocalDateTime accessTime;//
 	
-	private String novelWriter;
+	private String novelTitle;//
 	
-	private List<String> novelGenres;
+	private String novelIntro;//
 	
-	private String coverSrc;
+	private String novelWriter;//
+	
+	private List<String> novelGenres;//
+	
+	private Integer likeCount;//
+	
+	private String coverSrc;//
+	
+	private Long totalViews;//
+
 }

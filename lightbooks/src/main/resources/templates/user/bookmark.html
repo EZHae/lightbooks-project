@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
-	<style>
+   <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+   <style>
 		html, body {
 			height: 100%;
 			margin: 0;
@@ -39,64 +39,119 @@
 		.navbar-category button {
 			border: 1px solid white;
 			border-radius: 20px;
-			padding: 8px;
-			font-size: 12px;
+			padding: 10px 12px;
+			font-size: 14px;
 			color: white;
 			background: #66b2ff;
 			text-decoration: none;
 			cursor: pointer; /* 버튼임을 명시 */
+			font-weight: bold; /* 폰트를 굵게 설정 */
+			
+		}
+		
+		.item img {
+			width: 200px;
+			height: auto;
+			margin-right: 20px;
 		}
 		
 		.item {
-			display: flex;
+			display: flex; /* 이미지와 텍스트를 가로로 나열 */
+			align-items: stretch; /* 추가: 자식 요소들을 최대한 늘려 높이를 같게 만듦 */
 			margin-bottom: 20px;
 			border-bottom: 1px solid #eee;
 			padding-bottom: 10px;
 		}
 		
-		.item img {
-			width: 100px;
-			height: auto;
+		.info-container {
+			display: flex;
+			flex-direction: column; /* 세로 방향으로 배치 */
+		}
+		
+		.view-container, .like-container { /* 추가: 아이콘과 조회수를 감싸는 컨테이너 */
+			display: flex; /* 가로로 배치 */
+			align-items: center; /* 세로 방향으로 중앙 정렬 */
+		}
+		
+		.view-container span, .like-container span {
+			margin-left: 5px; /* 아이콘과 조회수 간 간격 */
+		}
+		
+		.image-container img {
+			width: 150px;
+			height: 100;
 			margin-right: 20px;
 		}
 		
-		.item h3 {
-			margin-top: 0;
+		.text-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
 		}
-	</style>
-	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
-
-		<main>
-		    <div class="container">
-		        <div class="row centered-row gx-4 mt-4">
-		            <div>
-		                <strong>내 보관함</strong>
-		                <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
-		            </div>
 		
-		            <div class="navbar-category">
-		                <div>
-		                    <div>
-		                        <button id="likedBtn">좋아요한 작품</button>
-		                    </div>
-		                    <div>
-		                        <button id="watchedBtn">최근 본 작품</button>
-		                    </div>
-		                    <div>
-		                        <button id="purchasedBtn">구매한 작품</button>
-		                    </div>
-		                </div>
-		            </div>
-		            <hr/>
-		            <div id="itemList"></div>
-		        </div>
-		    </div>
-		</main>
+		.text-container p { /* text-container 내부의 모든 p 태그에 적용 */
+			margin-top: 2px;
+			margin-bottom: 2px;
+			display: flex;
+			align-items: center; /* 세로 중앙 정렬 */
+		}
+		
+		.text-container>div { /* text-container 내부의 모든 div에 적용 */
+			margin-top: 2px; /* 위쪽 여백 조정 */
+			margin-bottom: 2px; /* 아래쪽 여백 조정 */
+		}
+		
+		.text-container div a {
+			font-weight: normal; /* 추가: 소설 제목 일반 글꼴 설정 */
+		}
+		
+		.episode-num {
+			margin-left: 5px; /* 제목과 회차 정보 간 간격 */
+		}
+		
+		.gradeIcon {
+			margin-bottom: 10px; /* 유료/무료 표시와 제목 사이의 간격 추가 */
+		}
+		
+		.gradeIcon span {
+			border: 1px solid white;
+			background: #cf97ff;
+			color: white;
+			padding: 2px;
+			border-radius: 12px;
+		}
+</style>
+   <body>
+      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 
-
-		<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+      <main>
+          <div class="container">
+              <div class="row centered-row gx-4 mt-4">
+                  <div>
+                      <h4><strong>내 보관함</strong></h4>
+                      <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
+                  </div>
+      
+                  <div class="navbar-category">
+                      <div>
+                          <div>
+                              <button class="btn typeBtn" id="likedBtn" data-type="liked">좋아요한 작품</button>
+                          </div>
+                          <div>
+                              <button class="btn typeBtn" id="watchedBtn" data-type="watched">최근 본 작품</button>
+                          </div>
+                          <div>
+                              <button class="btn typeBtn" id="purchasedBtn" data-type="purchased">구매한 작품</button>
+                          </div>
+                      </div>
+                  </div>
+                  <hr/>
+                  <div id="itemList"></div>
+              </div>
+          </div>
+      </main>
+      <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/bookmark.js}"></script>
-	</body>
+   </body>
 </html>
