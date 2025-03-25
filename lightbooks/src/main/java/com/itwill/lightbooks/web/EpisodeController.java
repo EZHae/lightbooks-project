@@ -72,7 +72,7 @@ public class EpisodeController {
         model.addAttribute("maxEpisodeNum", maxEpisodeNum);
         
         // episodeNum 기본값 설정 (최대값 + 1)
-        episodeCreateDto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
+//        episodeCreateDto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
      
 		model.addAttribute("novelId", novelId);
 		
@@ -88,9 +88,9 @@ public class EpisodeController {
 	    Integer maxEpisodeNum = epiService.findMaxEpisodeNumByNovelId(novelId);
 	    
 	    // 작성자가 직접 번호를 입력할 수 있도록 하고, 번호를 입력하지 않을 경우 자동으로 차례대로 부여
-	    if (dto.getEpisodeNum() == null) {
-	        dto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
-	    }
+//	    if (dto.getEpisodeNum() == null) {
+//	        dto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
+//	    }
 
 		Novel novel = novelService.searchById(novelId);
 		
@@ -108,6 +108,16 @@ public class EpisodeController {
     public String episodeDetails(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, 
     		Model model, HttpSession session) {
         Episode episode = epiService.getEpisodeById(episodeId);
+        
+        if (episode != null && episode.getEpisodeNum() != null) {
+            int episodeNumber = episode.getEpisodeNum().intValue();
+            // episodeNumber를 사용하는 코드
+        } else {
+            // episode.getEpisodeNum()이 null인 경우 처리
+            // 예: 기본값 설정, 오류 메시지 출력, 예외 처리 등
+            System.err.println("Episode number is null for episode ID: " + episodeId);
+            // 또는 적절한 예외처리.
+        }
         
      // 조회수 증가 (로그인 사용자만, 세션 만료 전 중복 불가)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -142,6 +152,7 @@ public class EpisodeController {
 
         // 이전/다음 회차 ID 조회 (공지 제외)
         Long previousEpisodeId = epiService.findPreviousEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
+        
         Long nextEpisodeId = epiService.findNextEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
 
         // 이전/다음 회차 정보 조회

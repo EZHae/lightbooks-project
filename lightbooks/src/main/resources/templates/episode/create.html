@@ -48,10 +48,7 @@
 			                <label for="episodeNum" class="form-label">연재 회차번호</label>
 			                <input type="number" id="episodeNum" th:field="*{episodeNum}" class="form-control"
 							       th:placeholder="${maxEpisodeNum != null} ? (${maxEpisodeNum} + 1) + '회차를 작성할 차례입니다' : '등록된 회차가 없습니다.'"
-							       th:attr="data-original-value=${maxEpisodeNum != null ? maxEpisodeNum + 1 : ''}"
 							       oninput="validateEpisodeNum(this);" />
-							<input type="hidden" id="calculatedEpisodeNum" name="calculatedEpisodeNum"
-							       th:value="${maxEpisodeNum != null ? maxEpisodeNum + 1 : ''}" />
 			                <small class="form-text text-muted">
 							    ⚠️ 회차 번호를 입력하지 않으면 차례대로 자동 부여됩니다. 작성 못한 회차가 있다면, 회차 번호를 직접 입력하시면 됩니다.
 							</small>
