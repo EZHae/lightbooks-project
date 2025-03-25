@@ -47,9 +47,10 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 	  
 	  const episodeId = element.dataset.episodeId;
 	  const novelId = element.dataset.novelId;
+	  const userId = document.querySelector('input#userId').value;
 
 	  const updateAccessTime = () => {
-	      axios.post(`/novel/${novelId}/episode/${episodeId}/access`)
+	      axios.post(`/user/episode/${episodeId}/access?userId=${userId}`)
 	           .then(response => {
 	                console.log("access_time 업데이트 성공:", response.data);
 	            })
@@ -95,7 +96,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 
                     if (result === "PURCHASED" || result === "FREE") {
                         console.log("구매된 회차입니다. 이동합니다.");
-						updateAccessTime(); //TODO: access_time 업데이트?????????잠시만 유료일때 넣어야하는데
+						updateAccessTime();
                         window.location.href = element.getAttribute("href");
                     } else {
                         console.log("구매하지 않은 유료 회차입니다. 구매 팝업을 표시합니다.");
@@ -192,6 +193,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 
 										// 구매회차 페이지로 이동
 										setTimeout(() => {
+											updateAccessTime(); // TODO:access_time 업데이트
 											window.location.href = element.getAttribute("href");
 										}, 1000); // 1초 후 이동
 

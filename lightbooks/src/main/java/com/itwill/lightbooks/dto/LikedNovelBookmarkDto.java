@@ -11,6 +11,8 @@ public class LikedNovelBookmarkDto {
 	
     private String novelTitle;
     
+    private String novelIntro;
+    
     private String coverSrc;
     
     private Integer likeCount;

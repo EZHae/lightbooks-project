@@ -18,9 +18,12 @@ public class RecentlyWatchedEpisodeDto {
 	
 	private String novelTitle;
 	
+	private String novelIntro;
+	
 	private String novelWriter;
 	
 	private List<String> novelGenres;
 	
 	private String coverSrc;
+
 }

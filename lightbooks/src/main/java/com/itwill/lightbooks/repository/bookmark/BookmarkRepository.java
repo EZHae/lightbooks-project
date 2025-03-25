@@ -29,18 +29,25 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 	
 	
 	// 추가) 북마크 업데이트 및 북마크 존재 여부 확인
-	Bookmark findByUserIdAndEpisodeId(Long userId, Long episodeId);
+//	Bookmark findByUserIdAndEpisodeId(Long userId, Long episodeId);
+	
+	// 추가) 사용자의 특정 회차 북마크를 조회 
+	@Query("SELECT b FROM Bookmark b JOIN FETCH b.novel WHERE b.user.id = :userId AND b.episode.id = :episodeId")
+	Bookmark findByUserIdAndEpisodeIdWithNovel(@Param("userId") Long userId, @Param("episodeId") Long episodeId);
 	
 	// 좋아요 누른 소설 페이징 조회
 	@Query("SELECT b FROM Bookmark b JOIN FETCH b.novel WHERE b.user.id = :userId AND b.type = 0 ORDER BY b.novel.likeCount DESC")
 	Page<Bookmark> findLikedNovelsByUserIdOrderByLikeCountDesc(Long userId, Pageable pageable);
 
     // 최근 본 회차 페이징 조회
-    @Query("SELECT b FROM Bookmark b JOIN b.episode e WHERE b.user.id = :userId AND b.type = 1 AND e.category != 0 ORDER BY b.accessTime DESC")
-    Page<Bookmark> findRecentlyWatchedEpisodesByUserIdExcludeNotice(@Param("userId") Long userId, Pageable pageable);
+//    @Query("SELECT b FROM Bookmark b JOIN b.episode e WHERE b.user.id = :userId AND b.type = 1 AND e.category != 0 ORDER BY b.accessTime DESC")
+//    Page<Bookmark> findRecentlyWatchedEpisodesByUserIdExcludeNotice(@Param("userId") Long userId, Pageable pageable);
+	@Query("SELECT b FROM Bookmark b JOIN FETCH b.novel JOIN b.episode e WHERE b.user.id = :userId AND b.type = 1 AND e.category != 0 ORDER BY b.accessTime DESC")
+	Page<Bookmark> findRecentlyWatchedEpisodesWithNovelByUserIdExcludeNotice(@Param("userId") Long userId, Pageable pageable);
 
     // 구매한 소설 페이징 조회
-    @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId AND b.type = 2 ORDER BY b.createdTime DESC")
-    Page<Bookmark> findPurchasedNovelsByUserIdOrderByCreatedTimeDesc(Long userId, Pageable pageable);
-    
+//    @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId AND b.type = 2 ORDER BY b.createdTime DESC")
+//    Page<Bookmark> findPurchasedNovelsByUserIdOrderByCreatedTimeDesc(Long userId, Pageable pageable);
+	@Query("SELECT b FROM Bookmark b JOIN FETCH b.novel WHERE b.user.id = :userId AND b.type = 2 ORDER BY b.createdTime DESC")
+	Page<Bookmark> findPurchasedNovelsWithNovelByUserIdOrderByCreatedTimeDesc(@Param("userId") Long userId, Pageable pageable);
 }

@@ -3,7 +3,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-	consol.log(dom);
     const menuBar = document.querySelector('.global-menu-bar'); // 상단 메뉴바
     const settingsIcon = document.createElement('div'); // 뷰어 설정 버튼 생성
     const settingsPopup = document.createElement('div'); // 뷰어 설정 팝업 생성
