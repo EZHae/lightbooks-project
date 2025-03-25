@@ -1,5 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<<<<<<< HEAD
+   <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+   <style>
+		.as {
+	    background: olive;
+	    display: flex;
+	    justify-content: space-between;
+	    max-width: 900px;
+	    width: 800px;
+	    margin: 0 auto;
+	    padding: 20px;
+	  }
+	
+	  .box {
+	    width: 48%;
+	    background: white;
+	    padding: 10px;
+	    text-align: center;
+	  }
+   </style>
+   
+   <body>
+      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+         <main>
+               <div>
+                  <div class="as">
+                     <div class="box">
+                     	<strong>내 보관함</strong>
+                     	  <div style="background: white; width: 200px;">왼쪽</div>
+  							
+                     </div>
+                     <div class="box">
+							<div style="background: white; width: 200px;">오른쪽</div>
+                     </div>
+                  </div>
+               </div>
+         </main>
+       	<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+=======
 	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
 	<style>
 		html, body {
@@ -96,6 +135,7 @@
 
 
 		<th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+>>>>>>> 40f054e2d6a3774aeee0fadf88d4d2b1072e394e
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/bookmark.js}"></script>
 	</body>

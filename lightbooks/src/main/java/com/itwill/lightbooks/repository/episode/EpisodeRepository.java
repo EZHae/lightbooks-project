@@ -1,7 +1,9 @@
 package com.itwill.lightbooks.repository.episode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,7 +66,23 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long>{
 	//소설의 조회수 보여주기(공지를 제외한 유/무료 회차의 조회수만 더해서)
 	@Query("SELECT SUM(e.views) FROM Episode e WHERE e.novel.id = :novelId AND e.category != 0")
     Integer sumViewsByNovelIdExcludingNotices(@Param("novelId") Long novelId);
+
 	
+	// 검색된 소설의 조회수를 한 번에 호출
+	@Query("select e.novel.id, sum(e.views) from Episode e where e.novel.id in :novelId and e.category != 0 group by e.novel.id")
+	List<Object[]> getTotalViewsByNovelIdsRaw(@Param("novelId") List<Long> novelIds);
+	
+	//SUM()의 결과는 항상 Long 내부적으로 자동 타입 승급.
+	// 만약 views 필드가 Integer 여도 SUM(e.views) 결과는 항상 Long 타입.. (합계는 큰 값이 될 수 있으니까)
+	default Map<Long, Long> getTotalViewsByNovelIds(List<Long> novelIds) {
+		List<Object[]> rawResults = getTotalViewsByNovelIdsRaw(novelIds);
+		
+		return rawResults.stream()
+				.collect(Collectors.toMap(
+						row -> (Long)row[0],
+						row -> (Long)row[1] 
+						));
+	}				
 	//
 	
 	

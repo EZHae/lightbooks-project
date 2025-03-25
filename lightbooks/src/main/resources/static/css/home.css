@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .wrapper {
 	display: flex;
 	flex-direction: column;
@@ -85,38 +89,51 @@
 	margin-right: 6px;
 }
 
+/* 카테고리 전체 wrapper */
 .navbar-category {
+	max-width: 850px;
 	top: 40px;
-	background: white;
 	padding: 5px;
 	width: 100%;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	
 }
 
-/* 카테고리 장르 */
-.navbar-category div {
+/* 개별 카테고리 버튼 (div) */
+.category-item {
 	display: inline-block;
-	margin: 5px;
+	padding: 6px 14px;
+	margin-right: 6px;
+	border-radius: 20px;
+	transition: background 0.2s ease, color 0.2s ease;
+	border: 0.5px solid #f6f6f6;
 }
 
-.navbar-category a {
-	border: 1px solid white;
-	border-radius: 20px;
-	padding: 8px;
-	font-size: 12px;
-	color: white;
-	background: #66b2ff;
+/* 선택된 버튼 */
+.category-item.active {
+	background: #66b2ff !important;
+	color: white !important;
+	font-weight: bold;
+	text-decoration: underline !important;
+}
+
+/* 링크 스타일 */
+.category-link {
+	color: inherit; /* 상위 div 색 따라감 */
+	font-size: 14px;
 	text-decoration: none;
+	display: inline-block;
+}
+.category-item:hover {
+	background: #f6f6f6;
+	cursor: pointer;
 }
 /* -------------- */
 div.notice {
 	background-color: #f6f6f6;
-	color: black; border : 0px solid gray; border-radius : 10px; padding :
-	5px; padding-left : 10px; width : 850px; margin : auto;
-	font-size: 15px;
 	margin: auto;
 	width: 850px;
-	padding-left: 10px;
-	padding: 5px;
 	border-radius: 10px;
 	border: 0px solid gray;
 }
