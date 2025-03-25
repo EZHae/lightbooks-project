@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 올라잇')}"></head>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 무료')}"></head>
+	
 	<!-- 스와이퍼 -->
 	<link
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
+	
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
@@ -17,7 +18,7 @@
 							<div>		
 								<div class="category-item" th:classappend="${screenId == 1} ? ' active' : ''">
 									<a class="category-link" 
-										th:href="@{|/${mainCategory}/${menuId}/screen/1|}" > 올 라잇 </a>
+										th:href="@{|/${mainCategory}/${menuId}/screen/1|}" >자유</a>
 								</div>
 								<div class="category-item" th:classappend="${screenId == 2} ? ' active' : ''">
 									<a class="category-link" 
@@ -26,6 +27,30 @@
 								<div class="category-item" th:classappend="${screenId == 3} ? ' active' : ''">
 									<a class="category-link" 
 										th:href="@{|/${mainCategory}/${menuId}/screen/3|}">오늘신작</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 4} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/4|}">판타지</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 5} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/5|}">로맨스</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 6} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/6|}">무협</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 7} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/7|}">로판</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 8} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/8|}">현판</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 9} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/9|}">드라마</a>
 								</div>
 							</div>
 						</div>
@@ -49,22 +74,32 @@
 						    <!-- Slides -->
 						    <div class="swiper-slide">
 						    	<a href="#">
-							    	<img alt="" src="/images/cat1.jpg">
+							    	<img alt="" src="/images/resource.jpg">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/cat2.jpg">
+						    	<img alt="" src="/images/fantasy_2.jpg">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/cat3.jpg">
+						    	<img alt="" src="/images/fantasy_3.jpg">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/cat1.jpg">
+						    	<img alt="" src="/images/fantasy_6.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/fantasy_4.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/fantasy_5.jpg">
 						    	</a>
 						    </div>
 						    
@@ -86,7 +121,7 @@
 						
 						<section class="bestNovels">
 							<div class="subTitle">
-								<span class="font">라잇 베스트</span>			
+								<span class="font">추천신작</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
 							<div class="novel-grid">
@@ -96,18 +131,20 @@
 										<!-- 표지 이미지 -->
 							        	<img class="novelImgs" th:src="${novel.coverSrc}">
 							        	<!-- 제목 -->
-							        	<span th:text="${novel.title}"></span>
+							        	<span class="novel-card-title" th:text="${novel.title}"></span>
+							        	</br>
 							        	<!-- 작가 -->
-							        	<span th:text="${novel.writer}"></span>
-							        	<i class="bi bi-heart"></i>
+							        	<span class="novel-card-writer" th:text="|${novel.writer} · ${novel.genres}|"></span>
+							        	</br>
 							        	<!-- 좋아요 -->
-									  	<span th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
+							        	<i class="bi bi-heart"></i>
+									  	<span class="novel-card-like" th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
+									  	<!-- 평점 -->
 									  	<i class="bi bi-star"></i>
-									  	<!-- 조회수 -->
-									  	<span th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
+									  	<span class="novel-card-rating" th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
+									  	<!-- 조회수 -->									  	
 									  	<i class="bi bi-person-plus-fill"></i>
-<!-- 									  	<span th:if="${viewsMap != null and viewsMap.get(novel.id) != null}" -->
-<!--     								  			th:text="${viewsMap.get(novel.id)}"></span> -->
+									  	<span class="novel-card-totalViews"  th:if="${novel.totalViews != null}" th:text="${novel.totalViews}"></span>
 									</a>
 								</div>
 							</div>
@@ -116,7 +153,7 @@
 						
 						<section class="freeNovels">
 							<div class="subTitle">
-								<span class="font">라잇 무</span>			
+								<span class="font">인기 연재작</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
 							<div class="novel-grid">
@@ -132,7 +169,7 @@
 						
 						<section class="paidNovels">
 							<div class="subTitle">
-								<span class="font">라잇 유</span>			
+								<span class="font">인기 완결작</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
 						
@@ -146,13 +183,13 @@
 						</section>
 											
 						
-					
+						<!-- 장르별 -->
 						<section class="genre-novels">
 							<div th:each="entry : ${genreNovelsMap}">
 								
 								<!-- 장르명 -->
 								<div class="subTitle">
-									<span class="font" th:text="${entry.key} + ' 소설'"></span>
+									<span class="font" th:text="${entry.key} "></span>
 									<i class="bi bi-caret-right-fill"></i>
 								</div>
 						
@@ -167,9 +204,10 @@
 							</div>
 						</section>
 						
+						<!-- 이벤트 -->
 						<section class="eventNovels">
 							<div class="subTitle">
-								<span class="font">라잇 이벤트</span>			
+								<span class="font">웹소설 이벤트</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
 							<div class="novel-grid">
@@ -187,9 +225,9 @@
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/home.js}"></script>
-        
         <!-- 스와이퍼 -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
+   	<link rel="stylesheet" th:href="@{/css/home-free.css}" />
 </html>

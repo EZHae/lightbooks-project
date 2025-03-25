@@ -21,10 +21,18 @@ public interface NovelQuerydsl {
 	
 	Page<Novel> searchByKeyword(NovelSearchDto dto, Pageable pageable);
 	
+	// 메인 페이지
 	List<NovelListItemDto> findRandomBestNovels(int count);
 	List<Novel> findFreeNovels(int limit);
 	List<Novel> findPaidNovels(int limit);
 	List<Novel> findNovelsByGenreName(String genreName, int limit);
 	List<Novel> findRandomNovels(int limit);
 	
+	// 무료 페이지
+	List<NovelListItemDto> findByFreeGradeOrderByNew(int limit);
+	List<NovelListItemDto> findByFreeGradeAndSerialOrderByPopularity(int limit);
+	List<NovelListItemDto> findByFreeGradeAndCompletedOrderByPopularity(int limit);
+	List<NovelListItemDto> findByFreeGradeEventOrderByNew(int limit);
+	List<NovelListItemDto> findByFreeGradeAndGenreRandom(String genreName, int limit);
+	List<Novel> findFreeOrderByLikeDesc();
 }

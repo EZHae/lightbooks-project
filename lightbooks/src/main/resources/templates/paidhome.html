@@ -26,6 +26,30 @@
 									<a class="category-link" 
 										th:href="@{|/${mainCategory}/${menuId}/screen/3|}">오늘신작</a>
 								</div>
+								<div class="category-item" th:classappend="${screenId == 4} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/4|}">판타지</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 5} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/5|}">로맨스</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 6} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/6|}">무협</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 7} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/7|}">로판</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 8} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/8|}">현판</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 9} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/9|}">드라마</a>
+								</div>
 							</div>
 						</div>
 					
@@ -191,5 +215,5 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
+	<link rel="stylesheet" th:href="@{/css/home-paid.css}" />
 </html>

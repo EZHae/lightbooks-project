@@ -6,7 +6,6 @@
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
@@ -99,7 +98,7 @@
 							        	<span class="novel-card-title" th:text="${novel.title}"></span>
 							        	</br>
 							        	<!-- 작가 -->
-							        	<span class="novel-card-writer" th:text="${novel.writer}"></span>
+							        	<span class="novel-card-writer" th:text="|${novel.writer} · ${novel.genres}|"></span>
 							        	</br>
 							        	<!-- 좋아요 -->
 							        	<i class="bi bi-heart"></i>
@@ -194,5 +193,5 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
-	
+	<link rel="stylesheet" th:href="@{/css/home.css}" />
 </html>

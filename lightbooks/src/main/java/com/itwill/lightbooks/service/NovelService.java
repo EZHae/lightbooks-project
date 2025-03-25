@@ -233,7 +233,7 @@ public class NovelService {
 	}
 
 	
-	// ===================================== 소설 리스트 ======================================
+	// ===================================== 메인 소설 리스트 ======================================
 	public List<NovelListItemDto> getRandemBestNovels(int count) {
 		return novelRepo.findRandomBestNovels(count);
 	}
@@ -273,4 +273,53 @@ public class NovelService {
 						Collectors.toList()
 						));
 	}
+
+	// ===================================== 무료 소설 리스트 ======================================
+	// 추천 신작 무료 소설 (최근순)
+	public List<NovelListItemDto> getFreeRecommendNewNovels(int limit) {
+		return novelRepo.findByFreeGradeOrderByNew(limit);
+	}
+
+	// 인기 연재 무료 소설 (좋아요/평점순)
+	public List<NovelListItemDto> getFreesPopularSerialNovels(int limit) {
+		return novelRepo.findByFreeGradeAndSerialOrderByPopularity(limit);
+	}
+
+	// 인기 완결 무료 소설
+	public List<NovelListItemDto> getFreePopularCompletedNovels(int limit) {
+		return novelRepo.findByFreeGradeAndCompletedOrderByPopularity(limit);
+	}
+	
+	// 무료 장르별 소설 (장르 지정)
+	public Map<String, List<NovelListItemDto>> getFreeGenreNovels(int limit) {
+		List<String> genreNames = List.of("판타지", "로맨스", "무협", "로판", "현판", "드라마");
+		Map<String, List<NovelListItemDto>> result = new LinkedHashMap<>();
+		
+		for(String genreName : genreNames) {
+			List<NovelListItemDto> novels = novelRepo.findByFreeGradeAndGenreRandom(genreName, limit);
+			result.put(genreName, novels);
+		}
+		return result;
+	}
+	// 무료 이벤트 소설
+	public List<NovelListItemDto> getFreeEventNovels(int limit) {
+		return novelRepo.findByFreeGradeEventOrderByNew(limit);
+	}
+	// 무료 - 베스트 소설 목록
+	public List<Novel> getFreeRecommendedBest() {
+		List<Novel> novels = novelRepo.findFreeOrderByLikeDesc();
+		System.out.println(novels);
+		return novels;
+	}
+	// 무료 - 최근 날짜순으로 소설 목록
+		public Map<LocalDate, List<Novel>> getFreeRecommendedNew() {
+			LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+			List<Novel> novels = novelRepo.findByGradeAndCreatedTimeAfter(0, oneMonthAgo);
+			
+			// 날짜 내림차순으로 그룹화
+			return novels.stream().collect(Collectors.groupingBy(novel -> novel.getCreatedTime().toLocalDate(),
+					() -> new TreeMap<>(Collections.reverseOrder()),
+							Collectors.toList()
+							));
+		}
 }
