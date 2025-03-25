@@ -48,6 +48,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
       if (isOwner || category === "0" || category === "1") {
               console.log("공지거나 무료회차 또는 작성자 또는 구매한 경우입니다. 상세 페이지로 이동합니다.");
               window.location.href = element.getAttribute("href");
+			  // axios.post 북마크 테이블 insert/update을 서비스 계층에서 결정
               return;
           }
 

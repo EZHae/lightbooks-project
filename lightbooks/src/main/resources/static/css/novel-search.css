@@ -34,10 +34,21 @@ main {
 	width: 320px;
 	height: 220px;
 	padding: 1rem;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	box-shadow: 0 4px 5px rgba(0, 0, 0, 0.08);
+	box-sizing: border-box;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
 	text-decoration: none; /* 🔥 밑줄 제거 */
 }
 
+.searchBox:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
+/* a 태그 전체 카드 클릭 가능 + 밑줄 제거 */
 .searchBox-link {
 	display: block; /* 이거만 있으면 됨 */
 	text-decoration: none; /* 🔥 밑줄 제거 */

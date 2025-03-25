@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 공지사항 수정')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+			<div class="container-sm mt-4">
+				<h2>공지사항 수정</h2>
+				<form method="post" th:action="@{/admin/post/update}">
+					<div class="card">
+						<div class="card-header">
+							<div class="d-none">
+								<input id="id" name="id" th:value="${post.id}">
+							</div>
+							<div>
+								<input class="form-control fs-3" id="title" name="title" maxlength="100" th:value="${post.title}" style="height: 50px;" required>
+							</div>
+							<div>
+								<h6 th:text=${post.writer}></h6>
+							</div>
+							<div>
+								<h6>작성시간: <span th:text="${#temporals.format(post.createdTime, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></h6>
+							</div>
+							<div>
+								<h6>수정시간: <span th:text="${#temporals.format(post.modifiedTime, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></h6>
+							</div>
+						</div>
+						<div class="card-body">
+							<textarea class="form-control" rows="20" id="content" name="content" maxlength="1000" th:text="${post.content}" required></textarea>
+						</div>
+						<div class="card-footer" sec:authorize="isAuthenticated() and principal.loginId == 'admin'">
+							<div class="d-flex justify-content-end">
+								<input class="btn btn-outline-success" type="submit" value="수정" onclick="return confirm('수정하시겠습니까?');">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</main>
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

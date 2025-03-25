@@ -77,13 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		coinChargeList.forEach(item => {
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">코인 충전</td>
 					<td class="col">${item.coin}</td>
 					<td class="col text-danger">${item.cash}</td>
-					<td class="col">${item.createdTime}</td>
+					<td class="col">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -113,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				(item.novel !== null) ? title = item.novel.title : '-';
 			let episodeNum;
 				(item.episodeNum !== null) ? episodeNum = item.episodeNum : '-';
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
@@ -120,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					<td class="col-5">${title}</td>
 					<td class="col-1">${episodeNum}</td>
 					<td class="col-2 text-danger">${item.coin}</td>
-					<td class="col-3">${item.createdTime}</td>
+					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -148,13 +150,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		coinReList.forEach(item => {
 			const con = (item.con === 0) ? '대기' : '완료';
 			console.log(con);
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">환불/환전</td>
 					<td class="col-3 text-danger">${item.coin}</td>
 					<td class="col-4 text-success">${item.cash}</td>
-					<td class="col-3">${item.createdTime}</td> 
+					<td class="col-3">${formatCreatedTime}</td> 
 					<td id="con" class="col-1">${con}</td>
 				</tr>
 			`;
@@ -183,13 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		donationList.forEach(item => {
+			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 후원</td>
 					<td class="col-6">${item.novelId}</td>
 					<td class="col-2 text-danger">${item.coin}</td>
-					<td class="col-3">${item.createdTime}</td>
+					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
@@ -363,6 +367,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		blocker.style.zIndex = "9999";
 
 		document.body.appendChild(blocker);
+	}
+	
+	function formatDateTime(dateTimeString) {
+	    const date = new Date(dateTimeString);
+	    return date.toLocaleString('ko-KR', { 
+	        year: 'numeric', 
+	        month: '2-digit', 
+	        day: '2-digit', 
+	        hour: '2-digit', 
+	        minute: '2-digit', 
+	    });
 	}
 
 });

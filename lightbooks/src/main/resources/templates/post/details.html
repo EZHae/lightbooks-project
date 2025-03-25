@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 공지사항')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+			<div class="container-sm mt-4">
+				<div class="card">
+					<div class="card-header">
+						<div>
+							<h2 th:text="${post.title}"></h2>
+						</div>
+						<div>
+							<h6 th:text=${post.writer}></h6>
+						</div>
+						<div>
+							<h6>작성시간: <span th:text="${#temporals.format(post.createdTime, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></h6>
+						</div>
+						<div>
+							<h6>수정시간: <span th:text="${#temporals.format(post.modifiedTime, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></h6>
+						</div>
+					</div>
+					<div class="card-body">
+						<span style="white-space: pre-line;" th:text="${post.content}"></span>
+					</div>
+					<div class="card-footer" sec:authorize="isAuthenticated() and principal.loginId == 'admin'">
+						<div class="d-flex justify-content-end">
+							<a class="btn btn-outline-primary" th:href="@{/admin/post/update(id=${post.id})}">수정</a>
+							<a class="ms-2 btn btn-outline-danger" th:href="@{/admin/post/delete(id=${post.id})}" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>

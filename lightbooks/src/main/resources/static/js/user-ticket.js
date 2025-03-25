@@ -1,96 +1,95 @@
 document.addEventListener('DOMContentLoaded', () => {
-	console.log('mileage-payment.js');
-	const userId = document.querySelector('span#userId').textContent;
+    console.log('user-ticket.js');
 	
+	const userId = document.querySelector('span#userId').textContent;
+
 	let currentPage = 0; // 현재 페이지
 	const pageSize = 5; // 페이지 크기 설정
 	const blockSize = 5;
 	
-	getMileagePayment(0, pageSize, 0); // 0은 마일리지 적립
-	getMileagePayment(0, pageSize, 1); // 1은 마일리지 사용
+	getTicket(0, pageSize); // 0은 마일리지 적립
+	getTicketPayment(0, pageSize); // 1은 마일리지 사용
 	
-	function getMileagePayment(page = 0, size = 5, type = 0) {
-		if (type === 0) {
-			axios.get(`/user/mileagepayment/read?userId=${userId}&page=${page}&size=${size}&type=${type}`).then(response => {
-				const data = response.data.content;
-				
-				readMileageEarnList(data);	
-				renderPagination(response.data, 0);
-			}).catch(error => {
-				console.error(error);
-			});
-		} else {
-			axios.get(`/user/mileagepayment/read?userId=${userId}&page=${page}&size=${size}&type=${type}`).then(response => {
-				const data = response.data.content
-				
-				readMileageUseList(data);
-				renderPagination(response.data, 1);
-			}).catch(error => {
-				console.error(error);
-			})
-		}
+	function getTicket(page = 0, size = 5) {
+		axios.get(`/user/ticket/read?userId=${userId}&page=${page}&size=${size}`).then(response => {
+			const data = response.data;
+			
+			readTicketList(data.content);
+			renderPagination(data, 0);
+		}).catch(error => {
+			console.error(error);
+		});
 	}
 	
-	// 적립 리스트
-	function readMileageEarnList(mileageEarnList) {
-		console.log(mileageEarnList);
-		const tbodymileageEarn = document.querySelector('tbody#mileageEarnTBody');
+	function getTicketPayment(page = 0, size = 5) {
+		axios.get(`/user/ticketpayment/read?userId=${userId}&page=${page}&size=${size}`).then(response => {
+			const data = response.data;
+			
+			readTicketPaymentList(data.content);
+			renderPagination(data, 1);
+		}).catch(error => {
+			console.error(error);
+		});
+	}
+	
+	// 보유 리스트
+	function readTicketList(TicketHoldList) {
+		console.log(TicketHoldList);
+		const tbodyTicketHoldList = document.querySelector('tbody#ticketHoldTBody');
 		
-		if (mileageEarnList.length === 0) {
-			tbodymileageEarn.innerHTML =
+		if (TicketHoldList.length === 0) {
+			tbodyTicketHoldList.innerHTML =
 			`
 				<tr class="row">
-					<td colspan="4">적립 내역이 없습니다.</td>
+					<td colspan="3">보유중인 이용권이 없습니다.</td>
 				</tr>
 			`
 			return;
 		}
 		
 		let html = '';
-		mileageEarnList.forEach(item => {
+		TicketHoldList.forEach(item => {
 			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
-					<td class="col-1 ts-6">적립</td>
-					<td class="col-2">${item.mileage}</td>
-					<td class="col-6">${item.descrip}</td>
+					<td class="col-2 ${item.grade === '전체 이용권' ? 'fw-bold text-primary' : ''}">${item.grade}</td>
+					<td class="col-7">${item.novelTitle}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
-		tbodymileageEarn.innerHTML = html;
+		tbodyTicketHoldList.innerHTML = html;
 	}
-	
+
 	// 사용 리스트
-	function readMileageUseList(mileageUseList) {
-		console.log(mileageUseList);
-		const tbodymileageUse = document.querySelector('tbody#mileageUseTBody');
+	function readTicketPaymentList(ticketUseList) {
+		console.log(ticketUseList);
+		const tbodyTicketUse = document.querySelector('tbody#ticketUseTBody');
 		
-		if (mileageUseList.length === 0) {
-			tbodymileageUse.innerHTML =
+		if (ticketUseList.length === 0) {
+			tbodyTicketUse.innerHTML =
 			`
 				<tr class="row">
-					<td colspan="4">사용 내역이 없습니다.</td>
+					<td colspan="3">사용 내역이 없습니다.</td>
 				</tr>
 			`
 			return;
 		}
 		
 		let html = '';
-		mileageUseList.forEach(item => {
+		ticketUseList.forEach(item => {
 			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
-					<td class="col-1 ts-6">사용</td>
-					<td class="col-2 text-danger">${item.mileage}</td>
-					<td class="col-6">${item.descrip}</td>
+					<td class="col-7">${item.novelTitle}</td>
+					<td class="col-2">${item.episodeNum}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
 		});
-		tbodymileageUse.innerHTML = html;
+		tbodyTicketUse.innerHTML = html;
 	}
 	
 	/**
@@ -100,9 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	function renderPagination(pageData, type) {
 		let typeName;
 		if (type === 0) {
-			typeName = 'mileageEarn';
+			typeName = 'ticketHold';
 		} else {
-			typeName = 'mileageUse';
+			typeName = 'ticketUse';
 		}
 	    const pagination = document.querySelector(`ul#${typeName}Pagination`);
 	    console.log('pageData', pageData);
@@ -184,7 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	    button.innerText = text;
 	    button.addEventListener('click', () => {
 	        currentPage = page;
-	        getMileagePayment(currentPage, 5, type);
+			if (type === 0) {
+				getTicket(currentPage, 5);	
+			} else {
+				getTicketPayment(currentPage, 5);
+			}
+	        
 	    });
 
 	    li.appendChild(button);

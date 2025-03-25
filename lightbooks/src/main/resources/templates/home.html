@@ -13,22 +13,23 @@
 					<div class="navbar-category">
 						<div>		
 							<div>
-								<a class="category-link" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/'} ? ' active' : ''"
-									th:href="@{/}" > 올 라잇 </a>
+								<a class="category-link" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/menu/157/screen/1'} ? ' active' : ''"
+									th:href="@{/menu/157/screen/1}" > 올 라잇 </a>
 							</div>
 							<div>
-								<a class="category-link" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/menu/light/'} ? ' active' : ''"
-									th:href="@{/menu/light/}">라잇 신작</a>
+								<a class="category-link" th:classappend="${#httpServletRequest != null and #httpServletRequest.requestURI == '/menu/157/screen/2'} ? ' active' : ''"
+									th:href="@{/menu/157/screen/2}">라잇 신작</a>
 							</div>
 						</div>
 					</div>
 					
-					<div class="notice" data-target-obj="/notice/1">
-						<div>		
-							<div>
-								<span>오늘의 공지 사항</span>
-							</div>
-						</div>
+					<div class="dropdown notice">
+						<button id="notice-first" class="w-100 btn dropdown-toggle text-start" style="background: #f6f6f6;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+							
+						</button>
+						<ul id="notice-items" class="dropdown-menu w-100 pb-0">
+
+						</ul>
 					</div>
 					
 					<div class="swiper-container">

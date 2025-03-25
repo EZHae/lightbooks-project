@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 공지사항')}"></head>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+			<div class="container-sm mt-4">
+				<h2>공지사항</h2>
+				<table class="mt-3 table table-bordered table-hover table-responsive">
+					<thead>
+						<tr class="row" sec:authorize="!isAuthenticated() or (isAuthenticated() and principal.loginId != 'admin')">
+							<th class="col-7">제목</th>
+							<th class="col-2">작성자</th>
+							<th class="col-3">작성일</th>
+						</tr>
+						<tr class="row" sec:authorize="isAuthenticated() and principal.loginId == 'admin'">
+							<th class="col-1">강조</th>
+							<th class="col-6">제목</th>
+							<th class="col-2">작성자</th>
+							<th class="col-3">작성일</th>
+						</tr>
+					</thead>
+					<tbody id="noticeTBody">
+
+					</tbody>
+				</table>
+				<div class="d-flex align-items-end flex-column">
+					<a class="btn btn-primary btn-sm" th:href="@{/admin/post/create}" sec:authorize="isAuthenticated() and principal.loginId == 'admin'">공지사항 작성</a>
+				</div>
+				
+			</div>
+		</main>
+		
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/post-notice.js}"></script>
+	</body>
+</html>

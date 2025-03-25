@@ -20,12 +20,17 @@
         <nav th:fragment="pageHeader" id="pageHeader" class="navbar navbar-expand-lg"> <!-- id속성 추가!!!!!! -->
             <style>
            		.navbar {
-					max-width: 1200px;
-					width: 100%; /* 전체 너비를 동일하게 설정 */
-					margin: 0 auto; /* 중앙 정렬 */
+					position: sticky;
 					top: 0;
-					background: white;
+					z-index: 1200;
+					background-color: white;
+					width: 100%;
+					max-width: 100%;
+					margin: 0 auto;
 					padding: 10px;
+					padding-left: 10%;  /* 좌측 여백을 비율로 설정 */
+					padding-right: 10%; /* 우측 여백을 비율로 설정 */
+					transition: box-shadow 0.3s ease; /* 부드럽게 그림자가 생기고 사라짐 */
 				}
 				
 				.footer {
@@ -89,7 +94,7 @@
                 .wallet-now {
                     background-color: #e5ebfd;
                 }
-                .navbar-nav .nav-link.active {
+                .navbar-nav .nav-link .active {
                     color: #3b3bff !important;  /* 글자색 파란색 */
                     text-decoration: underline !important; /* 밑줄 추가 */
                     /* !important를 붙여야 Bootstrap 기본 스타일보다 우선 적용됨. */
@@ -276,13 +281,13 @@
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/user/ticket(id=${#authentication.principal.id})}">
                                             <img th:src="@{/images/dropdown_icon_example.jpg}" /> <br>
                                             이용권
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a th:href="@{#}">
+                                        <a th:href="@{/post/notice}">
                                             <img th:src="@{/images/dropdown_icon_example.jpg}" /> <br>
                                             공지사항
                                         </a>

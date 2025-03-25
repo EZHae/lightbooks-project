@@ -1,21 +1,16 @@
 package com.itwill.lightbooks.domain;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
@@ -25,33 +20,28 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Entity
-@Table(name = "TICKET_PAYMENT")
-public class TicketPayment {
+@Table(name = "POSTS")
+public class Post extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "ticket_id")
-	private Long ticketId;
+	private String writer;
+	private String title;
+	private String content;
+	private int highlight;
 	
-	@Column(name = "user_id")
-	private Long userId;
+	public Post updateHighlight (Integer highlight) {
+		this.highlight = highlight;
+		
+		return this;
+	}
 	
-	@Column(name = "novel_id")
-	private Long novelId;
-	
-	@Column(name = "episode_id")
-	private Long episodeId;
-	
-	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
-	private LocalDateTime createdTime;
-	
-	@Setter
-	@Transient
-	private String episodeNum;
-	
-	@Setter
-	@Transient
-	private String novelTitle;
+	public Post update (String title, String content) {
+		this.title = title;
+		this.content = content;
+		
+		return this;
+	}
 }

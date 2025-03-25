@@ -57,6 +57,12 @@ public class HomeController {
 		return "home";
 	}
 	
+	@GetMapping("/menu/{menuId}/screen/{screenId}")
+	public String menu(@PathVariable Integer menuId) {
+		
+		return "redirect:/";
+	}
+	
 	@GetMapping("/coinshop")
 	public void coinshop() {
 		log.info("coinshop()");
