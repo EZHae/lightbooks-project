@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 
 public interface NovelQuerydsl {
@@ -20,7 +21,7 @@ public interface NovelQuerydsl {
 	
 	Page<Novel> searchByKeyword(NovelSearchDto dto, Pageable pageable);
 	
-	List<Novel> findRandomBestNovels(int count);
+	List<NovelListItemDto> findRandomBestNovels(int count);
 	List<Novel> findFreeNovels(int limit);
 	List<Novel> findPaidNovels(int limit);
 	List<Novel> findNovelsByGenreName(String genreName, int limit);

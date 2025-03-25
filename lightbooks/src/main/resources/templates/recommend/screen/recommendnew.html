@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 오늘신작')}"></head>
+	<link rel="stylesheet" th:href="@{/css/home.css}" />
+	<!-- 스와이퍼 -->
+	<link
+	  rel="stylesheet"
+	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+	/>
+	<body>
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+			<div class="wrapper">
+				<div class="container">
+					
+					<th:block th:replace="~{home :: subcategory}"></th:block>
+					
+										
+					<div class="novel-container">
+						<section class="bestNovels">
+						
+						    <!-- 날짜별 그룹 반복 -->
+   							<div th:each="entry : ${novels}">
+   							
+   							
+   							<!-- 날짜 표시 -->
+      						<h5 class="date-title mt-3" th:text="${#temporals.format(entry.key, 'yyyy년 M월 d일')}"></h5>
+      						
+							
+						      <!-- 그 날짜에 해당하는 소설 리스트 -->
+						      <div class="novel-grid">
+						        <div class="novel-card" th:each="novel : ${entry.value}">
+						          <a th:href="@{/novel/{id}(id=${novel.id})}">
+						            <img class="novelImgs" th:src="${novel.coverSrc}">
+						          </a>
+						        </div>
+						      </div>
+						      
+   							</div>
+						</section>
+					</div>
+				</div>
+			</div>	
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/home.js}"></script>
+        
+        <!-- 스와이퍼 -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+	</body>
+</html>

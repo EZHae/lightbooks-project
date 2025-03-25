@@ -1,11 +1,14 @@
 package com.itwill.lightbooks.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -231,7 +234,7 @@ public class NovelService {
 
 	
 	// ===================================== 소설 리스트 ======================================
-	public List<Novel> getRandemBestNovels(int count) {
+	public List<NovelListItemDto> getRandemBestNovels(int count) {
 		return novelRepo.findRandomBestNovels(count);
 	}
 	public List<Novel> getNovelsByFreeGrade(int limit) {
@@ -252,5 +255,22 @@ public class NovelService {
 	}
 	public List<Novel> getEventNovels(int limit) {
 		return novelRepo.findRandomNovels(limit);
+	}
+	// home - 베스트 소설 목록
+	public List<Novel> getRecommendedBest() {
+		List<Novel> novels = novelRepo.findAllOrderByLikeDesc();
+		System.out.println(novels);
+		return novels;
+	}
+	// 최근 날짜순으로 소설 목록
+	public Map<LocalDate, List<Novel>> getRecommendedNew() {
+		LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+		List<Novel> novels = novelRepo.findByCreatedTimeAfter(oneMonthAgo);
+		
+		// 날짜 내림차순
+		return novels.stream().collect(Collectors.groupingBy(novel -> novel.getCreatedTime().toLocalDate(),
+				() -> new TreeMap<>(Collections.reverseOrder()),
+						Collectors.toList()
+						));
 	}
 }

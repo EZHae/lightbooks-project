@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 올라잇')}"></head>
+	<link rel="stylesheet" th:href="@{/css/home.css}" />
 	<!-- 스와이퍼 -->
 	<link
 	  rel="stylesheet"
@@ -11,16 +12,33 @@
 			<div class="wrapper">
 				<div class="container">
 				
-					<th:block th:replace="~{home :: subcategory}"></th:block>
+					<th:block th:fragment="subcategory">
+						<div class="navbar-category">
+							<div>		
+								<div class="category-item" th:classappend="${screenId == 1} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/1|}" > 올 라잇 </a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 2} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/2|}">베스트</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 3} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/3|}">오늘신작</a>
+								</div>
+							</div>
+						</div>
 					
 					<div class="dropdown notice">
-						<button id="notice-first" class="w-100 btn dropdown-toggle text-start" style="background: #f6f6f6;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<button id="notice-first" class="w-100 btn dropdown-toggle text-start" style="background: #f6f6f6; font-size: 15px; font-weight: bold;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 							
 						</button>
 						<ul id="notice-items" class="dropdown-menu w-100 pb-0">
 
 						</ul>
 					</div>
+					</th:block>
 					
 					<div class="swiper-container">
 						<!-- 스와이퍼 -->
@@ -174,5 +192,4 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
 </html>
