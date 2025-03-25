@@ -110,16 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	const navbar = document.querySelector('.navbar');
 	const modalEl = document.getElementById('signModal');
 
-	// 모달 열릴 때 navbar 위치 변경
+	// 모달이 열릴 때만 적용
 	modalEl.addEventListener('show.bs.modal', () => {
-	  navbar.style.position = 'static';     // navbar를 static으로 만들어서 모달 앞에 겹치지 않도록
-	  navbar.style.zIndex = '1';            // z-index 낮추기
+	  navbar.classList.add('modal-open-navbar');
 	});
 
-	// 모달 닫힐 때 navbar 복구
 	modalEl.addEventListener('hidden.bs.modal', () => {
-	  navbar.style.position = 'sticky';    // 모달 닫으면 다시 sticky로 복원
-	  navbar.style.zIndex = '1005';         // z-index 복원
+	  navbar.classList.remove('modal-open-navbar');
 	});
 	// 스크롤 이벤트 리스너 추가
 	window.addEventListener('scroll', () => {

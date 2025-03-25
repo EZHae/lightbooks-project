@@ -49,6 +49,7 @@ public class HomeController {
 	    
 		return "home";
 	}
+	// 무료 페이지
 	@GetMapping("/free")
 	public String freehome(HttpServletRequest request, Model model) {
 		log.info("home()");
@@ -61,6 +62,7 @@ public class HomeController {
 	    
 		return "freehome";
 	}
+	// 유료 페이지
 	@GetMapping("/paid")
 	public String paidhome(HttpServletRequest request, Model model) {
 		log.info("home()");
@@ -74,6 +76,7 @@ public class HomeController {
 		return "paidhome";
 	}
 	
+	// 추천 페이지의 서브카테고리
 	@GetMapping("/recommend/{menuId}/screen/{screenId}")
 	public String recommendRouter(@PathVariable Integer menuId,
 	                              @PathVariable Integer screenId,
@@ -87,6 +90,7 @@ public class HomeController {
        return handleRecommend(screenId, model, request);
    }
 
+	// 무료 페이지의 서브카테고리
    @GetMapping("/free/{menuId}/screen/{screenId}")
    public String freeRouter(@PathVariable Integer menuId,
                             @PathVariable Integer screenId,
@@ -100,6 +104,7 @@ public class HomeController {
        return handleFree(screenId, model, request);
    }
    
+   // 유료 페이지의 서브카테고리
    @GetMapping("/paid/{menuId}/screen/{screenId}")
    public String paidRouter(@PathVariable Integer menuId,
                             @PathVariable Integer screenId,
@@ -132,7 +137,7 @@ public class HomeController {
     }
     
    
-    // 데이터 case 처리
+    // ======================================== 데이터 case 처리 ========================================
     // 메인 홈 데이터
 	private void loadHomeData(HttpServletRequest request, Model model) {
 		model.addAttribute("bestNovels", novelService.getRandemBestNovels(12));
@@ -164,7 +169,7 @@ public class HomeController {
 //		model.addAttribute("requestURI", request.getRequestURI());
 	}
 	
-	// 무료
+	// 무료 케이스
 	private String handleFree(Integer screenId, Model model, HttpServletRequest request) {
 		switch (screenId) {
 			case 1 -> {
@@ -184,18 +189,18 @@ public class HomeController {
 			}
 			case 4 -> {
 				// 무료 판타지
-	//			model.addAttribute("novels", novelService.getFreeByGenre("fantasy"));
+				model.addAttribute("novels", novelService.getFreeByGenre(0, "판타지", 300)); // 소설 300개
 				return "free/screen/fantasy";
 			}
 			case 5 -> {
 				// 무료 로판
-	//			model.addAttribute("novels", novelService.getFreeByGenre("romance-fantasy"));
-				return "free/screen/romancefantasy";
+				model.addAttribute("novels", novelService.getFreeByGenre(0, "로맨스", 300));
+				return "free/screen/romance";
 			}
 			case 6 -> {
-				// 무료 현판
+				// 무료 무협
 	//			model.addAttribute("novels", novelService.getFreeByGenre("modern-fantasy"));
-				return "free/screen/modernfantasy";
+				return "free/screen/martialArts";
 			}
 			default -> {
 				return "error/404";
@@ -203,7 +208,7 @@ public class HomeController {
 		}
 	}
 
-	// 무료
+	// 유료 케이스
 	private String handlePaid(Integer screenId, Model model, HttpServletRequest request) {
 		switch (screenId) {
 			case 1 -> {
@@ -242,7 +247,7 @@ public class HomeController {
 		}
 	}
 
-   // 추천
+   // 추천 케이스
    private String handleRecommend(Integer screenId, Model model, HttpServletRequest request) {
          switch (screenId) {
          case 1 -> {

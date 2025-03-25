@@ -342,6 +342,26 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 				.where(novel.grade.eq(0))
 				.orderBy(novel.likeCount.desc(), novel.rating.desc())
 				.fetch();
+	}
+
+
+
+	@Override
+	public List<NovelListItemDto> findbyGradeAndGenre(int grade, String genreName, int limit) {
+		QNovel novel = QNovel.novel;
+	    QNGenre nGenre = QNGenre.nGenre;
+	    QGenre genre = QGenre.genre;
+	    
+	    List<Novel> novels = queryFactory
+	            .selectFrom(novel)
+	            .join(novel.novelGenre, nGenre)
+	            .join(nGenre.genre, genre)
+	            .where(genre.name.eq(genreName).and(novel.grade.eq(0)))
+	            .orderBy(novel.modifiedTime.desc(), novel.rating.desc(), novel.likeCount.desc())
+	            .limit(300)
+	            .fetch();
+		
+		return toDtoList(novels);
 	}			
 	
 }

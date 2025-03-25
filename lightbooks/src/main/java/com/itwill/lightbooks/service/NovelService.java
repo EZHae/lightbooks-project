@@ -312,14 +312,20 @@ public class NovelService {
 		return novels;
 	}
 	// 무료 - 최근 날짜순으로 소설 목록
-		public Map<LocalDate, List<Novel>> getFreeRecommendedNew() {
-			LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
-			List<Novel> novels = novelRepo.findByGradeAndCreatedTimeAfter(0, oneMonthAgo);
-			
-			// 날짜 내림차순으로 그룹화
-			return novels.stream().collect(Collectors.groupingBy(novel -> novel.getCreatedTime().toLocalDate(),
-					() -> new TreeMap<>(Collections.reverseOrder()),
-							Collectors.toList()
-							));
-		}
+	public Map<LocalDate, List<Novel>> getFreeRecommendedNew() {
+		LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+		List<Novel> novels = novelRepo.findByGradeAndCreatedTimeAfter(0, oneMonthAgo);
+		
+		// 날짜 내림차순으로 그룹화
+		return novels.stream().collect(Collectors.groupingBy(novel -> novel.getCreatedTime().toLocalDate(),
+				() -> new TreeMap<>(Collections.reverseOrder()),
+						Collectors.toList()
+						));
+	}
+	// 무료 - 판타지 장르만
+	public List<NovelListItemDto> getFreeByGenre(int grade, String genreName, int limit) {
+		List<NovelListItemDto> novels = novelRepo.findbyGradeAndGenre(grade, genreName, limit);
+		log.info("판타지 소설 개수 : {}", novels);
+		return novels;
+	}
 }

@@ -19,7 +19,7 @@ main {
 /* 전체 그리드 (2행 4열 자동 생성) */
 .searchGrid {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 	gap: 2rem;
 	padding: 2rem;
 	justify-items: center; /* 각 카드 가운데 정렬 */
@@ -41,6 +41,7 @@ main {
 	box-sizing: border-box;
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 	text-decoration: none; /* 🔥 밑줄 제거 */
+	
 }
 
 .searchBox:hover {
@@ -58,8 +59,8 @@ main {
 .searchBox a {
 	text-decoration: none;
 	color: inherit;
+  	
 }
-
 /* 이미지 */
 .search-img {
 	width: 120px;
@@ -79,6 +80,10 @@ main {
 	gap: 1rem;
 	height: 100%;
 	text-decoration: none; /* 🔥 밑줄 제거 */
+	overflow: hidden;
+ 	 white-space: nowrap;
+	text-overflow: ellipsis;
+	max-width: 100%;
 }
 
 .searchContent h3 {
