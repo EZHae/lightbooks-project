@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let direction = 'DESC'; // 초기 정렬 방향
 
     const userId = document.querySelector('input#userId').value;
-	console.log("User ID:", userId);
-	
+   console.log("User ID:", userId);
+   
     const itemList = document.getElementById('itemList');
 
     if (!userId) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
                 getAllItems(currentPageNo + 1);
             }
-        }, 200);
+        }, 150);
     });
 
     async function getAllItems(pageNo = 0, reset = false) {
@@ -47,17 +47,23 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const requestBody = { id: userId, type, p: pageNo, s: sortBy, d: direction };
             const { data } = await axios.post(uri, requestBody);
-			console.log("Request Body:", {
-			    id: userId,
-			    type: type,
-			    p: pageNo,
-			    s: sortBy,
-			    d: direction
-			}); // 모든 요청 데이터 확인
-			
+         console.log("Request Body:", {
+             id: userId,
+             type: type,
+             p: pageNo,
+             s: sortBy,
+             d: direction
+         }); // 모든 요청 데이터 확인
+         
             currentPageNo = data.number;
             isLastPage = data.totalPages <= currentPageNo + 1;
             makeItemElements(data, reset);
+			
+			if (data && data.totalPages <= currentPageNo + 1) {
+			        isLastPage = true;
+			        itemList.insertAdjacentHTML('beforeend', '<p>마지막 페이지입니다.</p>');
+			    }
+			
         } catch (error) {
             console.error("아이템 불러오기 실패", error);
             itemList.insertAdjacentHTML('beforeend', '<p>데이터를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.</p>');
@@ -66,43 +72,83 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function makeItemElements(data, reset = false) {
-        if (reset) itemList.innerHTML = '';
-        if (!data.content || data.content.length === 0) {
-            if (reset) {
-                itemList.innerHTML = '<p>아이템이 없습니다.</p>';
-            }
-            return;
-        }
+	function makeItemElements(data, reset = false) {
+	    console.log("data.content:", data.content);
+	    console.log("itemList", itemList);
+	    if (reset) itemList.innerHTML = '';
+	    if (!data.content || data.content.length === 0) {
+	        if (reset) {
+	            itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>';
+	        }
+	        return;
+	    }
 
-        let htmlStr = '';
-        data.content.forEach(item => {
-            htmlStr += `<div class="item">
-                <img src="${item.coverSrc}" alt="${item.novelTitle}">
-                <h3>${item.novelTitle}</h3>
-                <p>${item.writer}</p>
-                <p>조회수: ${item.totalViews}</p>
-            </div>`;
-        });
-        itemList.insertAdjacentHTML('beforeend', htmlStr);
-    }
+		let htmlStr = '';
+		    data.content.forEach(item => {
+		        let itemHtml = `
+		            <div class="item">
+		                <div class="image-container">
+		                    <img src="${item.coverSrc}" alt="${item.novelTitle}">
+		                </div>
+		                <div class="text-container">
+		                    <div class="gradeIcon">
+		                        <span class="${item.novelGrade === 0 ? 'free' : 'paid'}">
+		                            ${item.novelGrade === 0 ? '무료' : '유료'} 
+		                        </span>
+		                    </div>
+		                    <div>
+		                        <a href="/novel/${item.novelId}">${item.novelTitle}</a>
+		                        ${type === 'watched' ? `<span class="episode-num">${item.episodeNum}화</span>` : ''}
+		                    </div>
+		                    <div><p>작가: ${item.novelWriter}</p></div>
+		                    <div><p>장르: ${item.novelGenres.join(', ')}</p></div>
+		                    <div><p>작품 소개: ${item.novelIntro}</p></div>
+		                    <div class="view-container">
+		                        <i class="bi bi-person-plus-fill"></i>
+		                        <span>${item.totalViews}</span>
+		                    </div>
+		                    <div class="like-container">
+		                        <i class="bi bi-heart-fill"></i>
+		                        <span>${item.likeCount}</span>
+		                    </div>
+		                    ${type === 'watched' ? `<div><p><i class="bi bi-clock-fill"></i>${formatDate(item.accessTime)}</p></div>` : ''}
+		                </div>
+		            </div>
+		        `;
+		        htmlStr += itemHtml;
+		    });
 
-	function activateButton(button) {
-	    document.querySelectorAll('.typeBtn').forEach(btn => btn.classList.remove('active'));
-	    button.classList.add('active');
+	    console.log("htmlStr:", htmlStr);
+	    itemList.insertAdjacentHTML('beforeend', htmlStr);
 	}
-	
-	const buttons = document.querySelectorAll('.typeBtn');
-	buttons.forEach(button => {
-	    button.addEventListener('click', () => {
-	        activateButton(button);
-	        type = button.getAttribute('data-type');
-	        currentPageNo = 0;
-	        isLastPage = false;
-	        console.log(userId, type, currentPageNo);
-	        getAllItems(currentPageNo, true);
-	    });
-	});
+
+   function activateButton(button) {
+       document.querySelectorAll('.typeBtn').forEach(btn => btn.classList.remove('active'));
+       button.classList.add('active');
+   }
+   
+   const buttons = document.querySelectorAll('.typeBtn');
+   buttons.forEach(button => {
+       button.addEventListener('click', () => {
+           activateButton(button);
+           type = button.getAttribute('data-type');
+           currentPageNo = 0;
+           isLastPage = false;
+           console.log(userId, type, currentPageNo);
+           getAllItems(currentPageNo, true);
+       });
+   });
+   
+   function formatDate(dateTimeString) {
+       const date = new Date(dateTimeString);
+       const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+       const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+
+       const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
+       const formattedTime = date.toLocaleTimeString('ko-KR', timeOptions);
+
+       return `${formattedDate} ${formattedTime}`;
+   }
 
 });
 

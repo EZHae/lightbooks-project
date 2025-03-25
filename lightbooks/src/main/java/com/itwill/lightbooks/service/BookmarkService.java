@@ -78,19 +78,23 @@ public class BookmarkService {
             }
 
             RecentlyWatchedEpisodeDto dto = new RecentlyWatchedEpisodeDto();
+            dto.setNovelId(novel.getId());          
             dto.setEpisodeId(episode.getId());
             dto.setEpisodeNum(episode.getEpisodeNum());
             dto.setEpisodeTitle(episode.getTitle());
             dto.setAccessTime(bookmark.getAccessTime());
+            dto.setNovelGrade(novel.getGrade());
             dto.setNovelTitle(novel.getTitle());
             dto.setNovelIntro(novel.getIntro());
             dto.setNovelWriter(novel.getWriter());
+            dto.setLikeCount(novel.getLikeCount());
             dto.setNovelGenres(novel.getNovelGenre() == null || novel.getNovelGenre().isEmpty()
                 ? Collections.emptyList()
                 : novel.getNovelGenre().stream()
                     .map(genre -> genre.getGenre().getName())
                     .collect(Collectors.toList()));
             dto.setCoverSrc(novel.getCoverSrc());
+            dto.setTotalViews(epiService.getTotalViewsByNovelId(novel.getId()).longValue());
             return dto;
         });
     }
@@ -200,7 +204,8 @@ public class BookmarkService {
             dto.setNovelIntro(novel.getIntro());
             dto.setCoverSrc(novel.getCoverSrc());
             dto.setLikeCount(novel.getLikeCount());
-            dto.setNovelwriter(novel.getWriter());
+            dto.setNovelGrade(novel.getGrade());
+            dto.setNovelWriter(novel.getWriter());
             dto.setNovelGenres(novel.getNovelGenre() == null || novel.getNovelGenre().isEmpty()
                 ? Collections.emptyList()
                 : novel.getNovelGenre().stream()
@@ -244,9 +249,11 @@ public class BookmarkService {
             dto.setNovelId(novel.getId());
             dto.setNovelTitle(novel.getTitle());
             dto.setNovelIntro(novel.getIntro());
+            dto.setNovelGrade(novel.getGrade());
             dto.setCoverSrc(novel.getCoverSrc());
             dto.setPurchasedDate(bookmark.getCreatedTime()); // 구매일시 설정
             dto.setNovelWriter(novel.getWriter());
+            dto.setLikeCount(novel.getLikeCount());
 	        dto.setNovelGenres(novel.getNovelGenre() == null || novel.getNovelGenre().isEmpty()
 	          	    ? Collections.emptyList()
 	          	    : novel.getNovelGenre().stream()

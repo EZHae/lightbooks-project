@@ -135,43 +135,45 @@ public class UserController {
 	@PostMapping("/bookmark/data")
 	@ResponseBody
 	public ResponseEntity<Page<?>> bookmark(@RequestBody Map<String, Object> requestBody) {
-	    log.info("Processing bookmark API request: {}", requestBody);
+		log.info("Processing bookmark API request: {}", requestBody);
 
-	    Long id = Long.valueOf(requestBody.get("id").toString());
-	    String type = requestBody.get("type").toString();
-	    int pageNo = requestBody.containsKey("p") ? Integer.parseInt(requestBody.get("p").toString()) : 0;
-	    String sortBy = requestBody.containsKey("s") ? requestBody.get("s").toString() : "novel.likeCount";
-	    String direction = requestBody.containsKey("d") ? requestBody.get("d").toString() : "DESC";
+		Long id = Long.valueOf(requestBody.get("id").toString());
+		String type = requestBody.get("type").toString();
+		int pageNo = requestBody.containsKey("p") ? Integer.parseInt(requestBody.get("p").toString()) : 0;
+		String sortBy = requestBody.containsKey("s") ? requestBody.get("s").toString() : "novel.likeCount";
+		String direction = requestBody.containsKey("d") ? requestBody.get("d").toString() : "DESC";
 
-	    log.info("Parsed parameters: id={}, type={}, pageNo={}, sortBy={}, direction={}", id, type, pageNo, sortBy, direction);
+		log.info("Parsed parameters: id={}, type={}, pageNo={}, sortBy={}, direction={}", id, type, pageNo, sortBy,
+				direction);
 
-	    // 유효성 검사
-	    if (id == null || id <= 0) {
-	        log.error("Invalid ID: {}", id);
-	        return ResponseEntity.badRequest().body(null);
-	    }
-	    if (!"liked".equals(type) && !"watched".equals(type) && !"purchased".equals(type)) {
-	        log.error("Invalid type: {}", type);
-	        return ResponseEntity.badRequest().body(null);
-	    }
+		// 유효성 검사
+		if (id == null || id <= 0) {
+			log.error("Invalid ID: {}", id);
+			return ResponseEntity.badRequest().body(null);
+		}
+		if (!"liked".equals(type) && !"watched".equals(type) && !"purchased".equals(type)) {
+			log.error("Invalid type: {}", type);
+			return ResponseEntity.badRequest().body(null);
+		}
 
-	    Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-	    Pageable pageable = PageRequest.of(pageNo, 10, sort);
+		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+		Pageable pageable = PageRequest.of(pageNo, 10, sort);
 
-	    // 타입별 데이터 반환
-	    switch (type) {
-	        case "liked":
-	            Page<LikedNovelBookmarkDto> likedNovels = bookmarkService.getLikedNovels(id, pageNo, sort);
-	            return ResponseEntity.ok(likedNovels);
-	        case "watched":
-	            Page<RecentlyWatchedEpisodeDto> recentlyWatched = bookmarkService.getRecentlyWatchedEpisodes(id, pageNo, sort);
-	            return ResponseEntity.ok(recentlyWatched);
-	        case "purchased":
-	            Page<PurchasedNovelBookmarkDto> purchasedNovels = bookmarkService.getPurchasedNovels(id, pageNo, sort);
-	            return ResponseEntity.ok(purchasedNovels);
-	        default:
-	            return ResponseEntity.badRequest().body(null);
-	    }
+		// 타입별 데이터 반환
+		switch (type) {
+		case "liked":
+			Page<LikedNovelBookmarkDto> likedNovels = bookmarkService.getLikedNovels(id, pageNo, sort);
+			return ResponseEntity.ok(likedNovels);
+		case "watched":
+			Page<RecentlyWatchedEpisodeDto> recentlyWatched = bookmarkService.getRecentlyWatchedEpisodes(id, pageNo,
+					sort);
+			return ResponseEntity.ok(recentlyWatched);
+		case "purchased":
+			Page<PurchasedNovelBookmarkDto> purchasedNovels = bookmarkService.getPurchasedNovels(id, pageNo, sort);
+			return ResponseEntity.ok(purchasedNovels);
+		default:
+			return ResponseEntity.badRequest().body(null);
+		}
 	}
     
 	@PostMapping("/episode/{episodeId}/access")

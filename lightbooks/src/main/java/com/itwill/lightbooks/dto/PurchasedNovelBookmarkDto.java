@@ -10,6 +10,8 @@ public class PurchasedNovelBookmarkDto {
 
 	private Long novelId;
 	
+	private Integer novelGrade;
+	
     private String novelTitle;
     
     private String novelIntro;
@@ -21,6 +23,8 @@ public class PurchasedNovelBookmarkDto {
 	private List<String> novelGenres;
 	
 	private LocalDateTime purchasedDate; // 구매 날짜 필드 추가
+	
+	private Integer likeCount;
 	
 	private Long totalViews; //소설 조회수
 }
