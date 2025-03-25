@@ -263,7 +263,8 @@ public class UserController {
     @PostMapping("/coinpayment/reApp")
     public ResponseEntity<String> coinPaymentReApp(@RequestBody PaymentRequestDto dto) {
     	log.info("coinPaymentReApp()");
-    	User user = userService.searchById(dto.getUserId());  	
+    	User user = userService.searchById(dto.getUserId());
+    	int type = dto.getType();
     	
     	CoinPayment coinpayment = CoinPayment.builder().userId(dto.getUserId()).coin(dto.getCoin()).cash(dto.getCash()).type(dto.getType()).build();
     	CoinPaymentWaiting coinpaymentWaiting = CoinPaymentWaiting.builder().user(user).coin(dto.getCoin()).cash(dto.getCash()).type(dto.getType()).con(0).build();
