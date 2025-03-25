@@ -127,13 +127,15 @@ public class OrderService {
     
     @Transactional
     public Page<CoinPayment> readCoinPaymentByUserId(Long userId, int page, int size, int type) {
-    	log.info("여기 오류");
     	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
     	Page<CoinPayment> result = coinPaymentRepo.findByUserIdAndType(userId, type, pageable);
         result.getContent().forEach(coinPayment -> {
         	if (coinPayment.getEpisodeId() != null) {
         		Integer episodeNum = epiRepo.findById(coinPayment.getEpisodeId()).orElseThrow().getEpisodeNum();
         		coinPayment.setEpisodeNum(episodeNum);
+        	}
+        	if (coinPayment.getNovel() != null) {
+        		coinPayment.setNovelTitle(coinPayment.getNovel().getTitle());
         	}
         	
 //        	coinPayment.setEpisodeNum(epiRepo.findById(coinPayment.getEpisodeId()).orElseThrow().getEpisodeNum());
