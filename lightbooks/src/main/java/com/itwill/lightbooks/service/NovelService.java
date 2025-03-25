@@ -1,11 +1,14 @@
 package com.itwill.lightbooks.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -140,10 +143,19 @@ public class NovelService {
 	// 제목, 작성자로 소설 검색과 페이징
 	public Page<NovelListItemDto> search(NovelSearchDto dto, Sort sort) {
 		
-		Pageable pageable = PageRequest.of(dto.getP(), 6, sort);
+		Pageable pageable = PageRequest.of(dto.getP(), 8, sort);
 		Page<Novel> result = novelRepo.searchByKeyword(dto , pageable);
 		
-		return result.map(NovelListItemDto::fromEntity);
+		 //소설 ID 목록 추출
+		List<Long> novelIds = result.stream()
+				.map(Novel::getId)
+				.collect(Collectors.toList());
+		
+		//소설별 총 조회수 Map 조회
+		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
+		
+		//조회수 포함 dto로 변환
+		return result.map(novel -> NovelListItemDto.fromEntity(novel, viewsMap.getOrDefault(novel.getId(), 0L)));
 	}
 	
 	//추가
@@ -221,19 +233,16 @@ public class NovelService {
 	}
 
 	
-	// ===================================== 소설 리스트 ======================================
-	public List<Novel> getRandemBestNovels(int count) {
+	// ===================================== 메인 소설 리스트 ======================================
+	public List<NovelListItemDto> getRandemBestNovels(int count) {
 		return novelRepo.findRandomBestNovels(count);
 	}
-
 	public List<Novel> getNovelsByFreeGrade(int limit) {
 		return novelRepo.findFreeNovels(limit);
 	}
-
 	public List<Novel> getNovelsByPaidGrade(int limit) {
 		return novelRepo.findPaidNovels(limit);
 	}
-
 	public Map<String, List<Novel>> getFixedGenreNovels(int limit) {
 		List<String> genreNames = List.of("판타지", "로맨스", "무협", "로판", "현판", "드라마");
 		Map<String, List<Novel>> result = new LinkedHashMap<>();
@@ -244,8 +253,73 @@ public class NovelService {
 		}
 		return result;
 	}
-
 	public List<Novel> getEventNovels(int limit) {
 		return novelRepo.findRandomNovels(limit);
 	}
+	// home - 베스트 소설 목록
+	public List<Novel> getRecommendedBest() {
+		List<Novel> novels = novelRepo.findAllOrderByLikeDesc();
+		System.out.println(novels);
+		return novels;
+	}
+	// 최근 날짜순으로 소설 목록
+	public Map<LocalDate, List<Novel>> getRecommendedNew() {
+		LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+		List<Novel> novels = novelRepo.findByCreatedTimeAfter(oneMonthAgo);
+		
+		// 날짜 내림차순
+		return novels.stream().collect(Collectors.groupingBy(novel -> novel.getCreatedTime().toLocalDate(),
+				() -> new TreeMap<>(Collections.reverseOrder()),
+						Collectors.toList()
+						));
+	}
+
+	// ===================================== 무료 소설 리스트 ======================================
+	// 추천 신작 무료 소설 (최근순)
+	public List<NovelListItemDto> getFreeRecommendNewNovels(int limit) {
+		return novelRepo.findByFreeGradeOrderByNew(limit);
+	}
+
+	// 인기 연재 무료 소설 (좋아요/평점순)
+	public List<NovelListItemDto> getFreesPopularSerialNovels(int limit) {
+		return novelRepo.findByFreeGradeAndSerialOrderByPopularity(limit);
+	}
+
+	// 인기 완결 무료 소설
+	public List<NovelListItemDto> getFreePopularCompletedNovels(int limit) {
+		return novelRepo.findByFreeGradeAndCompletedOrderByPopularity(limit);
+	}
+	
+	// 무료 장르별 소설 (장르 지정)
+	public Map<String, List<NovelListItemDto>> getFreeGenreNovels(int limit) {
+		List<String> genreNames = List.of("판타지", "로맨스", "무협", "로판", "현판", "드라마");
+		Map<String, List<NovelListItemDto>> result = new LinkedHashMap<>();
+		
+		for(String genreName : genreNames) {
+			List<NovelListItemDto> novels = novelRepo.findByFreeGradeAndGenreRandom(genreName, limit);
+			result.put(genreName, novels);
+		}
+		return result;
+	}
+	// 무료 이벤트 소설
+	public List<NovelListItemDto> getFreeEventNovels(int limit) {
+		return novelRepo.findByFreeGradeEventOrderByNew(limit);
+	}
+	// 무료 - 베스트 소설 목록
+	public List<Novel> getFreeRecommendedBest() {
+		List<Novel> novels = novelRepo.findFreeOrderByLikeDesc();
+		System.out.println(novels);
+		return novels;
+	}
+	// 무료 - 최근 날짜순으로 소설 목록
+		public Map<LocalDate, List<Novel>> getFreeRecommendedNew() {
+			LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+			List<Novel> novels = novelRepo.findByGradeAndCreatedTimeAfter(0, oneMonthAgo);
+			
+			// 날짜 내림차순으로 그룹화
+			return novels.stream().collect(Collectors.groupingBy(novel -> novel.getCreatedTime().toLocalDate(),
+					() -> new TreeMap<>(Collections.reverseOrder()),
+							Collectors.toList()
+							));
+		}
 }

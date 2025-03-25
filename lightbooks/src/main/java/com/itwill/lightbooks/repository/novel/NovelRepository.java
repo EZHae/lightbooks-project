@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.repository.novel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.dto.NovelListItemDto;
 
 public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQuerydsl {
 	
@@ -28,4 +30,15 @@ public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQueryd
 	@Query("SELECT n FROM Novel n WHERE n.grade = 1 AND LOWER(n.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
 	List<Novel> searchPaidAndKeyword(@Param("keyword") String keyword);
 
+	@Query("SELECT n FROM Novel n ORDER BY n.likeCount DESC")
+	List<Novel> findAllOrderByLikeDesc();
+
+	
+	// 생성일이 1개월 이내인 소설을 찾는 메서드
+	List<Novel> findByCreatedTimeAfter(LocalDateTime oneMonthAgo);
+	// 무료 소설 (grade == 0)이고, 생성일이 1개월 이내인 소설을 찾는 메서드
+	List<Novel> findByGradeAndCreatedTimeAfter(int grade,LocalDateTime oneMonthAgo);
+
+	
+	
 }

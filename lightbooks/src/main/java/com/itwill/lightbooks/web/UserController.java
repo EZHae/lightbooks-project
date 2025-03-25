@@ -5,16 +5,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwill.lightbooks.domain.Bookmark;
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.MileagePayment;
@@ -22,11 +30,15 @@ import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
+import com.itwill.lightbooks.dto.LikedNovelBookmarkDto;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
+import com.itwill.lightbooks.dto.PurchasedNovelBookmarkDto;
+import com.itwill.lightbooks.dto.RecentlyWatchedEpisodeDto;
 import com.itwill.lightbooks.dto.TicketReadDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
+import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
@@ -44,6 +56,7 @@ public class UserController {
 	private final UserService userService;
 	private final OrderService orderService;
 	private final TicketService ticketService;
+	private final BookmarkService bookmarkService;
     
     @GetMapping("/signup")
     public void signup() {
@@ -108,11 +121,70 @@ public class UserController {
     	return "/user/mileage-payment";
     }
     
-    @GetMapping("/bookmark")
-    public void bookmark(@RequestParam(name = "id") Long id) {
-    	log.info("bookmark(id={})", id);
-    	
-    }
+
+	@GetMapping("/bookmark")
+	public String bookmarkPage(Model model, @RequestParam(name = "type") String type) {
+		log.info("북마크페이지");
+		
+		model.addAttribute("type", type);
+		
+		return "user/bookmark";
+	}
+    
+    
+	@PostMapping("/bookmark/data")
+	@ResponseBody
+	public ResponseEntity<Page<?>> bookmark(@RequestBody Map<String, Object> requestBody) {
+		log.info("Processing bookmark API request: {}", requestBody);
+
+		Long id = Long.valueOf(requestBody.get("id").toString());
+		String type = requestBody.get("type").toString();
+		int pageNo = requestBody.containsKey("p") ? Integer.parseInt(requestBody.get("p").toString()) : 0;
+		String sortBy = requestBody.containsKey("s") ? requestBody.get("s").toString() : "novel.likeCount";
+		String direction = requestBody.containsKey("d") ? requestBody.get("d").toString() : "DESC";
+
+		log.info("Parsed parameters: id={}, type={}, pageNo={}, sortBy={}, direction={}", id, type, pageNo, sortBy,
+				direction);
+
+		// 유효성 검사
+		if (id == null || id <= 0) {
+			log.error("Invalid ID: {}", id);
+			return ResponseEntity.badRequest().body(null);
+		}
+		if (!"liked".equals(type) && !"watched".equals(type) && !"purchased".equals(type)) {
+			log.error("Invalid type: {}", type);
+			return ResponseEntity.badRequest().body(null);
+		}
+
+		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+		Pageable pageable = PageRequest.of(pageNo, 10, sort);
+
+		// 타입별 데이터 반환
+		switch (type) {
+		case "liked":
+			Page<LikedNovelBookmarkDto> likedNovels = bookmarkService.getLikedNovels(id, pageNo, sort);
+			return ResponseEntity.ok(likedNovels);
+		case "watched":
+			Page<RecentlyWatchedEpisodeDto> recentlyWatched = bookmarkService.getRecentlyWatchedEpisodes(id, pageNo,
+					sort);
+			return ResponseEntity.ok(recentlyWatched);
+		case "purchased":
+			Page<PurchasedNovelBookmarkDto> purchasedNovels = bookmarkService.getPurchasedNovels(id, pageNo, sort);
+			return ResponseEntity.ok(purchasedNovels);
+		default:
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+    
+	@PostMapping("/episode/{episodeId}/access")
+	@ResponseBody
+	public ResponseEntity<Void> updateAccessTime(
+	        @RequestParam("userId") Long userId,
+	        @PathVariable Long episodeId) {
+
+	    bookmarkService.updateAccessTime(userId, episodeId);
+	    return ResponseEntity.ok().build();
+	}
     
     @GetMapping("/ticket")
     public void ticket(@RequestParam(name = "id") Long id) {

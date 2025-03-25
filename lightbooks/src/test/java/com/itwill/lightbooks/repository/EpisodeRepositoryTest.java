@@ -23,7 +23,7 @@ public class EpisodeRepositoryTest {
 	private EpisodeRepository epiRepo;
 	
 //	@Test
-	@Transactional
+//	@Transactional
 	public void testFindAll() {
 		
 		List<Episode> list = epiRepo.findAll();

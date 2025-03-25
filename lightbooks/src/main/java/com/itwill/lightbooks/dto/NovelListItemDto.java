@@ -32,9 +32,9 @@ public class NovelListItemDto {
 	private Integer ageLimit;
 	private LocalDateTime modifiedTime;
 	
+	private Long totalViews; // 회차 총 조회수
 	
-	
-	public static NovelListItemDto fromEntity(Novel entity) {
+	public static NovelListItemDto fromEntity(Novel entity, Long totalViews) {
 		String firstGenre = "";
 		
 		for(NGenre genre : entity.getNovelGenre()) {
@@ -55,6 +55,12 @@ public class NovelListItemDto {
 				.grade(entity.getGrade())
 				.ageLimit(entity.getAgeLimit())
 				.modifiedTime(entity.getModifiedTime())
+				.totalViews(totalViews)					// 조회수 포함
 				.build();
+	}
+	
+	// 조회수 없는 버전
+	public static NovelListItemDto fromEntity(Novel entity) {
+	    return fromEntity(entity, 0L); // 👈 요게 필요했던 거야!
 	}
 }

@@ -26,6 +26,30 @@
 									<a class="category-link" 
 										th:href="@{|/${mainCategory}/${menuId}/screen/3|}">오늘신작</a>
 								</div>
+								<div class="category-item" th:classappend="${screenId == 4} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/4|}">판타지</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 5} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/5|}">로맨스</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 6} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/6|}">무협</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 7} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/7|}">로판</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 8} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/8|}">현판</a>
+								</div>
+								<div class="category-item" th:classappend="${screenId == 9} ? ' active' : ''">
+									<a class="category-link" 
+										th:href="@{|/${mainCategory}/${menuId}/screen/9|}">드라마</a>
+								</div>
 							</div>
 						</div>
 					
@@ -95,20 +119,18 @@
 										<!-- 표지 이미지 -->
 							        	<img class="novelImgs" th:src="${novel.coverSrc}">
 							        	<!-- 제목 -->
-							        	<span class="novel-card-title" th:text="${novel.title}"></span>
-							        	</br>
+							        	<span th:text="${novel.title}"></span>
 							        	<!-- 작가 -->
-							        	<span class="novel-card-writer" th:text="|${novel.writer} · ${novel.genres}|"></span>
-							        	</br>
-							        	<!-- 좋아요 -->
+							        	<span th:text="${novel.writer}"></span>
 							        	<i class="bi bi-heart"></i>
-									  	<span class="novel-card-like" th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
-									  	<!-- 평점 -->
+							        	<!-- 좋아요 -->
+									  	<span th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
 									  	<i class="bi bi-star"></i>
-									  	<span class="novel-card-rating" th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
-									  	<!-- 조회수 -->									  	
+									  	<!-- 조회수 -->
+									  	<span th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
 									  	<i class="bi bi-person-plus-fill"></i>
-									  	<span class="novel-card-totalViews"  th:if="${novel.totalViews != null}" th:text="${novel.totalViews}"></span>
+<!-- 									  	<span th:if="${viewsMap != null and viewsMap.get(novel.id) != null}" -->
+<!--     								  			th:text="${viewsMap.get(novel.id)}"></span> -->
 									</a>
 								</div>
 							</div>
@@ -193,5 +215,5 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
+	<link rel="stylesheet" th:href="@{/css/home-paid.css}" />
 </html>

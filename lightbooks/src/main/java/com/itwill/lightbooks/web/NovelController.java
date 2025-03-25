@@ -224,29 +224,35 @@ public class NovelController {
     	return "redirect:/novel/" + dto.getId();
     }
     
+    @GetMapping("/search")
+    public String searchPage(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+    	model.addAttribute("keyword", keyword);
+    	return "novel/search";
+    }
+    
     // 작품 검색 페이지
     @GetMapping("/search/result")
-    public String novelSearch(@RequestParam(name="keyword", required=false) String keyword,NovelSearchDto dto, Model model) {
+    @ResponseBody
+    public Map<String, Object> searchNovelData(@RequestParam(name="keyword", required=false) String keyword, 
+    							@RequestParam(defaultValue="0") int tp, 
+    							@RequestParam(defaultValue="0") int wp) {
     	
-    	dto.setKeyword(keyword);
-    	dto.setCategory("tw");
+    	NovelSearchDto titleDto = new NovelSearchDto("t",keyword, tp);
+    	NovelSearchDto writerDto = new NovelSearchDto("w", keyword, wp);
     	
-    	Page<NovelListItemDto> page = novelService.search(dto, Sort.by("id").descending());
-    	model.addAttribute("page", page);
+    	Page<NovelListItemDto> titlePage = novelService.search(titleDto, Sort.by("id").descending());
+    	Page<NovelListItemDto> writerPage = novelService.search(writerDto, Sort.by("id").descending());
     	
-    	//소설 조회수 보여주기
-    	Map<Long, Integer> viewsMap = new HashMap<>();
-    	for(NovelListItemDto novel : page.getContent()) {
-    		Integer totalViews = episodeService.getTotalViewsByNovelId(novel.getId());
-    		viewsMap.put(novel.getId(), totalViews);
-    	}
+    	Map<String, Object> result = new HashMap<>();
+    	result.put("titlePage", titlePage);
+        result.put("writerPage", writerPage);
+        
+        log.info("검색 keyword={}, tp={}, wp={}", keyword, tp, wp);
+        log.info("제목 검색 dto = {}", titleDto);
+        log.info("작가 검색 dto = {}", writerDto);
+        log.info("작가 결과 총 개수: {}", writerPage.getTotalElements());
     	
-    	model.addAttribute("viewsMap", viewsMap);
-    	// pagination 프래그먼트의 링크(버튼)의 요청 주소로 사용할 문자열을 모델 속성으로 저장.
-        model.addAttribute("baseUrl", "/novel/search/result");
-        model.addAttribute("keyword", dto.getKeyword());
-    	
-    	return "novel/search";
+    	return result;
     }
     
     // 작품 좋아요 토클 (추가/취소)

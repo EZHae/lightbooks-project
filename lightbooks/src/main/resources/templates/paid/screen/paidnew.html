@@ -10,77 +10,10 @@
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
 				<div class="container">
-				
-					<th:block th:fragment="subcategory">
-						<div class="navbar-category">
-							<div>		
-								<div class="category-item" th:classappend="${screenId == 1} ? ' active' : ''">
-									<a class="category-link" 
-										th:href="@{|/${mainCategory}/${menuId}/screen/1|}" > 올 라잇 </a>
-								</div>
-								<div class="category-item" th:classappend="${screenId == 2} ? ' active' : ''">
-									<a class="category-link" 
-										th:href="@{|/${mainCategory}/${menuId}/screen/2|}">베스트</a>
-								</div>
-								<div class="category-item" th:classappend="${screenId == 3} ? ' active' : ''">
-									<a class="category-link" 
-										th:href="@{|/${mainCategory}/${menuId}/screen/3|}">오늘신작</a>
-								</div>
-							</div>
-						</div>
 					
-					<div class="dropdown notice">
-						<button id="notice-first" class="w-100 btn dropdown-toggle text-start" style="background: #f6f6f6; font-size: 15px; font-weight: bold;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-							
-						</button>
-						<ul id="notice-items" class="dropdown-menu w-100 pb-0">
-
-						</ul>
-					</div>
-					</th:block>
+					<th:block th:replace="~{paidhome :: subcategory}"></th:block>
 					
-					<div class="swiper-container">
-						<!-- 스와이퍼 -->
-						<!-- Slider main container -->
-						<div class="swiper">
-						  <!-- Additional required wrapper -->
-						  <div class="swiper-wrapper">
-						    <!-- Slides -->
-						    <div class="swiper-slide">
-						    	<a href="#">
-							    	<img alt="" src="/images/cat1.jpg">
-						    	</a>
-						    </div>
-						    <div class="swiper-slide">
-						    	<a href="#">
-						    	<img alt="" src="/images/cat2.jpg">
-						    	</a>
-						    </div>
-						    <div class="swiper-slide">
-						    	<a href="#">
-						    	<img alt="" src="/images/cat3.jpg">
-						    	</a>
-						    </div>
-						    <div class="swiper-slide">
-						    	<a href="#">
-						    	<img alt="" src="/images/cat1.jpg">
-						    	</a>
-						    </div>
-						    
-						  </div>
-						  <!-- If we need pagination -->
-						  <div class="swiper-pagination"></div>
-						
-						  <!-- If we need navigation buttons -->
-						  <div class="swiper-button-prev"></div>
-						  <div class="swiper-button-next"></div>
-						
-						  <!-- If we need scrollbar -->
-	<!-- 					  <div class="swiper-scrollbar"></div> -->
-						</div>
-					</div>
-
-
+										
 					<div class="novel-container">
 						
 						<section class="bestNovels">
@@ -95,20 +28,18 @@
 										<!-- 표지 이미지 -->
 							        	<img class="novelImgs" th:src="${novel.coverSrc}">
 							        	<!-- 제목 -->
-							        	<span class="novel-card-title" th:text="${novel.title}"></span>
-							        	</br>
+							        	<span th:text="${novel.title}"></span>
 							        	<!-- 작가 -->
-							        	<span class="novel-card-writer" th:text="|${novel.writer} · ${novel.genres}|"></span>
-							        	</br>
-							        	<!-- 좋아요 -->
+							        	<span th:text="${novel.writer}"></span>
 							        	<i class="bi bi-heart"></i>
-									  	<span class="novel-card-like" th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
-									  	<!-- 평점 -->
+							        	<!-- 좋아요 -->
+									  	<span th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
 									  	<i class="bi bi-star"></i>
-									  	<span class="novel-card-rating" th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
-									  	<!-- 조회수 -->									  	
+									  	<!-- 조회수 -->
+									  	<span th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
 									  	<i class="bi bi-person-plus-fill"></i>
-									  	<span class="novel-card-totalViews"  th:if="${novel.totalViews != null}" th:text="${novel.totalViews}"></span>
+<!-- 									  	<span th:if="${viewsMap != null and viewsMap.get(novel.id) != null}" -->
+<!--     								  			th:text="${viewsMap.get(novel.id)}"></span> -->
 									</a>
 								</div>
 							</div>
