@@ -6,6 +6,7 @@
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
+	<link rel="stylesheet" th:href="@{/css/home.css}" />
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
@@ -95,18 +96,20 @@
 										<!-- 표지 이미지 -->
 							        	<img class="novelImgs" th:src="${novel.coverSrc}">
 							        	<!-- 제목 -->
-							        	<span th:text="${novel.title}"></span>
+							        	<span class="novel-card-title" th:text="${novel.title}"></span>
+							        	</br>
 							        	<!-- 작가 -->
-							        	<span th:text="${novel.writer}"></span>
-							        	<i class="bi bi-heart"></i>
+							        	<span class="novel-card-writer" th:text="${novel.writer}"></span>
+							        	</br>
 							        	<!-- 좋아요 -->
-									  	<span th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
+							        	<i class="bi bi-heart"></i>
+									  	<span class="novel-card-like" th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
+									  	<!-- 평점 -->
 									  	<i class="bi bi-star"></i>
-									  	<!-- 조회수 -->
-									  	<span th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
+									  	<span class="novel-card-rating" th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
+									  	<!-- 조회수 -->									  	
 									  	<i class="bi bi-person-plus-fill"></i>
-<!-- 									  	<span th:if="${viewsMap != null and viewsMap.get(novel.id) != null}" -->
-<!--     								  			th:text="${viewsMap.get(novel.id)}"></span> -->
+									  	<span class="novel-card-totalViews"  th:if="${novel.totalViews != null}" th:text="${novel.totalViews}"></span>
 									</a>
 								</div>
 							</div>
@@ -191,5 +194,5 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
+	
 </html>

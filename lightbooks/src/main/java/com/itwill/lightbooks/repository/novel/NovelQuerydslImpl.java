@@ -2,6 +2,8 @@ package com.itwill.lightbooks.repository.novel;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,13 +15,16 @@ import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.QGenre;
 import com.itwill.lightbooks.domain.QNGenre;
 import com.itwill.lightbooks.domain.QNovel;
+import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
+import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,10 +32,12 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 	implements NovelQuerydsl{
 
 	private final JPAQueryFactory queryFactory;
+	private final EpisodeRepository episodeRepo;
 	
-	public NovelQuerydslImpl(JPAQueryFactory queryFactory) {
+	public NovelQuerydslImpl(JPAQueryFactory queryFactory, EpisodeRepository episodeRepo) {
 		super(Novel.class);
 		this.queryFactory = queryFactory;
+		this.episodeRepo = episodeRepo;
 		
 	}
 	
@@ -154,18 +161,32 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 	
 	// 베스트 소설 조회
 	@Override
-	public List<Novel> findRandomBestNovels(int count) {
+	public List<NovelListItemDto> findRandomBestNovels(int count) {
 		QNovel novel = QNovel.novel;
 		
 		// 조건이 좋아요 100이상, 평점 4.0이상, 조회수 1000이상
 		BooleanExpression condition = novel.likeCount.goe(100)
 				.and(novel.rating.goe(BigDecimal.valueOf(4.0)));
 		
-		return queryFactory.selectFrom(novel)
+		// 조건에 맞는 소설 랜덤 조회
+		List<Novel> novels = queryFactory.selectFrom(novel)
 				.where(condition)
 				.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc()) // function('rand')는 DB에서 랜덤 정렬
 				.limit(count)
 				.fetch();
+		
+		// id 
+		List<Long> novelIds = novels.stream()
+				.map(Novel :: getId)
+				.collect(Collectors.toList());
+		
+		// 조회수
+		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
+		
+		// DTO로 변환해서 조회수 포함시켜 반환
+		return novels.stream()
+				.map(n -> NovelListItemDto.fromEntity(n, viewsMap.getOrDefault(n.getId(), 0L)))
+				.collect(Collectors.toList());
 	}
 
 

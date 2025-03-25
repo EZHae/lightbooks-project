@@ -1,6 +1,9 @@
 package com.itwill.lightbooks.web;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -140,8 +143,7 @@ public class HomeController {
 		model.addAttribute("eventNovels", novelService.getEventNovels(6));
 		
 		model.addAttribute("requestURI", request.getRequestURI());
-		List<Novel> novels = novelService.searchAll();
-		model.addAttribute("novels", novels);
+		
 	}
 	
 	// 무료
@@ -232,12 +234,13 @@ public class HomeController {
 			}
 			case 2 -> {
 				// 베스트
-//				model.addAttribute("novels", novelService.getRecommendedBest());
+				model.addAttribute("novels", novelService.getRecommendedBest());
 				return "recommend/screen/recommendbest";
 			}
 			case 3 -> {
 				// 오늘신작
-//				model.addAttribute("novels", novelService.getRecommendedNew());
+				Map<LocalDate, List<Novel>> novelsByDate = novelService.getRecommendedNew();
+				model.addAttribute("novels", novelsByDate);
 				return"recommend/screen/recommendnew";
 			}
 			default -> {
