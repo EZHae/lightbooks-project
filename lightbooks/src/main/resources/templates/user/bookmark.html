@@ -2,6 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
    <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
 <style>
+	#statsModal .modal-dialog {
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    min-height: calc(100% - 60px); /* Adjust as needed */
+	}
+	
+	#statsModal .modal-content {
+	    max-width: 800px;
+	    max-height: 600px;
+	    margin: auto;
+	}
+	
+	/* 반응형 디자인을 위해 미디어 쿼리 추가 */
+	@media (max-width: 768px) {
+	    #statsModal .modal-content {
+	        max-width: 90%; /* 작은 화면에서는 너비를 더 늘림 */
+	        max-height: 90%; /* 작은 화면에서는 높이를 더 늘림 */
+	    }
+	}
+	
+	#statsChart {
+    display: block; /* 또는 inline-block */
+    margin: 0 auto; /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
+}
+
     html, body {
         height: 100%;
         margin: 0;
@@ -153,6 +179,9 @@
                           <div>
                               <button class="btn typeBtn" id="purchasedBtn" data-type="purchased">구매한 작품</button>
                           </div>
+                          <div>
+                          	  <button id="statsButton" class="btn btn-primary">통계</button>
+                          </div>
                       </div>
                   </div>
                   <hr/>
@@ -160,8 +189,41 @@
               </div>
           </div>
       </main>
+      
+      <!--------------------- 통계 모달창---------------------------->
+      <div class="modal fade" id="statsModal">
+	    <div class="modal-dialog modal-dialog-centered modal-lg">
+	        <div class="modal-content">
+	
+	            <div class="modal-header">
+	                <h4 class="modal-title">통계 그래프</h4>
+	                <button type="button" class="close" data-dismiss="modal">&times;</button>
+	            </div>
+	
+	            <div class="modal-body">
+	                <div>
+	                    <label for="chartType">통계 유형 선택:</label>
+	                    <select id="chartType" class="form-control">
+	                        <option value="genre">장르별 통계</option>
+	                        <option value="date">날짜별 통계</option>
+	                    </select>
+					</div>
+	                <canvas id="statsChart"></canvas>
+	            </div>
+	
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
+	            </div>
+	
+	        </div>
+	    </div>
+	</div>
+	
       <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/bookmark.js}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script th:src="@{/js/statistics.js}"></script>
    </body>
 </html>

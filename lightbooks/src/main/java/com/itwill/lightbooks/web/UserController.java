@@ -1,5 +1,10 @@
 package com.itwill.lightbooks.web;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,6 +64,7 @@ public class UserController {
 	private final OrderService orderService;
 	private final TicketService ticketService;
 	private final BookmarkService bookmarkService;
+	private final JdbcTemplate jdbcTemplate;//추가(통계 관련)
     
     @GetMapping("/signup")
     public void signup() {
@@ -157,7 +165,7 @@ public class UserController {
 		}
 
 		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-		Pageable pageable = PageRequest.of(pageNo, 10, sort);
+		Pageable pageable = PageRequest.of(pageNo, 20, sort);
 
 		// 타입별 데이터 반환
 		switch (type) {
@@ -184,6 +192,80 @@ public class UserController {
 
 	    bookmarkService.updateAccessTime(userId, episodeId);
 	    return ResponseEntity.ok().build();
+	}
+	
+	@ResponseBody
+	@GetMapping("/api/statistics")
+	public ResponseEntity<Map<String, List<Object>>> getStatistics( //통계 추가!
+	        @RequestParam("type") String type,
+	        @RequestParam("userId") Long userId) {
+
+	    try {
+	        Map<String, List<Object>> response = new HashMap<>();
+	        List<String> labels = new ArrayList<>();
+	        List<Integer> values = new ArrayList<>();
+
+	        String query = "";
+	        List<Map<String, Object>> rows;
+
+	        if ("genre".equals(type)) { //장르별
+	            query = "SELECT g.name AS label, COUNT(b.episode_id) AS value " +
+	                    "FROM BOOKMARK b " +
+	                    "JOIN EPISODES e ON b.episode_id = e.id " +
+	                    "JOIN NOVELS n ON e.novel_id = n.id " +
+	                    "JOIN NOVEL_GENRE ng ON n.id = ng.novel_id " +
+	                    "JOIN GENRES g ON ng.genre_id = g.id " +
+	                    "WHERE b.type = 1 AND b.user_id = ? " +
+	                    "GROUP BY g.name";
+
+	            rows = jdbcTemplate.queryForList(query, userId);
+	            
+	        } else if ("date".equals(type)) {//날짜별
+	            query = "SELECT DATE_FORMAT(b.access_time, '%Y-%m-%d') AS label, COUNT(b.episode_id) AS value " +
+	                    "FROM BOOKMARK b " +
+	                    "JOIN EPISODES e ON b.episode_id = e.id " +
+	                    "WHERE b.type = 1 AND b.user_id = ? " +
+	                    "GROUP BY label " +
+	                    "ORDER BY label";
+
+	            rows = jdbcTemplate.queryForList(query, userId);
+	            
+	        } else {
+	            return ResponseEntity.badRequest().body(null);
+	        }
+
+	        for (Map<String, Object> row : rows) {
+	            String label = String.valueOf(row.get("label"));
+	            labels.add(label);
+	            values.add(((Number) row.get("value")).intValue());
+	        }
+
+	        List<Object> labelsObject = new ArrayList<>(labels);
+	        List<Object> valuesObject = new ArrayList<>(values);
+
+	        response.put("labels", labelsObject);
+	        response.put("values", valuesObject);
+
+	        // 누적 회차 수(date타입인 경우)
+	        if ("date".equals(type)) {
+	            List<Integer> cumulativeValues = new ArrayList<>();
+	            int sum = 0;
+	            for (int value : values) {
+	                sum += value;
+	                cumulativeValues.add(sum);
+	            }
+	            List<Object> cumulativeValuesObject = new ArrayList<>(cumulativeValues);
+	            response.put("cumulativeValues", cumulativeValuesObject);
+	        }
+
+	        return ResponseEntity.ok(response);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        Map<String, List<Object>> errorResponse = new HashMap<>();
+	        errorResponse.put("error", Arrays.asList(e.getMessage()));
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+	    }
 	}
     
     @GetMapping("/ticket")
