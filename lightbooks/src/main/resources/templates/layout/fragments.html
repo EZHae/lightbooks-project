@@ -148,6 +148,17 @@
 				.nav-link.active .underline-text::after {
 					transform: scaleX(1);
 				}
+				.notification-dropdown {
+					min-width: 300px; /* 원하는 크기로 조절 */
+                    max-width: 500px; /* 최대 크기 제한 */
+                    max-height: 300px; /* 최대 크기 제한 */
+                    padding-bottom: 0px;
+                    overflow-y: auto;
+				}
+				.notification-item:hover .notification-div {
+					background-color: #f0f0f0;
+					font-weight: bold;
+				}
 				
             </style>
             <div class="container-fluid">
@@ -229,7 +240,7 @@
                     </div>
 
                     <!-- 로그인/회원가입 모달 생성 버튼 -->
-                    <div sec:authorize="isAnonymous()">
+                    <div class="ms-2" sec:authorize="isAnonymous()">
                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signModal">
                             <i class="bi bi-person-fill"></i>
                         </button>
@@ -246,11 +257,17 @@
                             data-bs-auto-close="outside"
                         >
                             <i class="btn btn-outline-primary bi bi-bell-fill"></i>
-					        <span id="countNoReadNotification" class="position-absolute badge rounded-pill bg-danger text-center p-0 d-flex align-items-center justify-content-center" style="height: 20px; width: 20px; top: -3px; right: -3px;">55</span>
+					        <span id="countNoReadNotification" class="d-none position-absolute badge rounded-pill bg-danger text-center p-0 d-flex align-items-center justify-content-center" style="height: 20px; width: 20px; top: -3px; right: -3px;"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="notificationDropdown">
-                        	<li>알림1</li>
-                        	<li>알림2</li>
+                        <ul class="dropdown-menu dropdown-menu-end pb-0" aria-labelledby="notificationDropdown">
+                        	<li id="noReadNotification" class="notification-dropdown">
+                        	</li>
+                        	<li>
+                        		<div class="border-top p-2 d-flex justify-content-between">
+	                        		<button id="btnAllRead" class="btn btn-sm btn-outline-primary">모두 읽기</button>
+	                        		<a class="mt-1 link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" th:href="@{/user/notification(id=${#authentication.principal.id})}">알림 목록</a>
+                        		</div>
+                        	</li>
                         </ul>
                     </div>
 

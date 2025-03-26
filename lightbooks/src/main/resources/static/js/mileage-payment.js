@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			`
 				<tr class="row">
 					<td class="col-1 ts-6">사용</td>
-					<td class="col-2 text-danger">${item.mileage}</td>
+					<td class="col-2 text-danger">${Math.abs(item.mileage)}</td>
 					<td class="col-6">${item.descrip}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>

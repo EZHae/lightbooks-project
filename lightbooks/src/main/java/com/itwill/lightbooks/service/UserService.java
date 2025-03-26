@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.MileagePayment;
+import com.itwill.lightbooks.domain.Notification;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.User;
@@ -210,9 +211,30 @@ public class UserService implements UserDetailsService {
 	public NotificationFragmentDto countNoReadNotificationAndFindNoReadNotification(Long userId, int isRead) {
 		NotificationFragmentDto dto = new NotificationFragmentDto();
 		dto.setCount(notifiRepo.countByUserIdAndIsRead(userId, isRead));
-		dto.setNotifications(notifiRepo.findByUserIdAndIsRead(userId, isRead));
+		dto.setNotifications(notifiRepo.findByUserIdAndIsReadOrderByCreatedTimeDesc(userId, isRead));
 		
 		return dto;
 	}
 	
+	public void updateNotificationsAllReadByUserId(Long userId) {
+		notifiRepo.updateNotificationsAllReadByUserId(userId);
+	}
+	
+	public List<Notification> readNotificationByUserId(Long userId) {
+		List<Notification> notifications = notifiRepo.findByUserIdOrderByCreatedTimeDesc(userId);
+		
+		return notifications;
+	}
+	
+	public void deleteNotificationById(Long id) {
+		notifiRepo.deleteById(id);
+	}
+	
+	public void deleteNotificationByUserId(Long userId) {
+		notifiRepo.deleteByUserId(userId);
+	}
+	
+	public void updateNotificationReadById(Long id) {
+		notifiRepo.updateNotificationReadById(id);
+	}
 }
