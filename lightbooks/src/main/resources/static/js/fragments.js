@@ -113,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const toggler = document.querySelector('.navbar-toggler');
 	
 	toggler.addEventListener('click', () => {
-		
 		navbar.style.position = 'sticky';
 		navbar.style.zIndex = '1200';
 	});
