@@ -42,9 +42,10 @@ public class CoinPayment {
 	private Long userId;
 	private int type;
 	
+	@JsonIgnore
 	@ToString.Exclude
 	@ManyToOne
-	@JoinColumn(name = "novel_id", nullable = false)
+	@JoinColumn(name = "novel_id")
 	private Novel novel;
 	
 //	@JsonIgnore
@@ -67,4 +68,8 @@ public class CoinPayment {
 	@Setter
 	@Transient
 	private Integer episodeNum;
+	
+	@Setter
+	@Transient
+	private String novelTitle;
 }

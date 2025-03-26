@@ -39,6 +39,6 @@ public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQueryd
 	// 무료 소설 (grade == 0)이고, 생성일이 1개월 이내인 소설을 찾는 메서드
 	List<Novel> findByGradeAndCreatedTimeAfter(int grade,LocalDateTime oneMonthAgo);
 
-	
-	
+
+
 }

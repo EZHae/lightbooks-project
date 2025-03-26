@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -59,8 +60,12 @@ public class AdminController {
 		CoinPaymentWaiting updatedWaiting = waiting.update(1);
 		
 		// 처리한 결과 payment 추가
-		CoinPayment coinPayment = CoinPayment.builder().userId(updatedWaiting.getUser().getId()).coin(updatedWaiting.getCoin()).cash(updatedWaiting.getCash()).type(0).build();
-		orderService.saveCoinPayment(coinPayment);
+		if (waiting.getType() == 0) {
+			CoinPayment coinPayment = CoinPayment.builder().userId(updatedWaiting.getUser().getId()).coin(updatedWaiting.getCoin()).cash(updatedWaiting.getCash()).type(0).build();
+			log.info("savedCoinPayment={}", coinPayment);
+			orderService.saveCoinPayment(coinPayment);
+		}
+		orderService.saveCoinPaymentWaiting(updatedWaiting);
 		
 		return ResponseEntity.ok(null);
 	}

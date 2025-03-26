@@ -29,10 +29,12 @@ public interface NovelQuerydsl {
 	List<Novel> findRandomNovels(int limit);
 	
 	// 무료 페이지
-	List<NovelListItemDto> findByFreeGradeOrderByNew(int limit);
+	List<NovelListItemDto> findByFreeGradeOrderByNew(int limit);				
 	List<NovelListItemDto> findByFreeGradeAndSerialOrderByPopularity(int limit);
 	List<NovelListItemDto> findByFreeGradeAndCompletedOrderByPopularity(int limit);
 	List<NovelListItemDto> findByFreeGradeEventOrderByNew(int limit);
 	List<NovelListItemDto> findByFreeGradeAndGenreRandom(String genreName, int limit);
 	List<Novel> findFreeOrderByLikeDesc();
+	List<NovelListItemDto> findbyGradeAndGenre(int grade, String genreName, int limit);
+	
 }

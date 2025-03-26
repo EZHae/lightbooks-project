@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function getCoinPayment(page = 0, size = 5, type = 0) {
 		if (type === 0 || type === 1 || type === 3) {
 			axios.get(`/user/coinpayment/read?userId=${userId}&page=${page}&size=${size}&type=${type}`).then(response => {
-				console.log(response);
+				console.log(type, response);
 				const data = response.data.content;
 				const pageData = response.data;
 				
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		buyList.forEach(item => {
 			/*<td class="col-1">${item.episodeId}</td> */
 			let title;
-				(item.novel !== null) ? title = item.novel.title : '-';
+				(item.novel !== null) ? title = item.novelTitle : '-';
 			let episodeNum;
 				(item.episodeNum !== null) ? episodeNum = item.episodeNum : '-';
 			let formatCreatedTime = formatDateTime(item.createdTime);
@@ -186,12 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		donationList.forEach(item => {
+			let title;
+				(item.novel !== null) ? title = item.novelTitle : '-';
 			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 후원</td>
-					<td class="col-6">${item.novelId}</td>
+					<td class="col-6">${title}</td>
 					<td class="col-2 text-danger">${item.coin}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
