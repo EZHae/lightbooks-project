@@ -50,7 +50,6 @@
 				/* collapse가 열릴 때 배경색 유지 */
 				.navbar-collapse.show {
 				  background-color: white;   /* 네비 토글 열릴 때 흰 배경 */
-				  margin-top: 3px;
 				  border-radius: 0 0 8px 8px;
 				  z-index: 1100;             /* z-index는 navbar보다 살짝 낮게 */
 				}
@@ -150,7 +149,7 @@
 				}
 				
             </style>
-            <div class="container-fluid">
+            <div class="container-fluid mt-1">
                 <a class="navbar-brand" th:href="@{/}">
                     <img th:src="@{#}" />
                     로고예정
@@ -163,6 +162,7 @@
                     aria-controls="navbarSupportedContent"
                     aria-expanded="false"
                     aria-label="Toggle navigation"
+                    style="height: 50px;"
                 >
                     <span class="navbar-toggler-icon"></span>
                 </button>
