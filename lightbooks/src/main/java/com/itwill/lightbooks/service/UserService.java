@@ -19,11 +19,13 @@ import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
+import com.itwill.lightbooks.dto.NotificationFragmentDto;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.repository.mileagepayment.MileagePaymentRepository;
+import com.itwill.lightbooks.repository.notification.NotificationRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.ticket.TicketRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
@@ -41,6 +43,7 @@ public class UserService implements UserDetailsService {
 	private final TicketRepository ticketRepo;
 	private final PasswordEncoder passwordEncoder;
 	private final NovelRepository novelRepo;
+	private final NotificationRepository notifiRepo;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -202,6 +205,14 @@ public class UserService implements UserDetailsService {
 				.grade(dto.getGrade()).build();
 			ticketRepo.save(ticket);
 		}
+	}
+	
+	public NotificationFragmentDto countNoReadNotificationAndFindNoReadNotification(Long userId, int isRead) {
+		NotificationFragmentDto dto = new NotificationFragmentDto();
+		dto.setCount(notifiRepo.countByUserIdAndIsRead(userId, isRead));
+		dto.setNotifications(notifiRepo.findByUserIdAndIsRead(userId, isRead));
+		
+		return dto;
 	}
 	
 }
