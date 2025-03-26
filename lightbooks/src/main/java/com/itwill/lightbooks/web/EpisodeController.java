@@ -41,19 +41,19 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/novel/{novelId}/episode")
 public class EpisodeController {
-	
-	private final EpisodeService epiService;
-	private final NovelService novelService;
-	private final BookmarkService bookmarkService;
-	private final OrderService orderService; // COIN_PAYMENT 테이블 생성하기 위함
-	private final UserService userService;
-	private final TicketService ticketService;
+   
+   private final EpisodeService epiService;
+   private final NovelService novelService;
+   private final BookmarkService bookmarkService;
+   private final OrderService orderService; // COIN_PAYMENT 테이블 생성하기 위함
+   private final UserService userService;
+   private final TicketService ticketService;
 
-	@GetMapping("/create")
-	public String createEpisode(@PathVariable Long novelId, Model model) {
-		log.info("GET createForm(novelId={})", novelId);
-		
-		Novel novel = novelService.searchById(novelId);
+   @GetMapping("/create")
+   public String createEpisode(@PathVariable Long novelId, Model model) {
+      log.info("GET createForm(novelId={})", novelId);
+      
+      Novel novel = novelService.searchById(novelId);
         model.addAttribute("novel", novel);
 
         EpisodeCreateDto episodeCreateDto = new EpisodeCreateDto();
@@ -74,39 +74,39 @@ public class EpisodeController {
         // episodeNum 기본값 설정 (최대값 + 1)
         episodeCreateDto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
      
-		model.addAttribute("novelId", novelId);
-		
-		return "episode/create";
-	}
-	
-	@PostMapping("/create")
-	public String createEpisode(@PathVariable Long novelId, EpisodeCreateDto dto,
-			RedirectAttributes redirectAttributes) {
-		log.info("POST create(dto={})", dto);
+      model.addAttribute("novelId", novelId);
+      
+      return "episode/create";
+   }
+   
+   @PostMapping("/create")
+   public String createEpisode(@PathVariable Long novelId, EpisodeCreateDto dto,
+         RedirectAttributes redirectAttributes) {
+      log.info("POST create(dto={})", dto);
 
-		// 현재 최대 episodeNum 조회 및 설정
-	    Integer maxEpisodeNum = epiService.findMaxEpisodeNumByNovelId(novelId);
-	    
-	    // 작성자가 직접 번호를 입력할 수 있도록 하고, 번호를 입력하지 않을 경우 자동으로 차례대로 부여
-	    if (dto.getEpisodeNum() == null) {
-	        dto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
-	    }
+      // 현재 최대 episodeNum 조회 및 설정
+       Integer maxEpisodeNum = epiService.findMaxEpisodeNumByNovelId(novelId);
+       
+       // 작성자가 직접 번호를 입력할 수 있도록 하고, 번호를 입력하지 않을 경우 자동으로 차례대로 부여
+       if (dto.getEpisodeNum() == null && dto.getCategory() != 0) {
+           dto.setEpisodeNum(maxEpisodeNum != null ? maxEpisodeNum + 1 : 1);
+       }
 
-		Novel novel = novelService.searchById(novelId);
-		
-		Episode episode = epiService.createEpisode(novelId, dto);
-		log.info("저장된 엔터티 = {}", episode);
-		
-		redirectAttributes.addAttribute("id", episode.getId());
-		redirectAttributes.addAttribute("novelId", episode.getNovel().getId());
-		
+      Novel novel = novelService.searchById(novelId);
+      
+      Episode episode = epiService.createEpisode(novelId, dto);
+      log.info("저장된 엔터티 = {}", episode);
+      
+      redirectAttributes.addAttribute("id", episode.getId());
+      redirectAttributes.addAttribute("novelId", episode.getNovel().getId());
+      
         return "redirect:/novel/{novelId}/episode/{id}";
-	}
+   }
 
-	//회차 상세보기
-	@GetMapping("/{id}")
+   //회차 상세보기
+   @GetMapping("/{id}")
     public String episodeDetails(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, 
-    		Model model, HttpSession session) {
+          Model model, HttpSession session) {
         Episode episode = epiService.getEpisodeById(episodeId);
         
      // 조회수 증가 (로그인 사용자만, 세션 만료 전 중복 불가)
@@ -140,23 +140,49 @@ public class EpisodeController {
         log.info("novel id = {}", novel);
         model.addAttribute("novel", novel);
 
-        // 이전/다음 회차 ID 조회 (공지 제외)
-        Long previousEpisodeId = epiService.findPreviousEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
-        Long nextEpisodeId = epiService.findNextEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
-
-        // 이전/다음 회차 정보 조회
-        Episode previousEpisode = (previousEpisodeId != null) ? epiService.getEpisodeById(previousEpisodeId) : null;
-        Episode nextEpisode = (nextEpisodeId != null) ? epiService.getEpisodeById(nextEpisodeId) : null;
-        model.addAttribute("previousEpisode", previousEpisode);
-        model.addAttribute("nextEpisode", nextEpisode);
         
-        // 이전/다음 회차 구매 여부 확인
-        boolean previousEpisodeIsPurchased = (currentUserId != null) && (previousEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, previousEpisodeId);
-        boolean nextEpisodeIsPurchased = (currentUserId != null) && (nextEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, nextEpisodeId);
+        Long previousEpisodeId=null ;
+        Long nextEpisodeId=null;
+        // 이전/다음 회차 ID 조회 (공지 제외)
+        if(episode.getEpisodeNum() != null) {
+            previousEpisodeId = epiService.findPreviousEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
+            nextEpisodeId = epiService.findNextEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
+            
+            // 이전/다음 회차 정보 조회
+            Episode previousEpisode = (previousEpisodeId != null) ? epiService.getEpisodeById(previousEpisodeId) : null;
+            Episode nextEpisode = (nextEpisodeId != null) ? epiService.getEpisodeById(nextEpisodeId) : null;
+            model.addAttribute("previousEpisode", previousEpisode);
+            model.addAttribute("nextEpisode", nextEpisode);
+            
+            // 이전/다음 회차 구매 여부 확인
+            boolean previousEpisodeIsPurchased = (currentUserId != null) && (previousEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, previousEpisodeId);
+            boolean nextEpisodeIsPurchased = (currentUserId != null) && (nextEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, nextEpisodeId);
+            
+            // 이전/다음 회차 무료/구매 여부
+            model.addAttribute("previousEpisodeIsFree", (previousEpisode != null) && (previousEpisode.getCategory() == 1));
+            model.addAttribute("nextEpisodeIsFree", (nextEpisode != null) && (nextEpisode.getCategory() == 1));
+            model.addAttribute("previousEpisodeIsPurchased", previousEpisodeIsPurchased);
+            model.addAttribute("nextEpisodeIsPurchased", nextEpisodeIsPurchased);
+            
+            model.addAttribute("previousEpisodeId", previousEpisodeId);
+            model.addAttribute("nextEpisodeId", nextEpisodeId);
+        }
+//        Long previousEpisodeId = epiService.findPreviousEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
+//        Long nextEpisodeId = epiService.findNextEpisodeId(episode.getNovel().getId(), episode.getEpisodeNum());
+
+//        // 이전/다음 회차 정보 조회
+//        Episode previousEpisode = (previousEpisodeId != null) ? epiService.getEpisodeById(previousEpisodeId) : null;
+//        Episode nextEpisode = (nextEpisodeId != null) ? epiService.getEpisodeById(nextEpisodeId) : null;
+//        model.addAttribute("previousEpisode", previousEpisode);
+//        model.addAttribute("nextEpisode", nextEpisode);
+//        
+//        // 이전/다음 회차 구매 여부 확인
+//        boolean previousEpisodeIsPurchased = (currentUserId != null) && (previousEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, previousEpisodeId);
+//        boolean nextEpisodeIsPurchased = (currentUserId != null) && (nextEpisode != null) && bookmarkService.isPurchasedByUser(currentUserId, novelId, nextEpisodeId);
 
         model.addAttribute("episode", episode);
-        model.addAttribute("previousEpisodeId", previousEpisodeId);
-        model.addAttribute("nextEpisodeId", nextEpisodeId);
+//        model.addAttribute("previousEpisodeId", previousEpisodeId);
+//        model.addAttribute("nextEpisodeId", nextEpisodeId);
         model.addAttribute("novelId", novelId);
 
         // 이용권 수 조회
@@ -165,129 +191,130 @@ public class EpisodeController {
         model.addAttribute("globalTicketCount", globalTicketCount);
         model.addAttribute("novelTicketCount", novelTicketCount);
 
-        // 이전/다음 회차 무료/구매 여부
-        model.addAttribute("previousEpisodeIsFree", (previousEpisode != null) && (previousEpisode.getCategory() == 1));
-        model.addAttribute("nextEpisodeIsFree", (nextEpisode != null) && (nextEpisode.getCategory() == 1));
-        model.addAttribute("previousEpisodeIsPurchased", previousEpisodeIsPurchased);
-        model.addAttribute("nextEpisodeIsPurchased", nextEpisodeIsPurchased);
+//        // 이전/다음 회차 무료/구매 여부
+//        model.addAttribute("previousEpisodeIsFree", (previousEpisode != null) && (previousEpisode.getCategory() == 1));
+//        model.addAttribute("nextEpisodeIsFree", (nextEpisode != null) && (nextEpisode.getCategory() == 1));
+//        model.addAttribute("previousEpisodeIsPurchased", previousEpisodeIsPurchased);
+//        model.addAttribute("nextEpisodeIsPurchased", nextEpisodeIsPurchased);
 
         return "episode/details";
     }
-	
-	//회차 업데이트
-	@GetMapping("/{id}/modify")
-	public String modifyEpisode(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, Model model) {
-		log.info("GET modifyEpisode(novelId={}, episodeId={})", novelId, episodeId);
-		
-	    Episode episode = epiService.getEpisodeById(episodeId);
+   
+   //회차 업데이트
+   @GetMapping("/{id}/modify")
+   public String modifyEpisode(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, Model model) {
+      log.info("GET modifyEpisode(novelId={}, episodeId={})", novelId, episodeId);
+      
+       Episode episode = epiService.getEpisodeById(episodeId);
 
-	    // Episode -> EpisodeUpdateDto 변환
-	    EpisodeUpdateDto dto = new EpisodeUpdateDto();
-	    dto.setId(episode.getId());
-	    dto.setNovelId(episode.getNovel().getId());
-	    dto.setTitle(episode.getTitle());
-	    dto.setContent(episode.getContent());
+       // Episode -> EpisodeUpdateDto 변환
+       EpisodeUpdateDto dto = new EpisodeUpdateDto();
+       dto.setId(episode.getId());
+       dto.setNovelId(episode.getNovel().getId());
+       dto.setTitle(episode.getTitle());
+       dto.setContent(episode.getContent());
 
-	    model.addAttribute("episode", dto);
-	    model.addAttribute("novel", episode.getNovel());
-	    return "episode/modify";
-	}
-	
-	@PostMapping("/{id}/update")
-	public String updateEpisode(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, 
-			@ModelAttribute("episode") EpisodeUpdateDto dto) {
-	    log.info("POST updateEpisode(episodeId={}, dto={})", episodeId, dto);
-	    
-	    dto.setId(episodeId);
+       model.addAttribute("episode", dto);
+       model.addAttribute("novel", episode.getNovel());
+       return "episode/modify";
+   }
+   
+   @PostMapping("/{id}/update")
+   public String updateEpisode(@PathVariable("novelId") Long novelId, @PathVariable("id") Long episodeId, 
+         @ModelAttribute("episode") EpisodeUpdateDto dto) {
+       log.info("POST updateEpisode(episodeId={}, dto={})", episodeId, dto);
+       
+       dto.setId(episodeId);
         Episode episode = epiService.getEpisodeById(episodeId);
         dto.setNovelId(episode.getNovel().getId());
 
         epiService.updateEpisode(dto);
         
-	    return "redirect:/novel/" + episode.getNovel().getId() + "/episode/" + episode.getId();
-	}
-	
-	@PostMapping("/{id}/delete")
+       return "redirect:/novel/" + episode.getNovel().getId() + "/episode/" + episode.getId();
+   }
+   
+   @PostMapping("/{id}/delete")
     public String deleteEpisode(@PathVariable("novelId") Long novelId,
                                 @PathVariable("id") Long episodeId) {
         log.info("POST deleteEpisode(novelId={}, episodeId={})", novelId, episodeId);
         
-		epiService.deleteEpisode(episodeId);
+      epiService.deleteEpisode(episodeId);
 
-		return "redirect:/novel/" + novelId;
+      return "redirect:/novel/" + novelId;
 
     }
-	
-	//ResponseEntity
-	@GetMapping("/api/check-episode-num")
+   
+   //ResponseEntity
+   @GetMapping("/api/check-episode-num")
     public ResponseEntity<Boolean> checkEpisodeNum(@RequestParam Long novelId, @RequestParam int episodeNum) {
         boolean exists = epiService.doesEpisodeNumExist(novelId, episodeNum);
         return ResponseEntity.ok(exists);
     }
-	
-	// 유료회차 구매 여부 확인
-	@GetMapping("/{episodeId}/check")
-	@ResponseBody
-	public ResponseEntity<String> checkEpisode(@PathVariable Long novelId, @PathVariable Long episodeId) {
-		// 인증 정보 확인
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() instanceof String) {
-		    return ResponseEntity.status(401).body("로그인이 필요합니다.");
-		}
+   
+   // 유료회차 구매 여부 확인
+   @GetMapping("/{episodeId}/check")
+   @ResponseBody
+   public ResponseEntity<String> checkEpisode(@PathVariable Long novelId, @PathVariable Long episodeId) {
+      // 인증 정보 확인
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() instanceof String) {
+          return ResponseEntity.status(401).body("로그인이 필요합니다.");
+      }
 
-	    // 현재 로그인된 사용자 ID 가져오기
-	    Long currentUserId = ((User) auth.getPrincipal()).getUserId();
-	    log.info("현재 로그인된 사용자 ID: " + currentUserId);
+       // 현재 로그인된 사용자 ID 가져오기
+       Long currentUserId = ((User) auth.getPrincipal()).getUserId();
+       log.info("현재 로그인된 사용자 ID: " + currentUserId);
 
-	    try {
-	        Episode episode = epiService.getEpisodeById(episodeId);
+       try {
+           Episode episode = epiService.getEpisodeById(episodeId);
 
-	        // 무료 회차 확인
-	        if (episode.getCategory() == 1) {
-	            return ResponseEntity.ok("FREE");
-	        }
+           // 무료 회차 확인
+           if (episode.getCategory() == 1) {
+               return ResponseEntity.ok("FREE");
+           }
 
-	        // 유료 회차 구매 여부 확인
-	        boolean purchased = bookmarkService.isPurchasedByUser(currentUserId, novelId, episodeId);
-	        log.info("유저 ID: " + currentUserId);
-	        log.info("소설 ID: " + novelId);
-	        log.info("에피소드 ID: " + episodeId);
-	        log.info("구매 여부: " + purchased);
+           // 유료 회차 구매 여부 확인
+           boolean purchased = bookmarkService.isPurchasedByUser(currentUserId, novelId, episodeId);
+           log.info("유저 ID: " + currentUserId);
+           log.info("소설 ID: " + novelId);
+           log.info("에피소드 ID: " + episodeId);
+           log.info("구매 여부: " + purchased);
 
-	        if (purchased) {
-	        	log.info("구매된 회차");
-	            return ResponseEntity.ok("PURCHASED");
-	        }
+           if (purchased) {
+              log.info("구매된 회차");
+               return ResponseEntity.ok("PURCHASED");
+           }
 
-	        // 구매되지 않은 상태
-	        log.info("구매하지 않은 유료 회차");
-	        return ResponseEntity.ok("NOT_PURCHASED");
-	    } catch (EntityNotFoundException e) {
-	        return ResponseEntity.status(404).body("해당 회차를 찾을 수 없습니다.");
-	    }
-	}
+           // 구매되지 않은 상태
+           log.info("구매하지 않은 유료 회차");
+           return ResponseEntity.ok("NOT_PURCHASED");
+       } catch (EntityNotFoundException e) {
+           return ResponseEntity.status(404).body("해당 회차를 찾을 수 없습니다.");
+       }
+   }
 
-	@ResponseBody
-	@PostMapping("/buy")
-	public ResponseEntity<?> episodeBuy(@RequestBody EpisodeBuyDto dto) {
-		
-		int result = dto.getType();
-		Long ticketId;
-		
-		if (result == 2) { // 타입이 2인 경우 (코인으로 구매)
-			orderService.saveCoinPaymentFromEpisodeBuyDto(dto); // 코인 이용내역 테이블 추가
-		} else { // 타입이 0, 1인 경우 (이용권으로 구매)
-			ticketId = ticketService.deleteTicketFromEpisodeBuyDto(dto); // 이용권 삭제, 서비스 메서드보면 dto.getType 값에 따라 삭제되는 이용권이 다름
-			orderService.saveTicketPaymentFromEpisodeBuyDto(dto, ticketId);
-		}
-		// 북마크 테이블 추가, 구매하면 북마크에는 무조건 들어가니 if문 밖에 설정
-		bookmarkService.saveBookmarkFromEpisodeBuyDto(dto); 
-		
-		// TODO
-		// 북마크 테이블 최근 본 항목을 insert/update 뭘 할지 서비스에서 결정해서 처리
-		
-		
-		return ResponseEntity.ok(null);
-	}
-	
+   @ResponseBody
+   @PostMapping("/buy")
+   public ResponseEntity<?> episodeBuy(@RequestBody EpisodeBuyDto dto) {
+      
+      int result = dto.getType();
+      Long ticketId;
+      
+      if (result == 2) { // 타입이 2인 경우 (코인으로 구매)
+         orderService.saveCoinPaymentFromEpisodeBuyDto(dto); // 코인 이용내역 테이블 추가
+      } else { // 타입이 0, 1인 경우 (이용권으로 구매)
+         ticketId = ticketService.deleteTicketFromEpisodeBuyDto(dto); // 이용권 삭제, 서비스 메서드보면 dto.getType 값에 따라 삭제되는 이용권이 다름
+         orderService.saveTicketPaymentFromEpisodeBuyDto(dto, ticketId);
+      }
+      // 북마크 테이블 추가, 구매하면 북마크에는 무조건 들어가니 if문 밖에 설정
+      bookmarkService.saveBookmarkFromEpisodeBuyDto(dto); 
+      
+      // TODO
+      // 북마크 테이블 최근 본 항목을 insert/update 뭘 할지 서비스에서 결정해서 처리
+      
+      
+      return ResponseEntity.ok(null);
+   }
+   
 }
+

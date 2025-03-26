@@ -9,7 +9,7 @@ function toggleEpisodeNum() {
     if (categorySelect.value === '0') { // '공지' 선택 시
         episodeNumInput.disabled = true;
         episodeNumInput.required = false;
-        episodeNumInput.value = '';
+        episodeNumInput.value = null;
     } else { // '무료' 또는 '유료' 선택 시
         episodeNumInput.disabled = false;
         episodeNumInput.required = true;
