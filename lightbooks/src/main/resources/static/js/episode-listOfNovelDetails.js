@@ -44,28 +44,42 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
       }
       
       console.log("isOwner:", isOwner);
-	  
-	  const episodeId = element.dataset.episodeId;
-	  const novelId = element.dataset.novelId;
-	  const userId = document.querySelector('input#userId').value;
+     
+     const episodeId = element.dataset.episodeId;
+     const novelId = element.dataset.novelId;
+     const userId = document.querySelector('input#userId').value;
+	 console.log("userId", userId);
+	 
+	 if (!element || !element.dataset) {
+	         console.error("element 또는 element.dataset이 null입니다.");
+	         return;
+	     }
+	     if (!novelId) {
+	         console.error("novelId가 null입니다.");
+	         return;
+	     }
 
-	  const updateAccessTime = () => {
-	      axios.post(`/user/episode/${episodeId}/access?userId=${userId}`)
-	           .then(response => {
-	                console.log("access_time 업데이트 성공:", response.data);
-	            })
-	            .catch(error => {
-	                console.error("access_time 업데이트 실패:", error);
-	            });
-	      };
+     const updateAccessTime = () => {
+         axios.post(`/user/episode/${episodeId}/access?userId=${userId}`)
+              .then(response => {
+                   console.log("access_time 업데이트 성공:", response.data);
+               })
+               .catch(error => {
+                   console.error("access_time 업데이트 실패:", error);
+               });
+         };
       
-      if (isOwner || category === "0" || category === "1") {
-              console.log("공지거나 무료회차 또는 작성자 또는 구매한 경우입니다. 상세 페이지로 이동합니다.");
-			  updateAccessTime(); // TODO:access_time 업데이트
-              window.location.href = element.getAttribute("href");
-			  // axios.post 북마크 테이블 insert/update을 서비스 계층에서 결정
-              return;
-          }
+		 if (isOwner || category === "0" || category === "1") {
+		     console.log("공지거나 무료회차 또는 작성자 또는 구매한 경우입니다. 상세 페이지로 이동합니다.");
+
+		     if (category !== "0") { // 공지가 아닌 경우에만 updateAccessTime() 호출!!!!!근데 이거때문인가 뭔가 유료?무료?회차 시간 업뎃 갑자기 안되던데 확인하기
+		         updateAccessTime(); // TODO:access_time 업데이트()
+		     }
+
+		     window.location.href = element.getAttribute("href");
+		     // axios.post 북마크 테이블 insert/update을 서비스 계층에서 결정
+		     return;
+		 }
 
         if (category === "2") {
          console.log("유료회차");
@@ -96,7 +110,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 
                     if (result === "PURCHASED" || result === "FREE") {
                         console.log("구매된 회차입니다. 이동합니다.");
-						updateAccessTime();
+                  		updateAccessTime(); //업데이트!
                         window.location.href = element.getAttribute("href");
                     } else {
                         console.log("구매하지 않은 유료 회차입니다. 구매 팝업을 표시합니다.");
@@ -106,189 +120,189 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
                             return;
                         }
 
-                  		console.log("bootstrap:", bootstrap); // 추가
-						const buyEpisodeModal = new bootstrap.Modal(modalElement, {
-							backdrop: 'true',
-							keyboard: false
-						});
+                        console.log("bootstrap:", bootstrap); // 추가
+                  const buyEpisodeModal = new bootstrap.Modal(modalElement, {
+                     backdrop: 'true',
+                     keyboard: false
+                  });
 
-						const closeModal = () => {
-							console.log('Modal closed');
-							buyEpisodeModal.hide();
-						};
+                  const closeModal = () => {
+                     console.log('Modal closed');
+                     buyEpisodeModal.hide();
+                  };
 
-						
-						const closeButton = modalElement.querySelector('.btn-close[data-bs-dismiss="modal"]');
-						if (closeButton) {
-							closeButton.addEventListener('click', closeModal);
-						} else {
-							console.error('buyEpisodeModal의 닫기 버튼을 찾을 수 없습니다.(header)');
-						}
+                  
+                  const closeButton = modalElement.querySelector('.btn-close[data-bs-dismiss="modal"]');
+                  if (closeButton) {
+                     closeButton.addEventListener('click', closeModal);
+                  } else {
+                     console.error('buyEpisodeModal의 닫기 버튼을 찾을 수 없습니다.(header)');
+                  }
 
-						const closeFooterButton = modalElement.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
-						if (closeFooterButton) {
-							closeFooterButton.addEventListener('click', closeModal);
-						} else {
-							console.error(' buyEpisodeModal의 닫기버튼을 찾을 수 없습니다.(footer)');
-						}
+                  const closeFooterButton = modalElement.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
+                  if (closeFooterButton) {
+                     closeFooterButton.addEventListener('click', closeModal);
+                  } else {
+                     console.error(' buyEpisodeModal의 닫기버튼을 찾을 수 없습니다.(footer)');
+                  }
 
-						document.querySelector('h5#modalTitle').textContent = `${inputNovelTitle}의 ${episodeNum}화`;
+                  document.querySelector('h5#modalTitle').textContent = `${inputNovelTitle}의 ${episodeNum}화`;
 
-						const updateRemainingCoin = () => {
-						    const nowCoinElement = document.querySelector('strong#nowCoin') || document.querySelector('span#remainingCoin');
+                  const updateRemainingCoin = () => {
+                      const nowCoinElement = document.querySelector('strong#nowCoin') || document.querySelector('span#remainingCoin');
 
-						    console.log('nowCoinElement:', nowCoinElement);
+                      console.log('nowCoinElement:', nowCoinElement);
 
-						    if (nowCoinElement) {
-						        const coinValue = nowCoinElement.textContent || "0";
-						        console.log('strong#nowCoin textContent:', coinValue);
+                      if (nowCoinElement) {
+                          const coinValue = nowCoinElement.textContent || "0";
+                          console.log('strong#nowCoin textContent:', coinValue);
 
-						        document.getElementById('remainingCoin').innerHTML = `<strong>${coinValue}</strong>`;
-						        updateButtonStates();
-						    } else {
-						        console.error('코인 잔액 요소를 찾을 수 없습니다.');
-						        document.getElementById('remainingCoin').innerHTML = '<strong>0</strong>';
-							}
-						};
-						updateRemainingCoin(); // 코인 값 업데이트
-						buyEpisodeModal.show(); // 모달 표시
-						console.log("모달창 열렸음");
+                          document.getElementById('remainingCoin').innerHTML = `<strong>${coinValue}</strong>`;
+                          updateButtonStates();
+                      } else {
+                          console.error('코인 잔액 요소를 찾을 수 없습니다.');
+                          document.getElementById('remainingCoin').innerHTML = '<strong>0</strong>';
+                     }
+                  };
+                  updateRemainingCoin(); // 코인 값 업데이트
+                  buyEpisodeModal.show(); // 모달 표시
+                  console.log("모달창 열렸음");
 
-						updateButtonStates();
+                  updateButtonStates();
 
-						document.querySelectorAll('a#selectProduct').forEach(btn => {
-							btn.addEventListener('click', () => {
-								const type = btn.dataset.type;
-								console.log(type);
-								const userId = document.querySelector('span#userId').textContent.trim();
-								console.log(userId);
-								const novelId = document.querySelector('input#novelId').value;
-								console.log(novelId);
-								const episodeId = element.dataset.episodeId;
-								console.log(episodeId);
-								const coin = Number(-100);
-								console.log(coin);
+                  document.querySelectorAll('a#selectProduct').forEach(btn => {
+                     btn.addEventListener('click', () => {
+                        const type = btn.dataset.type;
+                        console.log(type);
+                        const userId = document.querySelector('span#userId').textContent.trim();
+                        console.log(userId);
+                        const novelId = document.querySelector('input#novelId').value;
+                        console.log(novelId);
+                        const episodeId = element.dataset.episodeId;
+                        console.log(episodeId);
+                        const coin = Number(-100);
+                        console.log(coin);
 
-								if (!userId || !novelId || !episodeId) {
-									console.error("필수 정보(userId, novelId, episodeId)가 누락되었습니다.");
-									return;
-								}
+                        if (!userId || !novelId || !episodeId) {
+                           console.error("필수 정보(userId, novelId, episodeId)가 누락되었습니다.");
+                           return;
+                        }
 
-								const data = { userId, novelId, episodeId, type, coin };
+                        const data = { userId, novelId, episodeId, type, coin };
 
-								// 버튼 광클릭시 중복 구매 방지
-								btn.disabled = true;
-								btn.textContent = '구매 중...';
+                        // 버튼 광클릭시 중복 구매 방지
+                        btn.disabled = true;
+                        btn.textContent = '구매 중...';
 
-								axios.post(`/novel/${novelId}/episode/buy`, data)
-									.then(response => {
-										console.log("구매 성공:", response.data);
+                        axios.post(`/novel/${novelId}/episode/buy`, data)
+                           .then(response => {
+                              console.log("구매 성공:", response.data);
 
-										const successModal = new bootstrap.Modal(document.getElementById('customSuccessModal'));
-										successModal.show();//구매완료 창 띄우기
+                              const successModal = new bootstrap.Modal(document.getElementById('customSuccessModal'));
+                              successModal.show();//구매완료 창 띄우기
 
-										const modalElement = document.getElementById('buyEpisodeModal');
-										const buyEpisodeModal = bootstrap.Modal.getInstance(modalElement);
-										buyEpisodeModal.hide(); //모달창 숨기기
+                              const modalElement = document.getElementById('buyEpisodeModal');
+                              const buyEpisodeModal = bootstrap.Modal.getInstance(modalElement);
+                              buyEpisodeModal.hide(); //모달창 숨기기
 
-										// 구매회차 페이지로 이동
-										setTimeout(() => {
-											updateAccessTime(); // TODO:access_time 업데이트
-											window.location.href = element.getAttribute("href");
-										}, 1000); // 1초 후 이동
+                              // 구매회차 페이지로 이동
+                              setTimeout(() => {
+                                 updateAccessTime(); // TODO:access_time 업데이트
+                                 window.location.href = element.getAttribute("href");
+                              }, 1000); // 1초 후 이동
 
-										// 버튼 활성화 및 상태 복원
-										btn.disabled = false;
-										btn.textContent = '구매'; // 원래 버튼 텍스트로 복원
+                              // 버튼 활성화 및 상태 복원
+                              btn.disabled = false;
+                              btn.textContent = '구매'; // 원래 버튼 텍스트로 복원
 
-										// 페이지 새로고침 대신 필요한 부분 업데이트
-										const episodeRow = document.querySelector(`a[data-episode-id="${episodeId}"]`);
-										if (episodeRow) {
-											episodeRow.setAttribute('data-category', '1');
-										}
-									})
-									.catch(error => {
-										console.error("구매 중 오류 발생:", error);
-										btn.disabled = false;// 오류 발생 시 버튼 활성화 및 상태 복원
-										btn.textContent = '구매';// 원래 버튼 텍스트로 복원
-									});
-							});
-						});
-					}
-				});
-	}
+                              // 페이지 새로고침 대신 필요한 부분 업데이트
+                              const episodeRow = document.querySelector(`a[data-episode-id="${episodeId}"]`);
+                              if (episodeRow) {
+                                 episodeRow.setAttribute('data-category', '1');
+                              }
+                           })
+                           .catch(error => {
+                              console.error("구매 중 오류 발생:", error);
+                              btn.disabled = false;// 오류 발생 시 버튼 활성화 및 상태 복원
+                              btn.textContent = '구매';// 원래 버튼 텍스트로 복원
+                           });
+                     });
+                  });
+               }
+            });
+   }
 }
 
 document.addEventListener("click", function(event) { //지우면 안됨!!!!!!!!!
-	console.log("클릭된 요소:", event.target);
-	const episodeItem = event.target.closest(".episode-item");
-	if (episodeItem) {
-		console.log('episodeItem:', episodeItem);
-		event.preventDefault();
-		handleEpisodePurchase(episodeItem);
-	}
+   console.log("클릭된 요소:", event.target);
+   const episodeItem = event.target.closest(".episode-item");
+   if (episodeItem) {
+      console.log('episodeItem:', episodeItem);
+      event.preventDefault();
+      handleEpisodePurchase(episodeItem);
+   }
 });
 
 document.addEventListener('DOMContentLoaded', () => { //지우면 안됨!!!!!!!!!!!
-	const pageHeader = document.querySelector('nav[th\\:fragment="pageHeader"]');
-	    if (pageHeader) {
-	        pageHeader.classList.add('d-none');
-	    }
-	
-	console.log('[episode-list] 스크립트 로드됨');
+   const pageHeader = document.querySelector('nav[th\\:fragment="pageHeader"]');
+       if (pageHeader) {
+           pageHeader.classList.add('d-none');
+       }
+   
+   console.log('[episode-list] 스크립트 로드됨');
 
-	const container = document.getElementById("episodeListContainer");
-	if (container) {
-		container.addEventListener("click", function(event) {
-			// 1. 삭제 버튼 클릭 처리
-			const deleteBtn = event.target.closest(".btn-delete");
-			if (deleteBtn) {
-				console.log("[삭제 버튼] 클릭됨:", deleteBtn);
+   const container = document.getElementById("episodeListContainer");
+   if (container) {
+      container.addEventListener("click", function(event) {
+         // 1. 삭제 버튼 클릭 처리
+         const deleteBtn = event.target.closest(".btn-delete");
+         if (deleteBtn) {
+            console.log("[삭제 버튼] 클릭됨:", deleteBtn);
 
-				event.preventDefault();
-				event.stopImmediatePropagation();
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-				const episodeId = deleteBtn.dataset.episodeId;
-				const novelId = deleteBtn.dataset.novelId;
+            const episodeId = deleteBtn.dataset.episodeId;
+            const novelId = deleteBtn.dataset.novelId;
 
-				if (confirm('정말로 삭제하시겠습니까?')) {
-					fetch(`/novel/${novelId}/episode/${episodeId}/delete`, { method: 'POST' })
-						.then(response => {
-							if (response.ok) {
-								alert('삭제되었습니다!');
-								const row = document.querySelector(`tr[data-episode-id="${episodeId}"]`);
-								if (row) row.remove();
-							} else {
-								alert('삭제 실패: 서버 오류가 발생했습니다.');
-							}
-						})
-						.catch(error => console.error('삭제 중 오류 발생:', error));
-				}
-				return;
-			}
+            if (confirm('정말로 삭제하시겠습니까?')) {
+               fetch(`/novel/${novelId}/episode/${episodeId}/delete`, { method: 'POST' })
+                  .then(response => {
+                     if (response.ok) {
+                        alert('삭제되었습니다!');
+                        const row = document.querySelector(`tr[data-episode-id="${episodeId}"]`);
+                        if (row) row.remove();
+                     } else {
+                        alert('삭제 실패: 서버 오류가 발생했습니다.');
+                     }
+                  })
+                  .catch(error => console.error('삭제 중 오류 발생:', error));
+            }
+            return;
+         }
 
-			// 2. AJAX 링크 처리
-			const targetAnchor = event.target.closest("a.ajax-link");
-			if (targetAnchor) {
-				event.preventDefault();
-				const url = targetAnchor.getAttribute("href");
-				if (!url) return;
+         // 2. AJAX 링크 처리
+         const targetAnchor = event.target.closest("a.ajax-link");
+         if (targetAnchor) {
+            event.preventDefault();
+            const url = targetAnchor.getAttribute("href");
+            if (!url) return;
 
-				console.log("[AJAX 링크] 클릭됨, URL:", url);
+            console.log("[AJAX 링크] 클릭됨, URL:", url);
 
-				fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-					.then(response => {
-						if (!response.ok) {
-							throw new Error("네트워크 오류: " + response.statusText);
-						}
-						return response.text();
-					})
-					.then(html => {
-						container.innerHTML = html;
-						history.pushState(null, "", url);
-					})
-					.catch(error => console.error("회차 리스트 업데이트 중 오류 발생:", error));
-			}
-		});
-	}
+            fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+               .then(response => {
+                  if (!response.ok) {
+                     throw new Error("네트워크 오류: " + response.statusText);
+                  }
+                  return response.text();
+               })
+               .then(html => {
+                  container.innerHTML = html;
+                  history.pushState(null, "", url);
+               })
+               .catch(error => console.error("회차 리스트 업데이트 중 오류 발생:", error));
+         }
+      });
+   }
 });

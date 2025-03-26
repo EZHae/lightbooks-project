@@ -139,11 +139,15 @@ public class BookmarkService {
  // 추가) 회차 상세보기 access_time(로드 시간) 업데이트
     @Transactional
     public void updateAccessTime(Long userId, Long episodeId) {
-        Bookmark bookmark = bookmarkRepo.findByUserIdAndEpisodeIdWithNovel(userId, episodeId);
+//        Bookmark bookmark = bookmarkRepo.findByUserIdAndEpisodeIdWithNovel(userId, episodeId);
+        Bookmark bookmark = bookmarkRepo.findByUserIdAndEpisodeIdAndType(userId, episodeId, 1L);
+        log.info("유진 {},{}",userId, episodeId);
+        log.info("bookmark 유진={}",bookmark);
 
-        if (bookmark != null) { // 기존에 북마크 레코드가 존재하는 경우
-            bookmark.updateAccessTime(LocalDateTime.now());
-            bookmarkRepo.save(bookmark);
+        if (bookmark != null && bookmark.getType() == 1) { // 기존에 북마크 레코드가 존재하는 경우
+            Bookmark savedBookmark =bookmark.updateAccessTime(LocalDateTime.now());
+            log.info("savedBookmark 유진 ={}",savedBookmark);
+            bookmarkRepo.save(savedBookmark);
         } else { // 기존 북마크 레코드가 존재하지 않는 경우
             Episode episode = epiRepo.findById(episodeId)
                                      .orElseThrow(() -> new EntityNotFoundException("Episode not found with id: " + episodeId));

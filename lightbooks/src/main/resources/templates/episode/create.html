@@ -1,86 +1,91 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('회차 새글 작성')}"></head>
-	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
-		
-		<main class="card">
-			<div class="card-body">
-				<div class="mb-4">소설 연재 :: 새글 작성하기</div>
-					<div class="mt-3 card">
-					<div class="card-body bg-light">
-						<p class="text-muted">소설 작성 전 안내사항</p>
-						<ul>
-							<li>욕설 비방(특정 인물 또는 단체, 종교 등을 욕하거나 비방하는 작품)</li>
-							<li>소아를 성적 대상으로 하는 작품 등 현행법상 문제의 소지가 있는 작품</li>
-							<li>타인의 권리에 속하는 저작권, 상표권, 의장권 등을 무단으로 침해한 작품</li>
-							<li>타인의 개인정보(실명, 주민번호, 연락처, 주소, 블로그 주소 등)를 본인의 동의 없이 고의적,
-								악의적으로 게재한 작품</li>
-							<li>사이버 명예훼손의 우려가 있는 작품
-								<ul>
-									<li>개인의 사생활, 초상권을 침해한 내용</li>
-									<li>개인이나 단체에 대해 비방하거나 사실 또는 허위사실을 유포한 경우 또는 권리를 침해한 경우</li>
-									<li>욕설 또는 언어폭력 등의 저속한 표현으로 특정인의 인격을 모독하거나 불쾌감을 불러 일으키는 내용</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</div>
-					<!-- <h2 th:text="${novel.title}"></h2> -->
-		            <form id="episodeForm" th:action="@{/novel/{novelId}/episode/create(novelId=${novelId})}"
-			               th:object="${episodeCreateDto}" method="post" onsubmit="event.preventDefault(); checkEpisodeNum();" novalidate>
-			               
-			            <div class="form-group">
-			                <label for="category" class="form-label">카테고리 설정</label>
-			                <select id="category" th:field="*{category}" class="form-select" onchange="toggleEpisodeNum()">
-			                    <option value="0">공지</option>
-			                    <option value="1" th:if="${novel.grade == 0}">무료</option>
-			                    <option value="2" th:if="${novel.grade == 1}">유료</option>
-			                </select>
-			            </div>  
-			            
-						<div>
-			            	<input type="hidden" name="novelId" th:value="${novelId}" />
-						</div>
-			
-						<!-- 회차번호입력구간 : 회차 번호 입력하지 않으면 차례대로 자동 부여, 회차번호 중복 불가 -->
-			            <div class="form-group">
-			                <label for="episodeNum" class="form-label">연재 회차번호</label>
-			                <input type="number" id="episodeNum" th:field="*{episodeNum}" class="form-control"
-							       th:placeholder="${maxEpisodeNum != null} ? (${maxEpisodeNum} + 1) + '회차를 작성할 차례입니다' : '등록된 회차가 없습니다.'"
-							       oninput="validateEpisodeNum(this);" />
-			                <small class="form-text text-muted">
-							    ⚠️ 회차 번호를 입력하지 않으면 차례대로 자동 부여됩니다. 작성 못한 회차가 있다면, 회차 번호를 직접 입력하시면 됩니다.
-							</small>
-			            </div>
-			
-			            <div class="form-group mt-2">
-			                <label for="title" class="form-label">제목 <span class="text-danger">*</span></label>
-			                <input type="text" id="title" name="title" th:value="*{title}" class="form-control" required
-			                       placeholder="제목을 입력하세요" />
-			            </div>
-			
-			            <div class="form-group">
-			                <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
-			                <textarea id="content" name="content" th:value="*{content}" rows="10" class="form-control" required
-			                          placeholder="내용을 입력하세요"></textarea>
-			            </div>
-			
-						<!-- 
-			            <div class="form-group">
-			                <label for="reservationTime" class="form-label">연재 예약</label>
-			                <input type="datetime-local" id="reservationTime" th:field="*{reservationTime}" class="form-control" />
-			            </div>  -->
-			
-			            <div>
-			                <input class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
-			            </div>
-			        </form>
-				</div>
-		</main>
-		
+   <head th:replace="~{/layout/fragments :: htmlHead('회차 새글 작성')}"></head>
+   <body>
+      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+      
+      <main class="card">
+         <div class="card-body">
+            <div class="mb-4">소설 연재 :: 새글 작성하기</div>
+               <div class="mt-3 card">
+               <div class="card-body bg-light">
+                  <p class="text-muted">소설 작성 전 안내사항</p>
+                  <ul>
+                     <li>욕설 비방(특정 인물 또는 단체, 종교 등을 욕하거나 비방하는 작품)</li>
+                     <li>소아를 성적 대상으로 하는 작품 등 현행법상 문제의 소지가 있는 작품</li>
+                     <li>타인의 권리에 속하는 저작권, 상표권, 의장권 등을 무단으로 침해한 작품</li>
+                     <li>타인의 개인정보(실명, 주민번호, 연락처, 주소, 블로그 주소 등)를 본인의 동의 없이 고의적,
+                        악의적으로 게재한 작품</li>
+                     <li>사이버 명예훼손의 우려가 있는 작품
+                        <ul>
+                           <li>개인의 사생활, 초상권을 침해한 내용</li>
+                           <li>개인이나 단체에 대해 비방하거나 사실 또는 허위사실을 유포한 경우 또는 권리를 침해한 경우</li>
+                           <li>욕설 또는 언어폭력 등의 저속한 표현으로 특정인의 인격을 모독하거나 불쾌감을 불러 일으키는 내용</li>
+                        </ul>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+               <!-- <h2 th:text="${novel.title}"></h2> -->
+                  <form id="episodeForm" th:action="@{/novel/{novelId}/episode/create(novelId=${novelId})}"
+                        th:object="${episodeCreateDto}" method="post" onsubmit="event.preventDefault(); checkEpisodeNum();" novalidate>
+                        
+                     <div class="form-group">
+                         <label for="category" class="form-label">카테고리 설정</label>
+                         <select id="category" th:field="*{category}" class="form-select" onchange="toggleEpisodeNum()">
+                             <option value="0">공지</option>
+                             <option value="1" th:if="${novel.grade == 0}">무료</option>
+                             <option value="2" th:if="${novel.grade == 1}">유료</option>
+                         </select>
+                     </div>  
+                     
+                  <div>
+                        <input type="hidden" name="novelId" th:value="${novelId}" />
+                  </div>
+         
+                  <!-- 회차번호입력구간 : 회차 번호 입력하지 않으면 차례대로 자동 부여, 회차번호 중복 불가 -->
+                     <div class="form-group">
+                         <label for="episodeNum" class="form-label">연재 회차번호</label>
+                         <input type="number" id="episodeNum" th:field="*{episodeNum}" class="form-control"
+                            th:placeholder="${maxEpisodeNum != null} ? (${maxEpisodeNum} + 1) + '회차를 작성할 차례입니다' : '등록된 회차가 없습니다.'"
+                            th:attr="data-original-value=${maxEpisodeNum != null ? maxEpisodeNum + 1 : ''}"
+                            oninput="validateEpisodeNum(this);" />
+                     <input type="hidden" id="calculatedEpisodeNum" name="calculatedEpisodeNum"
+                            th:value="${maxEpisodeNum != null ? maxEpisodeNum + 1 : ''}" />
+                         <small class="form-text text-muted">
+                         ⚠️ 회차 번호를 입력하지 않으면 차례대로 자동 부여됩니다. 작성 못한 회차가 있다면, 회차 번호를 직접 입력하시면 됩니다.
+                     </small>
+                     </div>
+         
+                     <div class="form-group mt-2">
+                         <label for="title" class="form-label">제목 <span class="text-danger">*</span></label>
+                         <input type="text" id="title" name="title" th:value="*{title}" class="form-control" required
+                                placeholder="제목을 입력하세요" />
+                     </div>
+         
+                     <div class="form-group">
+                         <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
+                         <textarea id="content" name="content" th:value="*{content}" rows="10" class="form-control" required
+                                   placeholder="내용을 입력하세요"></textarea>
+                     </div>
+         
+                  <!-- 
+                     <div class="form-group">
+                         <label for="reservationTime" class="form-label">연재 예약</label>
+                         <input type="datetime-local" id="reservationTime" th:field="*{reservationTime}" class="form-control" />
+                     </div>  -->
+         
+                     <div>
+                         <input class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
+                     </div>
+                 </form>
+            </div>
+      </main>
+      
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/episode-create.js}"></script>
+   </body>
+</html>
 	</body>
 </html>

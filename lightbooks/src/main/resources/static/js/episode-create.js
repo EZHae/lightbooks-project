@@ -4,14 +4,20 @@
 function toggleEpisodeNum() {
     const categorySelect = document.getElementById('category');
     const episodeNumInput = document.getElementById('episodeNum');
+    const calculatedEpisodeNum = document.getElementById('calculatedEpisodeNum');
 
     if (categorySelect.value === '0') { // '공지' 선택 시
         episodeNumInput.disabled = true;
         episodeNumInput.required = false;
-        episodeNumInput.value = '';
+        episodeNumInput.value = null;
     } else { // '무료' 또는 '유료' 선택 시
         episodeNumInput.disabled = false;
         episodeNumInput.required = true;
+        if (episodeNumInput.value.trim() === '') { // 입력 필드가 비어 있으면
+            if (calculatedEpisodeNum.value) {
+                episodeNumInput.value = calculatedEpisodeNum.value; // 계산된 값 사용
+            }
+        }
     }
 }
 
@@ -29,15 +35,22 @@ function checkEpisodeNum() {
     const novelId = document.querySelector('input[name="novelId"]').value;
     const categorySelect = document.getElementById("category"); // 카테고리 선택
     const episodeNum = document.getElementById("episodeNum").value;
+    const calculatedEpisodeNum = document.getElementById('calculatedEpisodeNum').value;
 
     if (categorySelect.value === '0') { // 공지사항일 경우
         document.getElementById("episodeForm").submit(); // 바로 폼 제출
         return; // 함수 종료
     }
 
+    // 회차 번호가 비어있으면 자동 할당된 값(calculatedEpisodeNum)으로 대체
+    const episodeNumToCheck = episodeNum.trim() === '' ? calculatedEpisodeNum : episodeNum;
+    if (episodeNum.trim() === '') {
+        document.getElementById("episodeNum").value = calculatedEpisodeNum;
+    }
+
     // 회차 번호가 비어있지 않은 경우에만 서버에 중복 확인 요청
-    if (episodeNum.trim()) {
-        fetch(`/novel/${novelId}/episode/api/check-episode-num?novelId=${novelId}&episodeNum=${episodeNum}`)
+    if (episodeNumToCheck) {
+        fetch(`/novel/${novelId}/episode/api/check-episode-num?novelId=${novelId}&episodeNum=${episodeNumToCheck}`)
             .then(response => response.json())
             .then(exists => {
                 if (exists) {
@@ -62,4 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const categorySelect = document.getElementById('category');
     categorySelect.addEventListener('change', toggleEpisodeNum);
     toggleEpisodeNum();
+});
+
+// 폼 제출 시 episodeNum 입력 필드가 비어 있으면 calculatedEpisodeNum 값으로 설정
+document.querySelector('form').addEventListener('submit', function() {
+    const episodeNumInput = document.getElementById('episodeNum');
+    const calculatedEpisodeNum = document.getElementById('calculatedEpisodeNum');
+
+    if (episodeNumInput.value.trim() === '') {
+        episodeNumInput.value = calculatedEpisodeNum.value;
+    }
 });

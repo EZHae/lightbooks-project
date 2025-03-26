@@ -28,8 +28,8 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 	int countByNovelIdAndType(Long novelId, Integer type);
 	
 	
-	// 추가) 북마크 업데이트 및 북마크 존재 여부 확인
-//	Bookmark findByUserIdAndEpisodeId(Long userId, Long episodeId);
+	// 추가) 북마크 업데이트 및 북마크 존재 여부 확인 
+	Bookmark findByUserIdAndEpisodeIdAndType(Long userId, Long episodeId, Long type);
 	
 	// 추가) 사용자의 특정 회차 북마크를 조회 
 	@Query("SELECT b FROM Bookmark b JOIN FETCH b.novel WHERE b.user.id = :userId AND b.episode.id = :episodeId")

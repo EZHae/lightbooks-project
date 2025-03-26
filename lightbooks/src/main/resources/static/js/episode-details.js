@@ -10,27 +10,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let popupVisible = false; // 초기 상태: 팝업 숨김
     let darkModeEnabled = false; // 다크모드 초기 상태
 
-	// 메뉴바 표시/숨기기 로직
-	document.addEventListener('click', (event) => {
-		// 모달 창 내부 클릭 예외 처리
-		if (event.target.closest('#buyEpisodeModal')) { // 모달 창 ID에 맞게 수정
-			return;
-		}
+   // 메뉴바 표시/숨기기 로직
+   document.addEventListener('click', (event) => {
+      // 모달 창 내부 클릭 예외 처리
+      if (event.target.closest('#buyEpisodeModal')) { // 모달 창 ID에 맞게 수정
+         return;
+      }
 
-		// 팝업 클릭 이벤트와 충돌 방지
-		if (event.target.closest('.viewer-settings-icon') || event.target.closest('.viewer-settings-popup')) {
-			return;
-		}
+      // 팝업 클릭 이벤트와 충돌 방지
+      if (event.target.closest('.viewer-settings-icon') || event.target.closest('.viewer-settings-popup')) {
+         return;
+      }
 
-		// 메뉴바 토글
-		if (menuBarVisible) {
-			menuBar.style.display = 'none'; // 메뉴 숨기기
-			menuBarVisible = false;
-		} else {
-			menuBar.style.display = 'flex'; // 메뉴 보이기
-			menuBarVisible = true;
-		}
-	});
+      // 메뉴바 토글
+      if (menuBarVisible) {
+         menuBar.style.display = 'none'; // 메뉴 숨기기
+         menuBarVisible = false;
+      } else {
+         menuBar.style.display = 'flex'; // 메뉴 보이기
+         menuBarVisible = true;
+      }
+   });
 
     // 뷰어 설정 버튼 추가
     settingsIcon.classList.add('viewer-settings-icon'); // 버튼에 클래스 추가
