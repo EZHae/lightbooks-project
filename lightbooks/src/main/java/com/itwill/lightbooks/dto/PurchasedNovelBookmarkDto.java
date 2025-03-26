@@ -10,6 +10,8 @@ public class PurchasedNovelBookmarkDto {
 
 	private Long novelId;
 	
+	private Integer episodeNum;
+	
 	private Integer novelGrade;
 	
     private String novelTitle;

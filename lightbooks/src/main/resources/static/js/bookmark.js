@@ -73,54 +73,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 	function makeItemElements(data, reset = false) {
-	    console.log("data.content:", data.content);
-	    console.log("itemList", itemList);
-	    if (reset) itemList.innerHTML = '';
-	    if (!data.content || data.content.length === 0) {
-	        if (reset) {
-	            itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>';
+	        console.log("data.content:", data.content);
+	        console.log("itemList", itemList);
+	        if (reset) itemList.innerHTML = '';
+	        if (!data.content || data.content.length === 0) {
+	            if (reset) {
+	                itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>';
+	            }
+	            return;
 	        }
-	        return;
+
+	        let row = document.createElement('div'); // row 컨테이너 생성
+	        row.classList.add('row'); // row 클래스 추가
+
+	        data.content.forEach(item => {
+	            let itemHtml = `
+	                <div class="item">
+	                    <div class="image-container">
+	                        <img src="${item.coverSrc}" alt="${item.novelTitle}">
+	                    </div>
+	                    <div class="text-container">
+	                        <div class="gradeIcon">
+	                            <span class="${item.novelGrade === 0 ? 'free' : 'paid'}">
+	                                ${item.novelGrade === 0 ? '무료' : '유료'} 
+	                            </span>
+	                        </div>
+	                        <div>
+	                            <a href="/novel/${item.novelId}">${item.novelTitle}</a>
+	                            ${type === 'watched' ? `<span class="episode-num">${item.episodeNum}화</span>` : ''}
+	                            ${type === 'purchased' ? `<span class="episode-num">${item.episodeNum}화</span>` : ''}
+	                        </div>
+	                        <div><p>작가: ${item.novelWriter}</p></div>
+	                        <div><p>장르: ${item.novelGenres.join(', ')}</p></div>
+	                        <div><p>작품 소개: ${item.novelIntro}</p></div>
+	                        <div class="view-container">
+	                            <i class="bi bi-person-plus-fill"></i>
+	                            <span>${item.totalViews}</span>
+	                        </div>
+	                        <div class="like-container">
+	                            <i class="bi bi-heart-fill"></i>
+	                            <span>${item.likeCount}</span>
+	                        </div>
+	                        ${type === 'purchased' ? `<div><p><i class="bi bi-clock-fill"></i>${formatDate(item.purchasedDate)}</p></div>` : ''}
+	                        ${type === 'watched' ? `<div><p><i class="bi bi-clock-fill"></i>${formatDate(item.accessTime)}</p></div>` : ''}
+	                    </div>
+	                </div>
+	            `;
+	            row.insertAdjacentHTML('beforeend', itemHtml); // row 컨테이너에 itemHtml 추가
+	        });
+
+	        console.log("htmlStr:", row.innerHTML); // row 컨테이너의 HTML 출력
+	        itemList.appendChild(row); // row 컨테이너를 itemList에 추가
 	    }
-
-		let htmlStr = '';
-		    data.content.forEach(item => {
-		        let itemHtml = `
-		            <div class="item">
-		                <div class="image-container">
-		                    <img src="${item.coverSrc}" alt="${item.novelTitle}">
-		                </div>
-		                <div class="text-container">
-		                    <div class="gradeIcon">
-		                        <span class="${item.novelGrade === 0 ? 'free' : 'paid'}">
-		                            ${item.novelGrade === 0 ? '무료' : '유료'} 
-		                        </span>
-		                    </div>
-		                    <div>
-		                        <a href="/novel/${item.novelId}">${item.novelTitle}</a>
-		                        ${type === 'watched' ? `<span class="episode-num">${item.episodeNum}화</span>` : ''}
-		                    </div>
-		                    <div><p>작가: ${item.novelWriter}</p></div>
-		                    <div><p>장르: ${item.novelGenres.join(', ')}</p></div>
-		                    <div><p>작품 소개: ${item.novelIntro}</p></div>
-		                    <div class="view-container">
-		                        <i class="bi bi-person-plus-fill"></i>
-		                        <span>${item.totalViews}</span>
-		                    </div>
-		                    <div class="like-container">
-		                        <i class="bi bi-heart-fill"></i>
-		                        <span>${item.likeCount}</span>
-		                    </div>
-		                    ${type === 'watched' ? `<div><p><i class="bi bi-clock-fill"></i>${formatDate(item.accessTime)}</p></div>` : ''}
-		                </div>
-		            </div>
-		        `;
-		        htmlStr += itemHtml;
-		    });
-
-	    console.log("htmlStr:", htmlStr);
-	    itemList.insertAdjacentHTML('beforeend', htmlStr);
-	}
 
    function activateButton(button) {
        document.querySelectorAll('.typeBtn').forEach(btn => btn.classList.remove('active'));
