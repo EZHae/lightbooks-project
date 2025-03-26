@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 구매</td>
 					<td class="col-5">${title}</td>
 					<td class="col-1">${episodeNum}</td>
-					<td class="col-2 text-danger">${item.coin}</td>
+					<td class="col-2 text-danger">${Math.abs(item.coin)}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">환불/환전</td>
-					<td class="col-3 text-danger">${item.coin}</td>
+					<td class="col-3 text-danger">${Math.abs(item.coin)}</td>
 					<td class="col-4 text-success">${item.cash}</td>
 					<td class="col-3">${formatCreatedTime}</td> 
 					<td id="con" class="col-1">${con}</td>
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 후원</td>
 					<td class="col-6">${title}</td>
-					<td class="col-2 text-danger">${item.coin}</td>
+					<td class="col-2 text-danger">${Math.abs(item.coin)}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
 			`;
@@ -381,5 +381,47 @@ document.addEventListener('DOMContentLoaded', () => {
 	        minute: '2-digit', 
 	    });
 	}
+	
+	// ============ 모달 ============
+	const navbar = document.querySelector('.navbar');
+	const modalEl = document.getElementById('reAppModal');
+	const navCollapse = document.getElementById('navbarSupportedContent');
+	// collapse 토글 버튼 이벤트 감지
+	const toggler = document.querySelector('.navbar-toggler');
+
+	toggler.addEventListener('click', () => {
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200';
+	});
+
+	modalEl.addEventListener('show.bs.modal', () => {
+	  // collapse가 열려 있으면 닫고 숨김
+	  if (navCollapse.classList.contains('show')) {
+	    const collapseInstance = bootstrap.Collapse.getInstance(navCollapse);
+	    if (collapseInstance) {
+	      collapseInstance.hide(); // Bootstrap 방식으로 닫기
+	    }
+	  }
+	  
+	  navbar.style.position = 'static';
+	  navbar.style.zIndex = '1';
+	});
+
+	// 모달 닫힐 때 다시 복구
+	modalEl.addEventListener('hidden.bs.modal', () => {
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200'
+	});
+
+	// 스크롤 이벤트 리스너 추가
+	window.addEventListener('scroll', () => {
+	  // 스크롤이 10px 이상 내렸다면
+	  if (window.scrollY > 10) {
+	    navbar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)'; // 그림자 효과 추가
+	  } else {
+	    navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
+	  }
+	});
+
 
 });

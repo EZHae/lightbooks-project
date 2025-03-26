@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				axios.post(url, data).then(response => {
 					console.log(response);
 					alert('결제 신청이 완료되었습니다.');
-					window.location.href = "/";
+					window.location.reload();
 				}).catch(error => {
 					console.error(error);
 				});

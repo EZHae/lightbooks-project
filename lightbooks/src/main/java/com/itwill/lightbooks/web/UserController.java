@@ -15,15 +15,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate; //통계 차트때문에 추가
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,11 +36,13 @@ import com.itwill.lightbooks.domain.Bookmark;
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.MileagePayment;
+import com.itwill.lightbooks.domain.Notification;
 import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.LikedNovelBookmarkDto;
+import com.itwill.lightbooks.dto.NotificationFragmentDto;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.dto.PurchasedNovelBookmarkDto;
 import com.itwill.lightbooks.dto.RecentlyWatchedEpisodeDto;
@@ -81,6 +86,7 @@ public class UserController {
     	return "redirect:/";
     }
     
+    @PreAuthorize("isAuthenticated() and principal.id == #id")
     @GetMapping("/details")
     public void details(@RequestParam(name = "id") Long id, Model model) {
     	log.info("GET details");
@@ -115,6 +121,7 @@ public class UserController {
     	return "redirect:/user/signout";
     }
     
+    @PreAuthorize("isAuthenticated() and principal.id == #id")
     @GetMapping("/coinpayment")
     public String coinPayment(@RequestParam(name = "id") Long id) {
     	log.info("coinPayment(id={})", id);
@@ -122,6 +129,7 @@ public class UserController {
     	return "/user/coin-payment";
     }
     
+    @PreAuthorize("isAuthenticated() and principal.id == #id")
     @GetMapping("/mileagepayment")
     public String mileagePayment(@RequestParam(name = "id") Long id) {
     	log.info("mileagePayment(id={})", id);
@@ -129,9 +137,9 @@ public class UserController {
     	return "/user/mileage-payment";
     }
     
-
+    @PreAuthorize("isAuthenticated() and principal.id == #id")
 	@GetMapping("/bookmark")
-	public String bookmarkPage(Model model, @RequestParam(name = "type") String type) {
+	public String bookmarkPage(Model model, @RequestParam(name = "id") Long id, @RequestParam(name = "type") String type) {
 		log.info("북마크페이지");
 		
 		model.addAttribute("type", type);
@@ -268,10 +276,17 @@ public class UserController {
 	    }
 	}
     
+	@PreAuthorize("isAuthenticated() and principal.id == #id")
     @GetMapping("/ticket")
     public void ticket(@RequestParam(name = "id") Long id) {
     	log.info("ticket(id={})", id);
     }
+
+	@PreAuthorize("isAuthenticated() and principal.id == #id")
+    @GetMapping("/notification")
+    public void notification(@RequestParam(name = "id") Long id) {
+    	log.info("notification(id={})", id);
+    }    
     
     /* ResponseBody */
     @ResponseBody
@@ -473,5 +488,61 @@ public class UserController {
     	Page<TicketPayment> result = ticketService.readTicketPaymenByUserId(userId, page, size, size);
     	
     	return ResponseEntity.ok(result);
+    }
+    
+    @ResponseBody
+    @GetMapping("/notification/fragment")
+    public ResponseEntity<NotificationFragmentDto> readNotificationFragmentDto(@RequestParam(name = "userId") Long userId) {
+    	log.info("readNotificationFragmentDto()");
+    	
+    	NotificationFragmentDto dto = userService.countNoReadNotificationAndFindNoReadNotification(userId, 0);
+    	
+    	return ResponseEntity.ok(dto);
+    }
+    
+    @ResponseBody
+    @PutMapping("/notification/read/all")
+    public ResponseEntity<?> allReadNotification(@RequestParam(name = "userId") Long userId) {
+    	
+    	userService.updateNotificationsAllReadByUserId(userId);
+    	
+    	return ResponseEntity.ok(null);
+    }
+    
+    @ResponseBody
+    @GetMapping("/notification/get")
+    public ResponseEntity<List<Notification>> getNotification(@RequestParam(name = "userId") Long userId) {
+    	
+    	List<Notification> notifications = userService.readNotificationByUserId(userId);
+    	
+    	return ResponseEntity.ok(notifications);
+    }
+    
+    @ResponseBody
+    @DeleteMapping("/notification/delete")
+    public ResponseEntity<?> deleteNotificationById(@RequestParam(name = "id") Long id) {
+    	
+    	userService.deleteNotificationById(id);
+    	
+    	return ResponseEntity.ok(null);
+    }
+    
+    @ResponseBody
+    @DeleteMapping("/notification/delete/all")
+    public ResponseEntity<?> deleteNotificationByUserId(@RequestParam(name = "userId") Long userId) {
+    	
+    	userService.deleteNotificationByUserId(userId);
+    	
+    	return ResponseEntity.ok(null);
+    }
+    
+    @ResponseBody
+    @PutMapping("/notification/read")
+    public ResponseEntity<?> readNotification(@RequestParam(name = "id") Long id) {
+    	log.info("업데이트 시도");
+    	
+    	userService.updateNotificationReadById(id);
+    	
+    	return ResponseEntity.ok(null);
     }
 }
