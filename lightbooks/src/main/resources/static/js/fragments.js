@@ -106,18 +106,37 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 	
 	// ============ 모달 ============
-	// 모달창 nav 뒤로 밀어버리는 코드
 	const navbar = document.querySelector('.navbar');
 	const modalEl = document.getElementById('signModal');
-
-	// 모달이 열릴 때만 적용
+	const navCollapse = document.getElementById('navbarSupportedContent');
+	// collapse 토글 버튼 이벤트 감지
+	const toggler = document.querySelector('.navbar-toggler');
+	
+	toggler.addEventListener('click', () => {
+		
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200';
+	});
+	
 	modalEl.addEventListener('show.bs.modal', () => {
-	  navbar.classList.add('modal-open-navbar');
+	  // collapse가 열려 있으면 닫고 숨김
+	  if (navCollapse.classList.contains('show')) {
+	    const collapseInstance = bootstrap.Collapse.getInstance(navCollapse);
+	    if (collapseInstance) {
+	      collapseInstance.hide(); // Bootstrap 방식으로 닫기
+	    }
+	  }
+	  
+	  navbar.style.position = 'static';
+	  navbar.style.zIndex = '1';
+	});
+	
+	// 모달 닫힐 때 다시 복구
+	modalEl.addEventListener('hidden.bs.modal', () => {
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200'
 	});
 
-	modalEl.addEventListener('hidden.bs.modal', () => {
-	  navbar.classList.remove('modal-open-navbar');
-	});
 	// 스크롤 이벤트 리스너 추가
 	window.addEventListener('scroll', () => {
 	  // 스크롤이 10px 이상 내렸다면

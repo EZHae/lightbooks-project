@@ -36,23 +36,24 @@
 					padding-right: 10%; /* 우측 여백을 비율로 설정 */
 					transition: box-shadow 0.3s ease; /* 부드럽게 그림자가 생기고 사라짐 */
 				}
-				/* 모달 열릴 때만 임시 적용되는 클래스 */
-				.modal-open-navbar {
-				  position: static !important;
-				  z-index: 1 !important;
-				}
-				.navbar-collapse {
-				  background-color: white;   /* 미리 배경 줘버리기 */
-				  margin-top: 1px;
-				  padding: 1rem;
-				  transition: height 0.3s ease;
-				}
-				/* collapse가 열릴 때 배경색 유지 */
-				.navbar-collapse.show {
-				  background-color: white;   /* 네비 토글 열릴 때 흰 배경 */
-				  border-radius: 0 0 8px 8px;
-				  z-index: 1100;             /* z-index는 navbar보다 살짝 낮게 */
-				}
+					/* 모달 열릴 때만 임시 적용되는 클래스 */
+					.modal-open-navbar {
+					  position: static !important;
+					  z-index: 1 !important;
+					}
+					.navbar-collapse {
+					  background-color: white;   /* 미리 배경 줘버리기 */
+					  padding: 1rem;
+					  height: 70px;
+					  transition: height 0.3s ease;
+					}
+					/* collapse가 열릴 때 배경색 유지 */
+					.navbar-collapse.show {
+					  background-color: white;   /* 네비 토글 열릴 때 흰 배경 */
+					  border-radius: 0 0 8px 8px;
+					  height: 100%;
+					  z-index: 1100;             /* z-index는 navbar보다 살짝 낮게 */
+					}
 				
 				.footer {
 					background-color: white;
@@ -149,7 +150,7 @@
 				}
 				
             </style>
-            <div class="container-fluid mt-1">
+            <div class="container-fluid">
                 <a class="navbar-brand" th:href="@{/}">
                     <img th:src="@{#}" />
                     로고예정

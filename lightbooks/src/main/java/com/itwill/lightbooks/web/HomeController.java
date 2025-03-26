@@ -193,7 +193,7 @@ public class HomeController {
 				return "free/screen/fantasy";
 			}
 			case 5 -> {
-				// 무료 로판
+				// 무료 로맨스
 				model.addAttribute("novels", novelService.getFreeByGenre(0, "로맨스", 300));
 				return "free/screen/romance";
 			}
@@ -201,6 +201,21 @@ public class HomeController {
 				// 무료 무협
 				model.addAttribute("novels", novelService.getFreeByGenre(0, "무협", 300));
 				return "free/screen/martialArts";
+			}
+			case 7 -> {
+				// 무료 로판
+				model.addAttribute("novels", novelService.getFreeByGenre(0, "로판", 300));
+				return "free/screen/romancefantasy";
+			}
+			case 8 -> {
+				// 무료 현판
+				model.addAttribute("novels", novelService.getFreeByGenre(0, "현판", 300));
+				return "free/screen/modernfantasy";
+			}
+			case 9 -> {
+				// 무료 드라마
+				model.addAttribute("novels", novelService.getFreeByGenre(0, "드라마", 300));
+				return "free/screen/drama";
 			}
 			default -> {
 				return "error/404";
@@ -229,17 +244,32 @@ public class HomeController {
 			case 4 -> {
 				// 유료 판타지
 	//			model.addAttribute("novels", novelService.getPaidByGenre("fantasy"));
-				return "paid/screen/paidfantasy";
+				return "paid/screen/fantasy";
 			}
 			case 5 -> {
-				// 유료 로판
+				// 유료 로맨스
 	//			model.addAttribute("novels", novelService.getPaidByGenre("romance-fantasy"));
-				return "paid/screen/paidromancefantasy";
+				return "paid/screen/romance";
 			}
 			case 6 -> {
-				// 유료 현판
+				// 유료 무협
 	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
-				return "paid/screen/paidmodernfantasy";
+				return "paid/screen/martialArts";
+			}
+			case 7 -> {
+				// 유료 무협
+	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
+				return "paid/screen/romancefantasy";
+			}
+			case 8 -> {
+				// 유료 무협
+	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
+				return "paid/screen/martialArts";
+			}
+			case 9 -> {
+				// 유료 무협
+	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
+				return "paid/screen/martialArts";
 			}
 			default -> {
 				return "error/404";
