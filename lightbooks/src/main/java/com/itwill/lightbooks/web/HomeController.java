@@ -199,7 +199,7 @@ public class HomeController {
 			}
 			case 6 -> {
 				// 무료 무협
-	//			model.addAttribute("novels", novelService.getFreeByGenre("modern-fantasy"));
+				model.addAttribute("novels", novelService.getFreeByGenre(0, "무협", 300));
 				return "free/screen/martialArts";
 			}
 			default -> {

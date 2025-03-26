@@ -105,6 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	    return true;
 	}
 	
+	const spanCountNoReadNotification = document.querySelector('span#countNoReadNotification');
+	
+	
+	
 	// ============ 모달 ============
 	// 모달창 nav 뒤로 밀어버리는 코드
 	const navbar = document.querySelector('.navbar');
