@@ -62,7 +62,8 @@ public class Bookmark {
 	@Column(name = "access_time", nullable = false, insertable = false)
 	private LocalDateTime accessTime;
 	
-	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
+	@CreatedDate
+	@Column(name = "created_time", nullable = false)//수정
 	private LocalDateTime createdTime;
 	
 	// accessTime 업데이트 메서드
