@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			if (data && data.totalPages <= currentPageNo + 1) {
 			        isLastPage = true;
-			        itemList.insertAdjacentHTML('beforeend', '<p>마지막 페이지입니다.</p>');
+			        //itemList.insertAdjacentHTML('beforeend', '<p>마지막 페이지입니다.</p>');
 			    }
 			
         } catch (error) {
@@ -78,19 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	        if (reset) itemList.innerHTML = '';
 	        if (!data.content || data.content.length === 0) {
 	            if (reset) {
-	                itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>';
+	                itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>' + '<br>'.repeat(8);
 	            }
 	            return;
 	        }
 
 	        let row = document.createElement('div'); // row 컨테이너 생성
-	        row.classList.add('row'); // row 클래스 추가
+	        row.classList.add('card-grid'); // row 클래스 추가
 
 	        data.content.forEach(item => {
 	            let itemHtml = `
 	                <div class="item">
 	                    <div class="image-container">
-	                        <img src="${item.coverSrc}" alt="${item.novelTitle}">
+	                        <img id="bookmarkimage" src="${item.coverSrc}" alt="${item.novelTitle}">
 	                    </div>
 	                    <div class="text-container">
 	                        <div class="gradeIcon">
@@ -155,5 +155,3 @@ document.addEventListener('DOMContentLoaded', () => {
    }
 
 });
-
-

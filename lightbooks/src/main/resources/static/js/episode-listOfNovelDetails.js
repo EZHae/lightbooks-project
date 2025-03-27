@@ -305,4 +305,36 @@ document.addEventListener('DOMContentLoaded', () => { //지우면 안됨!!!!!!!!
          }
       });
    }
+   
+   // ============ 모달 ============
+   // navbar 및 모든 모달 처리
+   const navbar = document.querySelector('.navbar');
+
+   // 모든 모달 요소를 가져옴
+   const modals = document.querySelectorAll('.modal');
+
+   // 각 모달에 이벤트 리스너 추가
+   modals.forEach(modalEl => {
+       // 모달 열릴 때 navbar 위치 변경
+       modalEl.addEventListener('show.bs.modal', () => {
+           navbar.style.position = 'static';     // navbar를 static으로 만들어서 모달 앞에 겹치지 않도록
+           navbar.style.zIndex = '1';            // z-index 낮추기
+       });
+
+       // 모달 닫힐 때 navbar 복구
+       modalEl.addEventListener('hidden.bs.modal', () => {
+           navbar.style.position = 'sticky';    // 모달 닫으면 다시 sticky로 복원
+           navbar.style.zIndex = '1005';         // z-index 복원
+       });
+   });
+
+   // 스크롤 이벤트 리스너 추가
+   window.addEventListener('scroll', () => {
+       // 스크롤이 10px 이상 내렸다면
+       if (window.scrollY > 10) {
+           navbar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)'; // 그림자 효과 추가
+       } else {
+           navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
+       }
+   });
 });

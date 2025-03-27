@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{layout/fragments :: htmlHead('회차 새글 작성')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 회차 새글 작성')}"></head>
    <body>
       <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
       
@@ -65,7 +65,7 @@
          
                      <div class="form-group">
                          <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
-                         <textarea id="content" name="content" th:value="*{content}" rows="10" class="form-control" required
+                         <textarea id="content" name="content" th:value="*{content}" rows="14" class="form-control" required
                                    placeholder="내용을 입력하세요"></textarea>
                      </div>
          
@@ -82,10 +82,9 @@
             </div>
       </main>
       
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/episode-create.js}"></script>
-   </body>
-</html>
 	</body>
 </html>

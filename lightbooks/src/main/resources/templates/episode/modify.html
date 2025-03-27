@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{layout/fragments :: htmlHead('회차 수정')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 회차 수정')}"></head>
    <body>
       <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
       
@@ -42,7 +42,7 @@
          
                      <div class="form-group">
                          <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
-                         <textarea id="content" th:field="*{content}" rows="10" class="form-control" required
+                         <textarea id="content" th:field="*{content}" rows="14" class="form-control" required
                                    placeholder="내용을 입력하세요"></textarea>
                           <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></div>
                      </div>
@@ -54,6 +54,7 @@
           </div>
       </main>
       
+	  <th:block th:replace="~{layout/fragments :: footer}"></th:block>
       <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
       <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
    </body>
