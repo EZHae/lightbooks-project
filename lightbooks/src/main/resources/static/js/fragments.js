@@ -105,9 +105,98 @@ document.addEventListener('DOMContentLoaded', () => {
 	    return true;
 	}
 	
-	const spanCountNoReadNotification = document.querySelector('span#countNoReadNotification');
+	// 로그인 상태면 안읽은 알림과 그 개수 가져오기
+	if (document.querySelector('span#userId')) {
+		readNotificationAtFragment();
+		
+		const userId = document.querySelector('span#userId').textContent;
+		btnAllRead.addEventListener('click', () => {
+			axios.put(`/user/notification/read/all?userId=${userId}`).then(response => {
+				console.log(response);
+				readNotificationAtFragment()
+			}).catch(error => {
+				console.error(error);
+			});
+		});
+	}
 	
-	
+	function readNotificationAtFragment() {
+		const userId = document.querySelector('span#userId').textContent;
+		const spanCountNoReadNotification = document.querySelector('span#countNoReadNotification');
+		const btnAllRead = document.querySelector('button#btnAllRead');
+
+		axios.get(`/user/notification/fragment?userId=${userId}`).then(response => {
+			console.log(response);
+			const notifications = response.data.notifications;
+			
+			if (response.data.count === 0) {
+				if (!spanCountNoReadNotification.className.match('d-none')) {
+					spanCountNoReadNotification.classList.add('d-none');	
+				}
+				const liNoReadNotification = document.querySelector('li#noReadNotification');
+				liNoReadNotification.innerHTML = 
+				`
+					<div class="m-1 mt-2">
+						<div class="card card-body">
+							<span>새로운 알림이 없습니다.</span>
+						</div>
+					</div>
+				`;
+				btnAllRead.classList.add('disabled');
+			}
+			
+			if (response.data.count > 0) {
+				spanCountNoReadNotification.textContent = response.data.count;
+				if (spanCountNoReadNotification.className.match('d-none')) {
+					spanCountNoReadNotification.classList.remove('d-none');	
+				}
+				btnAllRead.classList.remove('disabled');			
+				
+				let html = '';
+				const liNoReadNotification = document.querySelector('li#noReadNotification');
+				let target;
+				notifications.forEach(notification => {
+					let createdTime = formatDateTime(notification.createdTime);
+					target = notification.target;
+					html += 
+					`	
+						<div class="m-1 mt-2">
+							<a class="text-decoration-none text-black notification-item" href="#" data-id="${notification.id}">
+								<div class="card card-body notification-div">
+									<div>
+										${notification.msg}
+									</div><br>
+									<div class="text-end">
+										${createdTime}
+									</div>
+								</div>
+							</a>
+						</div>
+
+					`
+				});
+				liNoReadNotification.innerHTML = html;
+				
+				const aNotificationItems = document.querySelectorAll('.notification-item');
+				aNotificationItems.forEach(item => {
+					item.addEventListener('click', (event) => {
+						console.log(event.target.closest('.notification-item'));
+						let notificationId = event.target.closest('.notification-item').dataset.id;
+						
+						axios.put(`/user/notification/read?id=${notificationId}`).then(response => {
+							console.log('읽음으로 변환');
+							window.location.href = target;
+						}).catch(error => {
+							console.error(error);
+						});	
+					});
+				});
+			}
+			
+		}).catch(error => {
+			console.log(error);
+		});
+	}
 	
 	// ============ 모달 ============
 	const navbar = document.querySelector('.navbar');
@@ -149,4 +238,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	    navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
 	  }
 	});
+	
+	function formatDateTime(dateTimeString) {
+	    const date = new Date(dateTimeString);
+	    return date.toLocaleString('ko-KR', { 
+	        year: 'numeric', 
+	        month: '2-digit', 
+	        day: '2-digit', 
+	        hour: '2-digit', 
+	        minute: '2-digit', 
+	    });
+	}
 });

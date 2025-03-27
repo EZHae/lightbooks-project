@@ -147,4 +147,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		document.body.appendChild(blocker);
 	}
+	
+	// ============ 모달 ============
+	const navbar = document.querySelector('.navbar');
+	const modalEl = document.getElementById('ticketExchangeModal');
+	const navCollapse = document.getElementById('navbarSupportedContent');
+	// collapse 토글 버튼 이벤트 감지
+	const toggler = document.querySelector('.navbar-toggler');
+
+	toggler.addEventListener('click', () => {
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200';
+	});
+
+	modalEl.addEventListener('show.bs.modal', () => {
+	  // collapse가 열려 있으면 닫고 숨김
+	  if (navCollapse.classList.contains('show')) {
+	    const collapseInstance = bootstrap.Collapse.getInstance(navCollapse);
+	    if (collapseInstance) {
+	      collapseInstance.hide(); // Bootstrap 방식으로 닫기
+	    }
+	  }
+	  
+	  navbar.style.position = 'static';
+	  navbar.style.zIndex = '1';
+	});
+
+	// 모달 닫힐 때 다시 복구
+	modalEl.addEventListener('hidden.bs.modal', () => {
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200'
+	});
+
+	// 스크롤 이벤트 리스너 추가
+	window.addEventListener('scroll', () => {
+	  // 스크롤이 10px 이상 내렸다면
+	  if (window.scrollY > 10) {
+	    navbar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)'; // 그림자 효과 추가
+	  } else {
+	    navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
+	  }
+	});
 });

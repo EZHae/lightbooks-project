@@ -55,6 +55,7 @@ public class BookmarkService {
     			.user(userRepo.findById(dto.getUserId()).orElseThrow())
     			.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
     			.episode(epiRepo.findById(dto.getEpisodeId()).orElseThrow())
+    			.createdTime(LocalDateTime.now()) // 
     			.type(2).build();
     	
     	Bookmark savedBookmark = bookmarkRepo.save(bookmark);
@@ -161,6 +162,7 @@ public class BookmarkService {
                         .novel(episode.getNovel()) // Novel 정보 저장
                         .type(1) // 최근 본 회차
                         .accessTime(LocalDateTime.now())
+                        .createdTime(LocalDateTime.now())
                         .build();
                 bookmarkRepo.save(newBookmark);
             } else {
@@ -248,14 +250,33 @@ public class BookmarkService {
         Page<Bookmark> page = bookmarkRepo.findPurchasedNovelsWithNovelByUserIdOrderByCreatedTimeDesc(userId, pageRequest);
 
         return page.map(bookmark -> {
+        	Episode episode = bookmark.getEpisode();
             Novel novel = bookmark.getNovel();
+            log.info("novel ={}", novel);
+
+            if (episode == null || novel == null) {
+                // episode 또는 novel이 null인 경우 로그 처리 또는 예외 발생
+                log.error("Episode or Novel not found. bookmarkId: {}", bookmark.getId());
+                return null; // 또는 예외 발생
+            }
+        	
             PurchasedNovelBookmarkDto dto = new PurchasedNovelBookmarkDto();
             dto.setNovelId(novel.getId());
+            dto.setEpisodeNum(episode.getEpisodeNum());//추가
+            log.info("episodeNum ={}", episode.getEpisodeNum());
             dto.setNovelTitle(novel.getTitle());
             dto.setNovelIntro(novel.getIntro());
             dto.setNovelGrade(novel.getGrade());
             dto.setCoverSrc(novel.getCoverSrc());
-            dto.setPurchasedDate(bookmark.getCreatedTime()); // 구매일시 설정
+            LocalDateTime createdTime = bookmark.getCreatedTime();
+            if (createdTime != null) {
+                dto.setPurchasedDate(createdTime);
+                log.info("createdTime ={}", createdTime);
+            } else {
+            	dto.setPurchasedDate(LocalDateTime.now());
+            	log.info("createdTime={}", LocalDateTime.now());
+            }
+            log.info("bookmark createdtime 나와? = {}", bookmark.getCreatedTime());
             dto.setNovelWriter(novel.getWriter());
             dto.setLikeCount(novel.getLikeCount());
 	        dto.setNovelGenres(novel.getNovelGenre() == null || novel.getNovelGenre().isEmpty()
