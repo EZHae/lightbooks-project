@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// ============ 모달 ============
 	// 모달창 nav 뒤로 밀어버리는 코드
 	const navbar = document.querySelector('.navbar');
-	const modalEl = document.getElementById("coinBuyModal");
+	const modalEl = document.getElementById("statsModal");
 
 	// 모달 열릴 때 navbar 위치 변경
 	modalEl.addEventListener('show.bs.modal', () => {
