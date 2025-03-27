@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			if (data && data.totalPages <= currentPageNo + 1) {
 			        isLastPage = true;
-			        itemList.insertAdjacentHTML('beforeend', '<p>마지막 페이지입니다.</p>');
+			        //itemList.insertAdjacentHTML('beforeend', '<p>마지막 페이지입니다.</p>');
 			    }
 			
         } catch (error) {
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	            let itemHtml = `
 	                <div class="item">
 	                    <div class="image-container">
-	                        <img src="${item.coverSrc}" alt="${item.novelTitle}">
+	                        <img id="bookmarkimage" src="${item.coverSrc}" alt="${item.novelTitle}">
 	                    </div>
 	                    <div class="text-container">
 	                        <div class="gradeIcon">
@@ -155,5 +155,3 @@ document.addEventListener('DOMContentLoaded', () => {
    }
 
 });
-
-
