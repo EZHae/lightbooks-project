@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.MileagePayment;
 import com.itwill.lightbooks.domain.Notification;
-import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
@@ -25,6 +25,7 @@ import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
+import com.itwill.lightbooks.repository.coinpayment.CoinPaymentRepository;
 import com.itwill.lightbooks.repository.mileagepayment.MileagePaymentRepository;
 import com.itwill.lightbooks.repository.notification.NotificationRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
@@ -45,6 +46,7 @@ public class UserService implements UserDetailsService {
 	private final PasswordEncoder passwordEncoder;
 	private final NovelRepository novelRepo;
 	private final NotificationRepository notifiRepo;
+	private final CoinPaymentRepository coinPaymentRepo;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -236,5 +238,21 @@ public class UserService implements UserDetailsService {
 	
 	public void updateNotificationReadById(Long id) {
 		notifiRepo.updateNotificationReadById(id);
+	}
+	
+	public void saveCoinPaymentFromDonation(PaymentRequestDto dto) {
+		CoinPayment coinPayment = CoinPayment.builder()
+				.userId(dto.getUserId())
+				.type(3)
+				.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
+				.coin(dto.getCoin()).build();
+		coinPaymentRepo.save(coinPayment);
+	}
+	public List<Object[]> test(Long novelId) {
+		List<Object[]> test = coinPaymentRepo.findDonationRankingByNovelId(novelId);	
+		test.forEach(dto -> log.info("testdto={}", dto));
+
+		
+		return test;
 	}
 }

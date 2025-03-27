@@ -1,10 +1,8 @@
 package com.itwill.lightbooks.web;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate; //통계 차트때문에 추가
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,12 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.itwill.lightbooks.domain.Bookmark;
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.MileagePayment;
 import com.itwill.lightbooks.domain.Notification;
-import com.itwill.lightbooks.domain.Ticket;
 import com.itwill.lightbooks.domain.TicketPayment;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.domain.UserWallet;
@@ -544,5 +537,23 @@ public class UserController {
     	userService.updateNotificationReadById(id);
     	
     	return ResponseEntity.ok(null);
+    }
+    
+    @ResponseBody
+    @PostMapping("/donation")
+    public ResponseEntity<?> donation(@RequestBody PaymentRequestDto dto) {
+    	log.info("donation(dto={})", dto);
+    	
+    	userService.saveCoinPaymentFromDonation(dto);
+    	
+    	return ResponseEntity.ok(null);
+    }
+    
+    @ResponseBody
+    @GetMapping("/donation/ranking")
+    public ResponseEntity<List<Object[]>> test(@RequestParam(name = "novelId") Long novelId) {
+    	List<Object[]> result = userService.test(novelId);
+    	
+    	return ResponseEntity.ok(result);
     }
 }

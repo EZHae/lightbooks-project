@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 올라잇')}"></head>
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 무료 - 오늘신작')}"></head>
+	
 	<!-- 스와이퍼 -->
 	<link
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
-	<body>
+	<body th:attr="data-screen-id=${screenId}">
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
 				<div class="container">
@@ -15,114 +16,23 @@
 					
 										
 					<div class="novel-container">
-						
-						<section class="bestNovels">
-							<div class="subTitle">
-								<span class="font">라잇 베스트</span>			
-								<i class="bi bi-caret-right-fill"></i>											
-							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${bestNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-									
-										<!-- 표지 이미지 -->
-							        	<img class="novelImgs" th:src="${novel.coverSrc}">
-							        	<!-- 제목 -->
-							        	<span th:text="${novel.title}"></span>
-							        	<!-- 작가 -->
-							        	<span th:text="${novel.writer}"></span>
-							        	<i class="bi bi-heart"></i>
-							        	<!-- 좋아요 -->
-									  	<span th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
-									  	<i class="bi bi-star"></i>
-									  	<!-- 조회수 -->
-									  	<span th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
-									  	<i class="bi bi-person-plus-fill"></i>
-<!-- 									  	<span th:if="${viewsMap != null and viewsMap.get(novel.id) != null}" -->
-<!--     								  			th:text="${viewsMap.get(novel.id)}"></span> -->
-									</a>
-								</div>
-							</div>
-						</section>
+						<section class="bestNovels" id="bestNovelsContainer">
+							<div class="novel-grid" id="novel-grid">
 							
-						
-						<section class="freeNovels">
-							<div class="subTitle">
-								<span class="font">라잇 무</span>			
-								<i class="bi bi-caret-right-fill"></i>											
-							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${freeNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-										<!-- 표지 이미지 -->
-							        	<img class="novelImgs" th:src="${novel.coverSrc}">
-									</a>
-								</div>
+							
 							</div>
 						</section>
-						
-						
-						<section class="paidNovels">
-							<div class="subTitle">
-								<span class="font">라잇 유</span>			
-								<i class="bi bi-caret-right-fill"></i>											
-							</div>
-						
-							<div class="novel-grid">
-								<div class="novel-card"  th:each="novel : ${paidNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-										<img class="novelImgs" th:src="${novel.coverSrc}" alt="cover">
-									</a>
-								</div>
-							</div>
-						</section>
-											
-						
-					
-						<section class="genre-novels">
-							<div th:each="entry : ${genreNovelsMap}">
-								
-								<!-- 장르명 -->
-								<div class="subTitle">
-									<span class="font" th:text="${entry.key} + ' 소설'"></span>
-									<i class="bi bi-caret-right-fill"></i>
-								</div>
-						
-								<!-- 소설 목록 (그리드) -->
-								<div class="novel-grid">
-									<div class="novel-card" th:each="novel : ${entry.value}">
-										<a th:href="@{/novel/{id}(id=${novel.id})}">
-											<img class="novelImgs" th:src="${novel.coverSrc}" alt="cover">
-										</a>
-									</div>
-								</div>
-							</div>
-						</section>
-						
-						<section class="eventNovels">
-							<div class="subTitle">
-								<span class="font">라잇 이벤트</span>			
-								<i class="bi bi-caret-right-fill"></i>											
-							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${eventNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-										<img class="novelImgs" th:src="${novel.coverSrc}" alt="cover">
-									</a>
-								</div>
-							</div>
-						</section>
+					</div>
 				</div>
-			</div>
-		</div>	
+			</div>	
 		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-        <script th:src="@{/js/home.js}"></script>
+        <script th:src="@{/js/home-paid.js}"></script>
         
         <!-- 스와이퍼 -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 	</body>
-	<link rel="stylesheet" th:href="@{/css/home.css}" />
+	<link rel="stylesheet" th:href="@{/css/home-paid.css}" />
 </html>

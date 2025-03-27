@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<div th:fragment="donationModal">
+		<div class="modal fade" id="donationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+		    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h1 class="modal-title fs-5" id="exampleModalLabel">작품 후원</h1>
+		                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		            </div>
+		            <div class="modal-body">
+						<ul class="nav nav-tabs">
+							<li class="nav-item">
+								<a class="nav-link nav-tab-item" href="#" data-itemname="donation">후원하기</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link nav-tab-item" href="#" data-itemname="donationRanking">후원랭킹</a>
+							</li>
+						</ul>
+						
+						<div id="tabResultSection" class="mt-2">
+							<div>
+								<span>메뉴를 선택해주세요.</span><br>
+								<span>해당 소설의 작가에게 후원을 하거나 후원랭킹을 볼 수 있습니다.</span>
+							</div>
+						</div>
+		            </div>
+		            <div class="modal-footer">
+		                
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</html>

@@ -23,18 +23,19 @@ public interface NovelQuerydsl {
 	
 	// 메인 페이지
 	List<NovelListItemDto> findRandomBestNovels(int count);
-	List<Novel> findFreeNovels(int limit);
-	List<Novel> findPaidNovels(int limit);
-	List<Novel> findNovelsByGenreName(String genreName, int limit);
-	List<Novel> findRandomNovels(int limit);
+	List<NovelListItemDto> findFreeNovels(int limit);
+	List<NovelListItemDto> findPaidNovels(int limit);
+	List<NovelListItemDto> findNovelsByGenreName(String genreName, int limit);
+	List<NovelListItemDto> findRandomNovels(int limit);
+	List<NovelListItemDto> findAllOrderByLikeDesc(int limit);
 	
-	// 무료 페이지
-	List<NovelListItemDto> findByFreeGradeOrderByNew(int limit);				
-	List<NovelListItemDto> findByFreeGradeAndSerialOrderByPopularity(int limit);
-	List<NovelListItemDto> findByFreeGradeAndCompletedOrderByPopularity(int limit);
-	List<NovelListItemDto> findByFreeGradeEventOrderByNew(int limit);
-	List<NovelListItemDto> findByFreeGradeAndGenreRandom(String genreName, int limit);
-	List<Novel> findFreeOrderByLikeDesc();
-	List<NovelListItemDto> findbyGradeAndGenre(int grade, String genreName, int limit);
+	// 무료 페이지 / 유료 페이지 
+	List<NovelListItemDto> findByGradeOrderByNew(int grade ,int limit);				
+	List<NovelListItemDto> findByGradeAndSerialOrderByPopularity(int grade,int state ,int limit);
+	List<NovelListItemDto> findByGradeAndCompletedOrderByPopularity(int grade,int state ,int limit);
+	List<NovelListItemDto> findByGradeEventOrderByNew(int grade, int limit);
+	List<NovelListItemDto> findByGradeAndGenreRandom(int grade, String genreName, int limit);
+	List<NovelListItemDto> findOrderByLikeDesc(int grade, int limit);
+	List<NovelListItemDto> findByGradeAndGenre(int grade, String genreName, int limit);
 	
 }

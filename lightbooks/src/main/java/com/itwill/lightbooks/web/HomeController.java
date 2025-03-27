@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.domain.User;
+import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelResponseDto;
 import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.service.EpisodeService;
@@ -33,6 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class HomeController {
 
+	public static final int STATE_COMPLETE = 0; // 완결
+	public static final int STATE_SERIAL = 1; // 연재중
+	public static final int GRADE_FREE = 0; // 무료
+	public static final int GRADE_PAID = 1; // 유료
 	private final NovelService novelService;
 	private final EpisodeService episodeService;
 	private final UserService userService;
@@ -45,33 +50,31 @@ public class HomeController {
 	    model.addAttribute("screenId", 1); // 올 라잇 화면과 동일한 처리
 	    model.addAttribute("mainCategory", "recommend");
 	    model.addAttribute("currentURI", request.getRequestURI()); // 추가!
-	    loadHomeData(request, model); // 홈 데이터 로딩
 	    
 		return "home";
 	}
+	
 	// 무료 페이지
 	@GetMapping("/free")
 	public String freehome(HttpServletRequest request, Model model) {
-		log.info("home()");
+		log.info("freehome()");
 		
 		model.addAttribute("menuId", 158);
 	    model.addAttribute("screenId", 1); // 올 라잇 화면과 동일한 처리
 	    model.addAttribute("mainCategory", "free");
 	    model.addAttribute("currentURI", request.getRequestURI()); // 추가!
-	    loadHomeData(request, model); // 홈 데이터 로딩
 	    
 		return "freehome";
 	}
 	// 유료 페이지
 	@GetMapping("/paid")
 	public String paidhome(HttpServletRequest request, Model model) {
-		log.info("home()");
+		log.info("paidhome()");
 		
 		model.addAttribute("menuId", 159);
 	    model.addAttribute("screenId", 1); // 올 라잇 화면과 동일한 처리
 	    model.addAttribute("mainCategory", "paid");
 	    model.addAttribute("currentURI", request.getRequestURI()); // 추가!
-	    loadHomeData(request, model); // 홈 데이터 로딩
 	    
 		return "paidhome";
 	}
@@ -89,37 +92,22 @@ public class HomeController {
 
        return handleRecommend(screenId, model, request);
    }
-
-	// 무료 페이지의 서브카테고리
-   @GetMapping("/free/{menuId}/screen/{screenId}")
-   public String freeRouter(@PathVariable Integer menuId,
-                            @PathVariable Integer screenId,
+   // 유료/무료 페이지의 서브카테고리
+   @GetMapping("/{type}/{menuId}/screen/{screenId}")
+   public String handleScreenRoute(@PathVariable String type,
+		   						@PathVariable Integer menuId,
+		   						@PathVariable Integer screenId,
                             Model model,
                             HttpServletRequest request) {
        model.addAttribute("menuId", menuId);
        model.addAttribute("screenId", screenId);
-       model.addAttribute("mainCategory", "free");
+       model.addAttribute("mainCategory", type);
        model.addAttribute("currentURI", request.getRequestURI());
 
-       return handleFree(screenId, model, request);
+       return handleScreen(type,screenId, model, request);
    }
    
-   // 유료 페이지의 서브카테고리
-   @GetMapping("/paid/{menuId}/screen/{screenId}")
-   public String paidRouter(@PathVariable Integer menuId,
-                            @PathVariable Integer screenId,
-                            Model model,
-                            HttpServletRequest request) {
-       model.addAttribute("menuId", menuId);
-       model.addAttribute("screenId", screenId);
-       model.addAttribute("mainCategory", "paid");
-       model.addAttribute("currentURI", request.getRequestURI());
-
-       return handlePaid(screenId, model, request);
-   }
    
-
-
    @GetMapping("/coinshop")
    public void coinshop() {
       log.info("coinshop()");
@@ -137,164 +125,152 @@ public class HomeController {
     }
     
    
-    // ======================================== 데이터 case 처리 ========================================
-    // 메인 홈 데이터
-	private void loadHomeData(HttpServletRequest request, Model model) {
-		model.addAttribute("bestNovels", novelService.getRandemBestNovels(12));
-		model.addAttribute("freeNovels", novelService.getNovelsByFreeGrade(6));
-		model.addAttribute("paidNovels", novelService.getNovelsByPaidGrade(6));
-		model.addAttribute("genreNovelsMap", novelService.getFixedGenreNovels(6));
-		model.addAttribute("eventNovels", novelService.getEventNovels(6));
-		
-		model.addAttribute("requestURI", request.getRequestURI());
-	}
-	// 프리 홈 데이터
-	private void loadFreeHomeData(HttpServletRequest request, Model model) {
-		model.addAttribute("bestNovels", novelService.getFreeRecommendNewNovels(12));
-		model.addAttribute("freeNovels", novelService.getFreesPopularSerialNovels(6));
-		model.addAttribute("paidNovels", novelService.getFreePopularCompletedNovels(6));
-		model.addAttribute("genreNovelsMap", novelService.getFreeGenreNovels(6));
-		model.addAttribute("eventNovels", novelService.getFreeEventNovels(6));
-		
-		model.addAttribute("requestURI", request.getRequestURI());
-	}
-	// 유료 홈 데이터
-	private void loadPaidHomeData(HttpServletRequest request, Model model) {
-//		model.addAttribute("bestNovels", novelService.getFreeRecommendNewNovels(12));
-//		model.addAttribute("freeNovels", novelService.getFreesPopularSerialNovels(6));
-//		model.addAttribute("paidNovels", novelService.getFreePopularCompletedNovels(6));
-//		model.addAttribute("genreNovelsMap", novelService.getFreeGenreNovels(6));
-//		model.addAttribute("eventNovels", novelService.getFreeEventNovels(6));
-//		
-//		model.addAttribute("requestURI", request.getRequestURI());
-	}
-	
-	// 무료 케이스
-	private String handleFree(Integer screenId, Model model, HttpServletRequest request) {
+    // ======================================== 데이터 비동기 / case 처리 ========================================
+    // 비동기 api 작성
+    @ResponseBody
+    @GetMapping("/api/recommend/home")
+    public ResponseEntity<?> recommendHome() {
+    	
+ 	   Map<String, Object> data = Map.of(
+         "bestNovels", novelService.getRandemBestNovels(12),
+         "freeNovels", novelService.getNovelsByFreeGrade(6),
+         "paidNovels", novelService.getNovelsByPaidGrade(6),
+         "genreNovelsMap", novelService.getFixedGenreNovels(6),
+         "eventNovels", novelService.getEventNovels(6)
+         );
+ 	   
+ 	   
+ 	   return ResponseEntity.ok(data);
+    }
+    
+    @ResponseBody
+    @GetMapping("/api/recommend/best")
+    public ResponseEntity<?> recommendBest(@RequestParam(defaultValue = "100") int limit) {
+ 	   return ResponseEntity.ok(novelService.getRecommendedBest(limit));
+    }
+    
+    @ResponseBody
+    @GetMapping("/api/recommend/new")
+    public ResponseEntity<?> recommendNew() {
+ 	   return ResponseEntity.ok(novelService.getRecommendedNew());
+    }
+    
+ // 무료소설 (free)
+    @ResponseBody
+    @GetMapping("/api/free/home")
+    public ResponseEntity<?> freeHome() {
+        Map<String, Object> data = Map.of(
+            "bestNovels", novelService.getRecommendNewNovels(GRADE_FREE, 12),
+            "freeNovels", novelService.getPopularSerialNovels(GRADE_FREE, STATE_SERIAL, 6),
+            "paidNovels", novelService.getPopularCompletedNovels(GRADE_FREE, STATE_COMPLETE, 6),
+            "genreNovelsMap", novelService.getGenreNovels(GRADE_FREE, 6),
+            "eventNovels", novelService.getEventNovels(GRADE_FREE, 6)
+        );
+        return ResponseEntity.ok(data);
+    }
+    @ResponseBody
+    @GetMapping("/api/free/best")
+    public ResponseEntity<?> freeBest(@RequestParam(defaultValue = "100") int limit) {
+ 	   return ResponseEntity.ok(novelService.getRecommendedFreePaidBest(GRADE_FREE, limit));
+    }
+    @ResponseBody
+    @GetMapping("/api/free/new")
+    public ResponseEntity<?> freeNew() {
+ 	   return ResponseEntity.ok(novelService.getRecommendedNew(GRADE_FREE));
+    }
+    // 유료
+    @ResponseBody
+    @GetMapping("/api/paid/home")
+    public ResponseEntity<?> paidHome() {
+        Map<String, Object> data = Map.of(
+            "bestNovels", novelService.getRecommendNewNovels(GRADE_PAID, 12),
+            "freeNovels", novelService.getPopularSerialNovels(GRADE_PAID, STATE_SERIAL, 6),
+            "paidNovels", novelService.getPopularCompletedNovels(GRADE_PAID, STATE_COMPLETE, 6),
+            "genreNovelsMap", novelService.getGenreNovels(GRADE_PAID, 6),
+            "eventNovels", novelService.getEventNovels(GRADE_PAID, 6)
+        );
+        return ResponseEntity.ok(data);
+    }
+    @ResponseBody
+    @GetMapping("/api/paid/best")
+    public ResponseEntity<?> paidBest(@RequestParam(defaultValue = "100") int limit) {
+        return ResponseEntity.ok(novelService.getRecommendedFreePaidBest(GRADE_PAID, limit));
+    }
+    @ResponseBody
+    @GetMapping("/api/paid/new")
+    public ResponseEntity<?> paidNew() {
+        return ResponseEntity.ok(novelService.getRecommendedNew(GRADE_PAID));
+    }
+    
+    // 장르 api 통합
+    @ResponseBody
+    @GetMapping("/api/{type}/genre/{genreName}")
+    public ResponseEntity<?> novelsByGenre(@PathVariable String type,
+                                           @PathVariable String genreName) {
+        int grade = type.equals("free") ? GRADE_FREE : GRADE_PAID;
+        return ResponseEntity.ok(novelService.getNovelsByGenre(grade, genreName, 50));
+    }
+    
+	//케이스
+	private String handleScreen(String type, Integer screenId, Model model, HttpServletRequest request) {
+		int grade = type.equals("free") ? 0 : 1;
+		String basePath = type + "/screen/";
 		switch (screenId) {
 			case 1 -> {
 				// 자유
-				loadFreeHomeData(request, model);
-				return "freehome";
+				return type + "home";
 			}
 			case 2 -> {
 				// 베스트
-				model.addAttribute("novels", novelService.getFreeRecommendedBest());
-				return "free/screen/freebest";
+				return basePath + type + "best";
 			}
 			case 3 -> {
 				// 무료 오늘신작
-				model.addAttribute("novels", novelService.getFreeRecommendedNew());
-				return "free/screen/freenew";
+				return basePath + type + "new";
 			}
 			case 4 -> {
 				// 무료 판타지
-				model.addAttribute("novels", novelService.getFreeByGenre(0, "판타지", 300)); // 소설 300개
-				return "free/screen/fantasy";
+				return basePath + "fantasy";
 			}
 			case 5 -> {
 				// 무료 로맨스
-				model.addAttribute("novels", novelService.getFreeByGenre(0, "로맨스", 300));
-				return "free/screen/romance";
+				return basePath + "romance";
 			}
 			case 6 -> {
 				// 무료 무협
-				model.addAttribute("novels", novelService.getFreeByGenre(0, "무협", 300));
-				return "free/screen/martialArts";
+				return basePath +"martialArts";
 			}
 			case 7 -> {
 				// 무료 로판
-				model.addAttribute("novels", novelService.getFreeByGenre(0, "로판", 300));
-				return "free/screen/romancefantasy";
+				return basePath +"romanceFantasy";
 			}
 			case 8 -> {
 				// 무료 현판
-				model.addAttribute("novels", novelService.getFreeByGenre(0, "현판", 300));
-				return "free/screen/modernfantasy";
+				return basePath +"modernFantasy";
 			}
 			case 9 -> {
 				// 무료 드라마
-				model.addAttribute("novels", novelService.getFreeByGenre(0, "드라마", 300));
-				return "free/screen/drama";
+				return basePath +"drama";
 			}
 			default -> {
 				return "error/404";
 			}
 		}
 	}
-
-	// 유료 케이스
-	private String handlePaid(Integer screenId, Model model, HttpServletRequest request) {
-		switch (screenId) {
-			case 1 -> {
-				// 유료 올라잇
-	//			model.addAttribute("novels", novelService.getPaidNovels());
-				return "paidhome";
-			}
-			case 2 -> {
-				// 유료 베스트
-	//			model.addAttribute("novels", novelService.getPaidBest());
-				return "paid/screen/paidbest";
-			}
-			case 3 -> {
-				// 유료 오늘신작
-	//			model.addAttribute("novels", novelService.getPaidNew());
-				return "paid/screen/paidnew";
-			}
-			case 4 -> {
-				// 유료 판타지
-	//			model.addAttribute("novels", novelService.getPaidByGenre("fantasy"));
-				return "paid/screen/fantasy";
-			}
-			case 5 -> {
-				// 유료 로맨스
-	//			model.addAttribute("novels", novelService.getPaidByGenre("romance-fantasy"));
-				return "paid/screen/romance";
-			}
-			case 6 -> {
-				// 유료 무협
-	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
-				return "paid/screen/martialArts";
-			}
-			case 7 -> {
-				// 유료 무협
-	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
-				return "paid/screen/romancefantasy";
-			}
-			case 8 -> {
-				// 유료 무협
-	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
-				return "paid/screen/martialArts";
-			}
-			case 9 -> {
-				// 유료 무협
-	//			model.addAttribute("novels", novelService.getPaidByGenre("modern-fantasy"));
-				return "paid/screen/martialArts";
-			}
-			default -> {
-				return "error/404";
-			}
-		}
-	}
-
-   // 추천 케이스
+    //추천 홈 케이스
    private String handleRecommend(Integer screenId, Model model, HttpServletRequest request) {
          switch (screenId) {
          case 1 -> {
             // 올라잇
-            loadHomeData(request, model);
             return "home"; // templates/home.html
          }
          case 2 -> {
             // 베스트
-            model.addAttribute("novels", novelService.getRecommendedBest());
-            return "recommend/screen/recommendbest";
+            return "recommend/screen/recommendBest";
          }
          case 3 -> {
             // 오늘신작
-            Map<LocalDate, List<Novel>> novelsByDate = novelService.getRecommendedNew();
-            model.addAttribute("novels", novelsByDate);
-            return"recommend/screen/recommendnew";
+            return"recommend/screen/recommendNew";
          }
          default -> {
             return "error/404";
@@ -302,5 +278,3 @@ public class HomeController {
       }
    }
 }
-
-

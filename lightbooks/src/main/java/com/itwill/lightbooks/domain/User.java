@@ -56,7 +56,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(name = "img_src")
     private String imgSrc;
     
-    @Column(name = "today_check")
+    @Column(name = "today_check", nullable = false, insertable = false)
     private Integer todayCheck;
 
     @JsonIgnore

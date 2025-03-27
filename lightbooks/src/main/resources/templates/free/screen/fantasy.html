@@ -8,7 +8,7 @@
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
 	
-	<body>
+	<body data-main-category="free" th:attr="data-screen-id=${screenId}">
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 		
 			<div class="wrapper">
@@ -73,32 +73,22 @@
 					</div>
 
 
-					<div class="novel-container">
-						
-						<section class="bestNovels">
-							<div class="subTitle">
-								<span class="font">TOP 300</span>			
-							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${novels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-									
-										<!-- 표지 이미지 -->
-							        	<img class="novelImgs" th:src="${novel.coverSrc}">
-								        	<!-- 제목 -->
-							        	<span class="novel-card-title" th:text="${novel.title}"></span>
-									</a>
-								</div>
-							</div>
-						</section>
-							
+				<div class="novel-container">
+	
+					<section class="bestNovels">
+						<div class="subTitle">
+							<span class="font">TOP 300</span>
+						</div>
+						<div class="novel-grid" id="novel-grid"></div>
+					</section>
+	
 				</div>
-			</div>
+		</div>
 		</div>	
 		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-        <script th:src="@{/js/home.js}"></script>
+        <script th:src="@{/js/home-free.js}"></script>
         <!-- 스와이퍼 -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 무료 - 무협')}"></head>
+	
+	<!-- 스와이퍼 -->
+	<link
+	  rel="stylesheet"
+	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+	/>
+	
+	<body data-main-category="paid" th:attr="data-screen-id=${screenId}">
+		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		
+			<div class="wrapper">
+				<div class="container">
+				
+				<th:block th:replace="~{paidhome :: subcategory}"></th:block>
+					
+					<div class="swiper-container">
+						<!-- 스와이퍼 -->
+						<!-- Slider main container -->
+						<div class="swiper">
+						  <!-- Additional required wrapper -->
+						  <div class="swiper-wrapper">
+						    <!-- Slides -->
+						    <div class="swiper-slide">
+						    	<a href="#">
+							    	<img alt="" src="/images/martialarts_7.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/martialarts_5.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/martialarts_2.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/martialarts_8.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/martialarts_9.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/martialarts_10.jpg">
+						    	</a>
+						    </div>
+						    <div class="swiper-slide">
+						    	<a href="#">
+						    	<img alt="" src="/images/martialarts_11.jpg">
+						    	</a>
+						    </div>
+						    
+						  </div>
+						  <!-- If we need pagination -->
+						  <div class="swiper-pagination"></div>
+						
+						  <!-- If we need navigation buttons -->
+						  <div class="swiper-button-prev"></div>
+						  <div class="swiper-button-next"></div>
+						
+						  <!-- If we need scrollbar -->
+	<!-- 					  <div class="swiper-scrollbar"></div> -->
+						</div>
+					</div>
+
+
+					<div class="novel-container">
+						
+						<section class="bestNovels">
+							<div class="subTitle">
+								<span class="font">TOP 300</span>			
+							</div>
+							<div class="novel-grid" id="novel-grid">
+							
+							</div>
+						</section>
+							
+				</div>
+			</div>
+		</div>	
+		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/home-free.js}"></script>
+        <!-- 스와이퍼 -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+	</body>
+   	<link rel="stylesheet" th:href="@{/css/home-genre.css}" />
+</html>

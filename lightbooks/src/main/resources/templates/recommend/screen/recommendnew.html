@@ -7,7 +7,7 @@
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
-	<body>
+	<body th:attr="data-screen-id=${screenId}">
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
 				<div class="container">
@@ -16,26 +16,11 @@
 					
 										
 					<div class="novel-container">
-						<section class="bestNovels">
-						
-						    <!-- 날짜별 그룹 반복 -->
-   							<div th:each="entry : ${novels}">
-   							
-   							
-   							<!-- 날짜 표시 -->
-      						<h5 class="date-title mt-3" th:text="${#temporals.format(entry.key, 'yyyy년 M월 d일')}"></h5>
-      						
-							
-						      <!-- 그 날짜에 해당하는 소설 리스트 -->
-						      <div class="novel-grid">
-						        <div class="novel-card" th:each="novel : ${entry.value}">
-						          <a th:href="@{/novel/{id}(id=${novel.id})}">
-						            <img class="novelImgs" th:src="${novel.coverSrc}">
-						          </a>
-						        </div>
-						      </div>
-						      
-   							</div>
+						<section class="bestNovels" id="bestNovelsContainer">
+							<div class="novel-grid" id="novel-grid">
+								
+								
+							</div>
 						</section>
 					</div>
 				</div>

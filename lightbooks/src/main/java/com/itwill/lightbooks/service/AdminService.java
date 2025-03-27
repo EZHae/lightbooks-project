@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class AdminService {
 
-	private final CoinPaymentRepository coinPaymentRepo;
+//	private final CoinPaymentRepository coinPaymentRepo;
 	private final CoinPaymentWaitingRepository coinPaymentWaitingRepo;
 	private final NovelGradeRequestRepository novelGradeRequestRepo;
 	
