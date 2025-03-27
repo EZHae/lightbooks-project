@@ -9,7 +9,8 @@
 				<form id="novelForm" method="post" th:action="@{/novel/new}">
 					<div class="row mg-b-25">
 						<div class="col-4">
-							<img th:src="@{/images/testimg.jpg}" style="width: 90%">
+							<!-- 이미지 미리보기 -->
+							<img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기" style="width: 400px; height:600px;">
 						</div>
 						<div class="col-lg-8">
 							<div class="d-none">
@@ -88,8 +89,10 @@
 				            <div>
 				                <label class="form-label">북커버 표지(400x600)</label>
 								<br/>
-								<input type="file" value="파일선택"/>
-								<input type="hidden" name="coverSrc" id="coverSrc" th:value="@{/images/romancefantasy.jpg}">
+								
+								<!-- 파일 선택 (jpeg, png, gif, webp) -->
+								<input type="file" id="coverInput" accept="image/*" value="파일선택"/> 
+								<input type="hidden" name="coverSrc" id="coverSrc">
 				            </div>
 				            <div>
 								<input class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
