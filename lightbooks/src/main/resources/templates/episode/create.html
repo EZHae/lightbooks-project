@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{/layout/fragments :: htmlHead('회차 새글 작성')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('회차 새글 작성')}"></head>
    <body>
-      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+      <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
       
       <main class="card">
          <div class="card-body">
@@ -82,8 +82,8 @@
             </div>
       </main>
       
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/episode-create.js}"></script>
    </body>
 </html>

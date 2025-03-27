@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
 	
 	<style>
 		th, td {
@@ -8,7 +8,7 @@
 		}
 	</style>
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
 		<main class="container-md">
 			<div class="d-flex justify-content-center">
@@ -50,8 +50,8 @@
 			</div>
 		</main>
 		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
 		<script th:src="@{/js/premium-request.js}"></script>
 	</body>
 </html>

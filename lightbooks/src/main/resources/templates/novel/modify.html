@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
 	
 	<style>
 		img {
@@ -10,7 +10,7 @@
 	</style>
 	
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 
 		
 
@@ -127,9 +127,9 @@
         </main>
 		
 		
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/novel-modify.js}"></script>
 	</body>
 </html>

@@ -40,4 +40,16 @@ public class MyworksConroller {
     	model.addAttribute("novels", novels);
     	model.addAttribute("premiumStatus", premiumStatus);
     }
+    
+    @GetMapping("/donation")
+    public void donation(@RequestParam(name = "id") Long id) {
+    	
+    }
+    
+    @GetMapping("/donation-details")
+    public String donationDetails(@RequestParam(name = "id") Long id, @RequestParam(name= "novelId") Long novelId) {
+    	
+    	
+    	return "/myworks/donation-details";
+    }
 }

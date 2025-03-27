@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
 	
 	<style>
 	
@@ -83,14 +83,14 @@
 	</style>
 	
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
-		<th:block th:replace="~{/layout/myworks-fragments :: myworksHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/myworks-fragments :: myworksHeader}"></th:block>
 		<main>
 			<div class="novelList">
 				<div th:each="novel : ${novels}" th:object="${novel}">
 					<div class="my-novel" >
 						<div class="novelCoverImg">
-							<img class="coverImg" th:src="@{/uploads/novelcovers/${novel.coverImageName}}">
+							<img class="coverImg" th:src="@{${novel.coverSrc}}">
 						</div>
 						<div class="novelContent">
 							<div class="gradeIcon">
@@ -135,8 +135,8 @@
 			</div>
 		</main>
 		
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
 	</body>
 </html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 무료 - 판타지')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 무료 - 판타지')}"></head>
 	
 	<!-- 스와이퍼 -->
 	<link
@@ -9,7 +9,7 @@
 	/>
 	
 	<body data-main-category="paid" th:attr="data-screen-id=${screenId}">
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
 			<div class="wrapper">
 				<div class="container">
@@ -25,37 +25,37 @@
 						    <!-- Slides -->
 						    <div class="swiper-slide">
 						    	<a href="#">
-							    	<img alt="" src="/images/fantasy_7.jpg">
+							    	<img alt="" th:src="@{/images/fantasy_7.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_5.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_5.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_2.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_2.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_8.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_8.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_9.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_9.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_10.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_10.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_11.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_11.jpg}">
 						    	</a>
 						    </div>
 						    
@@ -85,9 +85,9 @@
 				</div>
 		</div>
 		</div>	
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/home-free.js}"></script>
         <!-- 스와이퍼 -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

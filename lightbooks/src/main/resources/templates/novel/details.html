@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
    <style>
       .centered-row {
        max-width: 1200px;
@@ -119,7 +119,7 @@
       </style>
    
    <body>
-      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+      <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
       
       <main>
          <div class="card-body">
@@ -336,11 +336,11 @@
       </div>
    </div>
 
-   <div th:replace="~{/novel/donation-modal :: donationModal}"></div>
+   <div th:replace="~{novel/donation-modal :: donationModal}"></div>
 
-   <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-   <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-   <th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+   <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+   <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
+   <th:block th:replace="~{layout/fragments :: footer}"></th:block>
    <script th:src="@{/js/episode-listOfNovelDetails.js}"></script>
    <script th:src="@{/js/novel-details.js}"></script>
    <script th:src="@{/js/commentList.js}"></script>

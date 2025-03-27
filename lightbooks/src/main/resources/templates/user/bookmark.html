@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
 <style>
    .chart-container {
        display: flex; /* 차트와 라벨을 가로로 배치 */
@@ -205,7 +205,7 @@
     }
 </style>
    <body>
-      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+      <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 
       <main>
           <div class="container">
@@ -277,8 +277,8 @@
        </div>
    </div>
    
-      <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+      <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/bookmark.js}"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
