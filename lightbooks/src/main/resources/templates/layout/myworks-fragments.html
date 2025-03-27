@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
 	<body>
 		<nav th:fragment="myworksHeader">
 			<style>
@@ -34,14 +34,14 @@
 					<div class="p-2 fs-5 fw-bold d-flex align-items-center">
 						<a class="myworksNavItem me-4" th:href="@{/myworks/mynovel(id=${#authentication.principal.id})}">내 작품</a>
 						<a class="myworksNavItem me-4" th:href="@{/novel/new}">작품 작성</a>
-						<a class="myworksNavItem me-4" th:href="@{#}">후원 관리</a>
+						<a class="myworksNavItem me-4" th:href="@{/myworks/donation(id=${#authentication.principal.id})}">후원 관리</a>
 						<a class="myworksNavItem" th:href="@{/user/coinpayment(id=${#authentication.principal.id})}">정산</a>
 					</div>
 				</nav>
 			</div>
 		</nav>
 		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
 	</body>
 </html>

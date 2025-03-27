@@ -1,231 +1,285 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('라잇붃 : : 내보관함)}"></head>
 <style>
-   .chart-container {
-       display: flex; /* 차트와 라벨을 가로로 배치 */
-       justify-content: center; /* 차트를 가운데 정렬 */
-       align-items: center; /* 차트와 라벨을 세로로 중앙 정렬 */
-       gap: 20px; /* 차트와 라벨 사이의 간격 */
-   }
-   
-   .chart-legend {
-       display: flex;
-       flex-direction: column; /* 라벨을 세로로 나열 */
-       gap: 10px; /* 라벨 간 간격 */
-       font-size: 14px; /* 라벨 글자 크기 */
-       color: black; /* 라벨 텍스트 색상 */
-       align-items: flex-start; /* 라벨을 왼쪽 정렬 */
-   }
-   
-   .modal-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    max-height: 120vh; /* 뷰포트 높이 제한 (선택사항) */
-}
+		.chart-container {
+			display: flex; /* 차트와 라벨을 가로로 배치 */
+			justify-content: center; /* 차트를 가운데 정렬 */
+			align-items: center; /* 차트와 라벨을 세로로 중앙 정렬 */
+			gap: 20px; /* 차트와 라벨 사이의 간격 */
+		}
+		
+		.chart-legend {
+			display: flex;
+			flex-direction: column; /* 라벨을 세로로 나열 */
+			gap: 10px; /* 라벨 간 간격 */
+			font-size: 14px; /* 라벨 글자 크기 */
+			color: black; /* 라벨 텍스트 색상 */
+			align-items: flex-start; /* 라벨을 왼쪽 정렬 */
+		}
+		
+		.modal-content {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			max-height: 120vh; /* 뷰포트 높이 제한 (선택사항) */
+		}
+		
+		.modal-body {
+			flex: 1; /* modal-body가 나머지 공간을 차지하도록 설정 */
+			overflow-y: auto; /* 내용이 많을 경우 스크롤 처리 */
+		}
+		
+		#statsModal .modal-dialog {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: calc(100% - 60px); /* Adjust as needed */
+		}
+		
+		#statsModal .modal-content {
+			max-width: 800px;
+			max-height: 90vh;
+			margin: auto;
+		}
+		
+		#statsModal .modal-footer {
+			display: flex;
+			justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+			align-items: center; /* 버튼을 세로로 중앙 정렬 */
+			padding: 10px 15px; /* 내부 여백 조정 */
+			border-top: 1px solid #ddd; /* 상단 경계선 추가 (선택 사항) */
+		}
+		
+		/* 반응형 디자인을 위해 미디어 쿼리 추가 */
+		@media ( max-width : 768px) {
+			#statsModal .modal-content {
+				max-width: 90%; /* 작은 화면에서는 너비를 더 늘림 */
+				max-height: 90%; /* 작은 화면에서는 높이를 더 늘림 */
+			}
+		}
+		
+		#statsChart {
+			display: block; /* 또는 inline-block */
+			margin: 0 auto; /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
+			width: 200px; /* 차트 너비를 줄임 */
+			height: 200px; /* 차트 높이를 줄임 */
+		}
+		
+		#statsButton {
+			background-color: #f6f6f6; /* 버튼 배경색 설정 */
+			color: black; /* 글자색 설정 (선택 사항) */
+			padding: 12px 14px;
+		}
+		
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		
+		main {
+			flex: 1;
+			margin-top: 3rem;
+			padding: 0 2rem;
+		}
+		
+		.navbar-category {
+			top: 40px;
+			background: white;
+			padding: 5px;
+			width: 100%;
+		}
+		
+		/* 버튼 3개*/
+		.navbar-category div {
+			display: inline-block;
+			margin: 5px;
+		}
+		
+		.navbar-category button {
+			border: 1px solid white;
+			border-radius: 20px;
+			padding: 10px 12px;
+			font-size: 14px;
+			color: white;
+			background: #66b2ff;
+			text-decoration: none;
+			cursor: pointer; /* 버튼임을 명시 */
+			font-weight: bold; /* 폰트를 굵게 설정 */
+		}
+		
+		.centered-row {
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.row {
+			display: flex; /* ✅ 있어야 함 */
+			flex-wrap: wrap;
+		}
+		
+		.item {
+			width: 24%; /* 한 줄에 4개 표시 */
+			box-sizing: border-box; /* padding, border 포함 */
+			padding: 10px; /* 아이템 간 간격 */
+			display: flex;
+			flex-direction: column; /* 세로 방향으로 아이템 배치 */
+			align-items: center;
+			margin: 5px 0;
+			text-align: center;
+		}
+		
+		.item img {
+			width: 20px; /* 아이템 내 이미지 최대 너비 */
+			height: 50px;
+			margin-bottom: 0px;
+			border-radius: 8px; /* 이미지 모서리 둥글게 설정 */
+		}
+		
+		.info-container {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		.view-container, .like-container {
+			display: flex;
+			align-items: center;
+		}
+		
+		.view-container span, .like-container span {
+			margin-left: 5px;
+		}
+		
+		.image-container img {
+			width: 100%;
+			height: auto;
+			margin-bottom: 10px;
+		}
+		
+		.image-container {
+			width: 230px; /* 원하는 너비로 조정 */
+			height: 380px; /* 원하는 높이로 조정 */
+			overflow: hidden; /* 이미지가 컨테이너 밖으로 나가지 않도록 설정 */
+		}
+		
+		.text-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+		
+		.text-container p, .text-container div {
+			margin-top: 1px;
+			margin-bottom: 1px;
+			display: flex;
+			align-items: center;
+		}
+		
+		.text-container>div {
+			margin-top: 2px;
+			margin-bottom: 2px;
+		}
+		
+		.text-container div a {
+			font-weight: normal;
+		}
+		
+		.episode-num {
+			margin-left: 5px;
+		}
+		
+		.gradeIcon {
+			margin-top: -5px;
+			margin-bottom: 0px;
+		}
+		
+		.gradeIcon span {
+			border: 1px solid white;
+			background: #cf97ff;
+			color: white;
+			padding: 2px;
+			border-radius: 12px;
+		}
+	</style>
+   <body>
+      <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 
-   .modal-body {
-       flex: 1; /* modal-body가 나머지 공간을 차지하도록 설정 */
-       overflow-y: auto; /* 내용이 많을 경우 스크롤 처리 */
-   }
+      <main>
+          <div class="container">
+              <div class="row centered-row gx-4 mt-4">
+                  <div>
+                      <h4><strong>내 보관함</strong></h4>
+                      <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
+                  </div>
       
-   #statsModal .modal-dialog {
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       min-height: calc(100% - 60px); /* Adjust as needed */
-   }
+                  <div class="navbar-category">
+                      <div>
+                          <div>
+                              <button class="btn typeBtn" id="likedBtn" data-type="liked">좋아요한 작품</button>
+                          </div>
+                          <div>
+                              <button class="btn typeBtn" id="watchedBtn" data-type="watched">최근 본 작품</button>
+                          </div>
+                          <div>
+                              <button class="btn typeBtn" id="purchasedBtn" data-type="purchased">구매한 작품</button>
+                          </div>
+                          <div>
+                               <button id="statsButton" class="btn btn-primary">통계</button> <!-- 추가 -->
+                          </div>
+                      </div>
+                  </div>
+                  <hr/>
+                  <div id="itemList"></div>
+              </div>
+          </div>
+      </main>
+      
+      <!--------------------- 통계 모달창---------------------------->
+      <div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="buyEpisodeModalLabel" aria-hidden="true">
+       <div class="modal-dialog modal-dialog-centered modal-lg">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title">
+                       <span sec:authentication="principal.nickname"></span>님의 회차 통계 분석
+                   </h4>
+                   <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                   <p style="font-size: 14px; color: gray; margin-bottom: 4px;">
+                       <span sec:authentication="principal.nickname"></span>님이 읽은 작품 회차에 대한 통계 기록입니다.
+                   </p>
+                   <p style="font-size: 14px; color: gray; margin-bottom: 4px;">
+                   이 공간에서는 
+                   <span style="background-color: #f0f0f0; padding: 2px;"><strong>장르별</strong>로 선호하는 회차 분포</span>와 
+                   <span style="background-color: #f0f0f0; padding: 2px;"><strong>날짜별</strong>로 읽은 회차 건 수</span>를 확인할 수 있습니다.
+               </p>
+                   <p style="font-size: 14px; color: gray; margin-bottom: 4px;">
+                       특정 장르에 대한 관심도와 꾸준히 읽어온 날짜 패턴을 시각적으로 확인하여, 독서 습관을 분석할 수 있도록 도와줍니다.
+                   </p>
+                   <div class="mt-4">
+                       <label for="chartType"><i class="bi bi-caret-right-fill"></i> 통계 유형 선택</label>
+                       <select id="chartType" class="form-control">
+                           <option value="genre">장르별</option>
+                           <option value="date">날짜별</option>
+                       </select>
+                   </div>
+                   <div class="chart-container">
+                   <canvas id="statsChart" width="330" height="330"></canvas> <!-- 차트 -->  
+               </div>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
+               </div>
+           </div>
+       </div>
+   </div>
    
-   #statsModal .modal-content {
-       max-width: 800px;
-       max-height: 90vh;
-       margin: auto;
-   }
-   
-   #statsModal .modal-footer {
-    display: flex;
-    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
-    align-items: center; /* 버튼을 세로로 중앙 정렬 */
-    padding: 10px 15px; /* 내부 여백 조정 */
-    border-top: 1px solid #ddd; /* 상단 경계선 추가 (선택 사항) */
-}
-   
-   
-   /* 반응형 디자인을 위해 미디어 쿼리 추가 */
-   @media (max-width: 768px) {
-       #statsModal .modal-content {
-           max-width: 90%; /* 작은 화면에서는 너비를 더 늘림 */
-           max-height: 90%; /* 작은 화면에서는 높이를 더 늘림 */
-       }
-   }
-   
-   #statsChart {
-	    display: block; /* 또는 inline-block */
-	    margin: 0 auto; /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
-	    width: 200px; /* 차트 너비를 줄임 */
-	    height: 200px; /* 차트 높이를 줄임 */
-	    
-	}
-
-    #statsButton {
-	    background-color: #f6f6f6; /* 버튼 배경색 설정 */
-	    color: black; /* 글자색 설정 (선택 사항) */
-	    padding: 12px 14px;
-	}
-
-    html, body {
-        height: 100%;
-        margin: 0;
-    }
-
-    main {
-        flex: 1;
-        margin-top: 3rem;
-        padding: 0 2rem;
-    }
-
-    .navbar-category {
-        top: 40px;
-        background: white;
-        padding: 5px;
-        width: 100%;
-        
-    }
-
-    /* 버튼 3개*/
-    .navbar-category div {
-        display: inline-block;
-        margin: 5px;
-    }
-
-    .navbar-category button {
-        border: 1px solid white;
-        border-radius: 20px;
-        padding: 10px 12px;
-        font-size: 14px;
-        color: white;
-        background: #66b2ff;
-        text-decoration: none;
-        cursor: pointer; /* 버튼임을 명시 */
-        font-weight: bold; /* 폰트를 굵게 설정 */
-    }
-
-    .item {
-        width: 24%; /* 한 줄에 4개 표시 */
-        box-sizing: border-box; /* padding, border 포함 */
-        padding: 10px; /* 아이템 간 간격 */
-        display: flex;
-        flex-direction: column; /* 세로 방향으로 아이템 배치 */
-        align-items: center;
-        margin: 5px 0;
-    }
-
-    .gradeIcon span {
-        border: 1px solid white;
-        background: #cf97ff;
-        color: white;
-        padding: 2px;
-        border-radius: 12px;
-    }
-    
-    .image-container {
-    width: 200px;
-    height: 300px; /* 원하는 높이로 조정 */
-    overflow: hidden; /* 이미지가 컨테이너를 넘치면 숨김 */
-}
-</style>
-<body>
-	<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
-
-	<main>
-		<div class="container">
-			<div class="row centered-row gx-4 mt-4">
-				<div>
-					<h4>
-						<strong>내 보관함</strong>
-					</h4>
-					<input type="hidden" id="userId"
-						th:value="${#authentication.principal.id}" />
-				</div>
-
-				<div class="navbar-category">
-					<div>
-						<div>
-							<button class="btn typeBtn" id="likedBtn" data-type="liked">좋아요한
-								작품</button>
-						</div>
-						<div>
-							<button class="btn typeBtn" id="watchedBtn" data-type="watched">최근
-								본 작품</button>
-						</div>
-						<div>
-							<button class="btn typeBtn" id="purchasedBtn"
-								data-type="purchased">구매한 작품</button>
-						</div>
-						<div>
-							<button id="statsButton" class="btn btn-primary">통계</button>
-							<!-- 추가 -->
-						</div>
-					</div>
-				</div>
-				<hr />
-				<div id="itemList"></div>
-			</div>
-		</div>
-	</main>
-
-	<!--------------------- 통계 모달창---------------------------->
-	<div class="modal fade" id="statsModal" tabindex="-1"
-		aria-labelledby="buyEpisodeModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">
-						<span sec:authentication="principal.nickname"></span>님의 회차 통계 분석
-					</h4>
-					<button type="button" class="btn-close" data-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p style="font-size: 14px; color: gray; margin-bottom: 4px;">
-						<span sec:authentication="principal.nickname"></span>님이 읽은 작품 회차에
-						대한 통계 기록입니다.
-					</p>
-					<p style="font-size: 14px; color: gray; margin-bottom: 4px;">
-						이 공간에서는 <span style="background-color: #f0f0f0; padding: 2px;"><strong>장르별</strong>로
-							선호하는 회차 분포</span>와 <span
-							style="background-color: #f0f0f0; padding: 2px;"><strong>날짜별</strong>로
-							읽은 회차 건 수</span>를 확인할 수 있습니다.
-					</p>
-					<p style="font-size: 14px; color: gray; margin-bottom: 4px;">
-						특정 장르에 대한 관심도와 꾸준히 읽어온 날짜 패턴을 시각적으로 확인하여, 독서 습관을 분석할 수 있도록 도와줍니다.
-					</p>
-					<div class="mt-4">
-						<label for="chartType"><i class="bi bi-caret-right-fill"></i>
-							통계 유형 선택</label> <select id="chartType" class="form-control">
-							<option value="genre">장르별</option>
-							<option value="date">날짜별</option>
-						</select>
-					</div>
-					<div class="chart-container">
-						<canvas id="statsChart" width="330" height="330"></canvas>
-						<!-- 차트 -->
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-	<th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
-	<th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
-	<script th:src="@{/js/bookmark.js}"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script th:src="@{/js/statistics.js}"></script>
-</body>
+   		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/bookmark.js}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script th:src="@{/js/statistics.js}"></script>
+   </body>
 </html>

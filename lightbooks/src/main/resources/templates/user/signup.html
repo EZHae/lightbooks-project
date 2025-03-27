@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 회원가입')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 회원가입')}"></head>
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
         <main class="container-sm">
             <div class="card card-body w-50 mx-auto">
@@ -76,10 +76,10 @@
             </div>
         </main>
         
-        <th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: footer}"></th:block>
 		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/user-signup.js}"></script>
 	</body>
 </html>

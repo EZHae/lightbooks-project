@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 회차 수정')}"></head>
+   <head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 회차 수정')}"></head>
    <body>
-      <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+      <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
       
       <main class="card">
           <div class="card-body">
@@ -54,8 +54,8 @@
           </div>
       </main>
       
-      <th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-      <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-      <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	  <th:block th:replace="~{layout/fragments :: footer}"></th:block>
+      <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+      <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
    </body>
 </html>

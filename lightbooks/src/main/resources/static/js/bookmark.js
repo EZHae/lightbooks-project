@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        if (reset) itemList.innerHTML = '';
 	        if (!data.content || data.content.length === 0) {
 	            if (reset) {
-	                itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>';
+	                itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>' + '<br>'.repeat(8);
 	            }
 	            return;
 	        }

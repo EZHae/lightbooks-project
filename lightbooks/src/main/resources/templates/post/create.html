@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 공지사항 작성')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 공지사항 작성')}"></head>
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
 		<main>
 			<div class="container-sm">
@@ -27,9 +27,9 @@
 			</div>
 		</main>
 		
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
 		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
 	</body>
 </html>
