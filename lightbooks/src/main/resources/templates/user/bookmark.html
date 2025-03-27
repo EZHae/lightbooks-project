@@ -44,13 +44,26 @@
    }
    
    #statsModal .modal-footer {
-    display: flex;
-    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
-    align-items: center; /* 버튼을 세로로 중앙 정렬 */
-    padding: 10px 15px; /* 내부 여백 조정 */
-    border-top: 1px solid #ddd; /* 상단 경계선 추가 (선택 사항) */
-}
-   
+	    display: flex;
+	    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+	    align-items: center; /* 버튼을 세로로 중앙 정렬 */
+	    padding: 10px 15px; /* 내부 여백 조정 */
+	    border-top: 1px solid #ddd; /* 상단 경계선 추가 (선택 사항) */
+	}
+	
+	 #statsChart {
+	    display: block; /* 또는 inline-block */
+	    margin: 0 auto; /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
+	    width: 200px; /* 차트 너비를 줄임 */
+	    height: 200px; /* 차트 높이를 줄임 */
+	    
+	}
+	
+	   #statsButton {
+	    background-color: #f6f6f6; /* 버튼 배경색 설정 */
+	    color: black; /* 글자색 설정 (선택 사항) */
+	    padding: 12px 14px;
+	}
    
    /* 반응형 디자인을 위해 미디어 쿼리 추가 */
    @media (max-width: 768px) {
@@ -59,15 +72,8 @@
            max-height: 90%; /* 작은 화면에서는 높이를 더 늘림 */
        }
    }
-   
-   #statsChart {
-    display: block; /* 또는 inline-block */
-    margin: 0 auto; /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
-    width: 200px; /* 차트 너비를 줄임 */
-    height: 200px; /* 차트 높이를 줄임 */
-    
-}
 
+/* 이 줄을 기준으로 위 CSS는 모달창(통계), 밑 CSS는 html */
     html, body {
         height: 100%;
         margin: 0;
@@ -114,12 +120,6 @@
         cursor: pointer; /* 버튼임을 명시 */
         font-weight: bold; /* 폰트를 굵게 설정 */
     }
-    
-    #statsButton {
-    background-color: #f6f6f6; /* 버튼 배경색 설정 */
-    color: black; /* 글자색 설정 (선택 사항) */
-    padding: 12px 14px;
-}
 
     .item {
         width: 24%; /* 한 줄에 4개 표시 */
