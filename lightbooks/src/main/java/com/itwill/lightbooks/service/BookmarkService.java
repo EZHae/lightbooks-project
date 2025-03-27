@@ -65,7 +65,7 @@ public class BookmarkService {
     
  // 추가) 최근 본 회차 가져오기(공지 제외)
     public Page<RecentlyWatchedEpisodeDto> getRecentlyWatchedEpisodes(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 10, sort);
+        PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
         Page<Bookmark> page = bookmarkRepo.findRecentlyWatchedEpisodesWithNovelByUserIdExcludeNotice(userId, pageRequest);
 
         return page.map(bookmark -> {

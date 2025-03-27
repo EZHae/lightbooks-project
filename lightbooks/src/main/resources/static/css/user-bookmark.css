@@ -1,41 +1,41 @@
 @charset "UTF-8";
 
-html, body {
-    height: 100%;
-    margin: 0;
-}
+  html, body {
+      height: 100%;
+      margin: 0;
+  }
 
-main {
-    flex: 1;
-    margin-top: 3rem;
-    padding: 0 2rem;
-}
-.navbar-category {
-    top: 40px;
-    background: white;
-    padding: 5px;
-    width: 100%;
-    
-}
+  main {
+      flex: 1;
+      margin-top: 3rem;
+      padding: 0 2rem;
+  }
+  .navbar-category {
+      top: 40px;
+      background: white;
+      padding: 5px;
+      width: 100%;
+      
+  }
 
-/* 버튼 3개*/
-.navbar-category div {
-    display: inline-block;
-    margin: 5px;
-}
+  /* 버튼 3개*/
+  .navbar-category div {
+      display: inline-block;
+      margin: 5px;
+  }
 
-.navbar-category button {
-    border: 1px solid white;
-    border-radius: 20px;
-    padding: 10px 12px;
-    font-size: 14px;
-    color: white;
-    background: #66b2ff;
-    text-decoration: none;
-    cursor: pointer; /* 버튼임을 명시 */
-    font-weight: bold; /* 폰트를 굵게 설정 */
-}
-
+  .navbar-category button {
+      border: 1px solid white;
+      border-radius: 20px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: white;
+      background: #66b2ff;
+      text-decoration: none;
+      cursor: pointer; /* 버튼임을 명시 */
+      font-weight: bold; /* 폰트를 굵게 설정 */
+  }
+  
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
