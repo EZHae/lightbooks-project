@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const chartTypeFilter = $("#chartType");
         const chartCanvas = $("#statsChart");
         let currentChart;
-		const userId = document.querySelector('input#userId').value;
-		   console.log("User ID:", userId);
+      const userId = document.querySelector('input#userId').value;
+         console.log("User ID:", userId);
 
         function initializeChart(chartType, userId) {
             if (currentChart) {
@@ -40,16 +40,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     let chartConfig;
-                    console.log("차트 구성 데이터:", chartConfig);
 
                     if (chartType === "genre") {
                         chartConfig = {
-                            type: "pie",
+                            type: "pie", //파이차트!
                             data: {
-                                labels: data.labels,
+                                labels: data.labels, //각 장르명을 나타내는 배열!!!
                                 datasets: [{
-                                    label: "회차 수",
-                                    data: data.values,
+                                    label: "읽은 회차 수",
+                                    data: data.values,  //각 장르별 회차 수 데이터 배열!!!
                                     backgroundColor: [
                                         'rgba(255, 99, 132, 0.5)',
                                         'rgba(54, 162, 235, 0.5)',
@@ -61,29 +60,43 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }]
                             },
                             options: {
-								responsive: false, // 반응형 크기 조절 비활성화
-								            maintainAspectRatio: false, // 가로 세로 비율 유지 비활성화
-								            width: 200, // 원하는 너비 설정
-								            height: 200, // 원하는 높이 설정
-								            title: {
-								                display: true,
-								                text: '장르별 회차 통계'
-								            }
+                        responsive: false, //반응형 크기 조절 비활성화
+                        maintainAspectRatio: false, //가로 세로 비율 유지 비활성화
+                        title: {
+                           display: true,
+                           text: '장르별 회차 통계'
+                        },
+                        plugins: {
+                                legend: {
+                                    position: 'right', //라벨을 차트 오른쪽에 세로로 배치
+                                    labels: {
+                                        boxWidth: 25, //색상 상자의 너비 설정
+                                        padding: 15, //각 라벨 사이 간격
+                                        font: {
+                                            size: 13 //라벨 글씨 크기
+                                        }
+                                    }
+                                }
+                            }
+
                             }
                         };
                     } else if (chartType === "date") {
                         chartConfig = {
-                            type: "bar",
+                            type: "bar", //막대차트!
+
                             data: {
-                                labels: data.labels,
+                                labels: data.labels, //날짜 라벨 배열!!!
                                 datasets: [{
-                                    label: "회차 수",
-                                    data: data.values,
+                                    label: "읽은 회차 수",
+                                    data: data.values, //날짜별 회차 수 데이터 배열!!!
+
                                     backgroundColor: "rgba(54, 162, 235, 0.5)"
                                 }]
                             },
                             options: {
-                                responsive: true,
+                                responsive: false,
+								maintainAspectRatio: false, // 가로 세로 비율 유지 비활성화
                                 title: {
                                     display: true,
                                     text: "날짜별 회차 통계"
@@ -135,4 +148,43 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+   
+   // =======모달 닫기 버튼 ===========
+       const statsModal = document.getElementById('statsModal');
+       const closeButton = statsModal.querySelector('.btn-close'); 
+       const footerCloseButton = statsModal.querySelector('.btn-danger');
+
+       closeButton.addEventListener('click', function () {
+           $(statsModal).modal('hide');
+       });
+
+       footerCloseButton.addEventListener('click', function () {
+           $(statsModal).modal('hide');
+       });
+   
+   // ============ 모달 ============
+      // 모달창 nav 뒤로 밀어버리는 코드
+      const navbar = document.querySelector('.navbar');
+      const modalEl = document.getElementById("statsModal");
+
+      // 모달 열릴 때 navbar 위치 변경
+      modalEl.addEventListener('show.bs.modal', () => {
+        navbar.style.position = 'static';     // navbar를 static으로 만들어서 모달 앞에 겹치지 않도록
+        navbar.style.zIndex = '1';            // z-index 낮추기
+      });
+
+      // 모달 닫힐 때 navbar 복구
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        navbar.style.position = 'sticky';    // 모달 닫으면 다시 sticky로 복원
+        navbar.style.zIndex = '1005';         // z-index 복원
+      });
+      // 스크롤 이벤트 리스너 추가
+      window.addEventListener('scroll', () => {
+        // 스크롤이 10px 이상 내렸다면
+        if (window.scrollY > 10) {
+          navbar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)'; // 그림자 효과 추가
+        } else {
+          navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
+        }
+      });
 });

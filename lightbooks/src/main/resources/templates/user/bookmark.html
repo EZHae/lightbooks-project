@@ -2,30 +2,70 @@
 <html xmlns:th="http://www.thymeleaf.org">
    <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
 <style>
-	#statsModal .modal-dialog {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    min-height: calc(100% - 60px); /* Adjust as needed */
-	}
-	
-	#statsModal .modal-content {
-	    max-width: 800px;
-	    max-height: 600px;
-	    margin: auto;
-	}
-	
-	/* 반응형 디자인을 위해 미디어 쿼리 추가 */
-	@media (max-width: 768px) {
-	    #statsModal .modal-content {
-	        max-width: 90%; /* 작은 화면에서는 너비를 더 늘림 */
-	        max-height: 90%; /* 작은 화면에서는 높이를 더 늘림 */
-	    }
-	}
-	
-	#statsChart {
+   .chart-container {
+       display: flex; /* 차트와 라벨을 가로로 배치 */
+       justify-content: center; /* 차트를 가운데 정렬 */
+       align-items: center; /* 차트와 라벨을 세로로 중앙 정렬 */
+       gap: 20px; /* 차트와 라벨 사이의 간격 */
+   }
+   
+   .chart-legend {
+       display: flex;
+       flex-direction: column; /* 라벨을 세로로 나열 */
+       gap: 10px; /* 라벨 간 간격 */
+       font-size: 14px; /* 라벨 글자 크기 */
+       color: black; /* 라벨 텍스트 색상 */
+       align-items: flex-start; /* 라벨을 왼쪽 정렬 */
+   }
+   
+   .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 120vh; /* 뷰포트 높이 제한 (선택사항) */
+}
+
+   .modal-body {
+       flex: 1; /* modal-body가 나머지 공간을 차지하도록 설정 */
+       overflow-y: auto; /* 내용이 많을 경우 스크롤 처리 */
+   }
+      
+   #statsModal .modal-dialog {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       min-height: calc(100% - 60px); /* Adjust as needed */
+   }
+   
+   #statsModal .modal-content {
+       max-width: 800px;
+       max-height: 90vh;
+       margin: auto;
+   }
+   
+   #statsModal .modal-footer {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+    align-items: center; /* 버튼을 세로로 중앙 정렬 */
+    padding: 10px 15px; /* 내부 여백 조정 */
+    border-top: 1px solid #ddd; /* 상단 경계선 추가 (선택 사항) */
+}
+   
+   
+   /* 반응형 디자인을 위해 미디어 쿼리 추가 */
+   @media (max-width: 768px) {
+       #statsModal .modal-content {
+           max-width: 90%; /* 작은 화면에서는 너비를 더 늘림 */
+           max-height: 90%; /* 작은 화면에서는 높이를 더 늘림 */
+       }
+   }
+   
+   #statsChart {
     display: block; /* 또는 inline-block */
     margin: 0 auto; /* 좌우 마진을 auto로 설정하여 가운데 정렬 */
+    width: 200px; /* 차트 너비를 줄임 */
+    height: 200px; /* 차트 높이를 줄임 */
+    
 }
 
     html, body {
@@ -54,6 +94,7 @@
         background: white;
         padding: 5px;
         width: 100%;
+        
     }
 
     /* 버튼 3개*/
@@ -73,6 +114,12 @@
         cursor: pointer; /* 버튼임을 명시 */
         font-weight: bold; /* 폰트를 굵게 설정 */
     }
+    
+    #statsButton {
+    background-color: #f6f6f6; /* 버튼 배경색 설정 */
+    color: black; /* 글자색 설정 (선택 사항) */
+    padding: 12px 14px;
+}
 
     .item {
         width: 24%; /* 한 줄에 4개 표시 */
@@ -113,10 +160,10 @@
     }
     
     .image-container {
-	    width:230px; /* 원하는 너비로 조정 */
-	    height:380px; /* 원하는 높이로 조정 */
-	    overflow: hidden; /* 이미지가 컨테이너 밖으로 나가지 않도록 설정 */
-	}
+       width:230px; /* 원하는 너비로 조정 */
+       height:380px; /* 원하는 높이로 조정 */
+       overflow: hidden; /* 이미지가 컨테이너 밖으로 나가지 않도록 설정 */
+   }
 
     .text-container {
         display: flex;
@@ -145,9 +192,9 @@
     }
 
     .gradeIcon {
-	    margin-top: -5px;
-	    margin-bottom: 0px;
-	}
+       margin-top: -5px;
+       margin-bottom: 0px;
+   }
 
     .gradeIcon span {
         border: 1px solid white;
@@ -180,7 +227,7 @@
                               <button class="btn typeBtn" id="purchasedBtn" data-type="purchased">구매한 작품</button>
                           </div>
                           <div>
-                          	  <button id="statsButton" class="btn btn-primary">통계</button>
+                               <button id="statsButton" class="btn btn-primary">통계</button> <!-- 추가 -->
                           </div>
                       </div>
                   </div>
@@ -191,34 +238,45 @@
       </main>
       
       <!--------------------- 통계 모달창---------------------------->
-      <div class="modal fade" id="statsModal">
-	    <div class="modal-dialog modal-dialog-centered modal-lg">
-	        <div class="modal-content">
-	
-	            <div class="modal-header">
-	                <h4 class="modal-title">통계 그래프</h4>
-	                <button type="button" class="close" data-dismiss="modal">&times;</button>
-	            </div>
-	
-	            <div class="modal-body">
-	                <div>
-	                    <label for="chartType">통계 유형 선택:</label>
-	                    <select id="chartType" class="form-control">
-	                        <option value="genre">장르별 통계</option>
-	                        <option value="date">날짜별 통계</option>
-	                    </select>
-					</div>
-	                <canvas id="statsChart"></canvas>
-	            </div>
-	
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
-	            </div>
-	
-	        </div>
-	    </div>
-	</div>
-	
+      <div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="buyEpisodeModalLabel" aria-hidden="true">
+       <div class="modal-dialog modal-dialog-centered modal-lg">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title">
+                       <span sec:authentication="principal.nickname"></span>님의 회차 통계 분석
+                   </h4>
+                   <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                   <p style="font-size: 14px; color: gray; margin-bottom: 4px;">
+                       <span sec:authentication="principal.nickname"></span>님이 읽은 작품 회차에 대한 통계 기록입니다.
+                   </p>
+                   <p style="font-size: 14px; color: gray; margin-bottom: 4px;">
+                   이 공간에서는 
+                   <span style="background-color: #f0f0f0; padding: 2px;"><strong>장르별</strong>로 선호하는 회차 분포</span>와 
+                   <span style="background-color: #f0f0f0; padding: 2px;"><strong>날짜별</strong>로 읽은 회차 건 수</span>를 확인할 수 있습니다.
+               </p>
+                   <p style="font-size: 14px; color: gray; margin-bottom: 4px;">
+                       특정 장르에 대한 관심도와 꾸준히 읽어온 날짜 패턴을 시각적으로 확인하여, 독서 습관을 분석할 수 있도록 도와줍니다.
+                   </p>
+                   <div class="mt-4">
+                       <label for="chartType"><i class="bi bi-caret-right-fill"></i> 통계 유형 선택</label>
+                       <select id="chartType" class="form-control">
+                           <option value="genre">장르별</option>
+                           <option value="date">날짜별</option>
+                       </select>
+                   </div>
+                   <div class="chart-container">
+                   <canvas id="statsChart" width="330" height="330"></canvas> <!-- 차트 -->  
+               </div>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
+               </div>
+           </div>
+       </div>
+   </div>
+   
       <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/bookmark.js}"></script>

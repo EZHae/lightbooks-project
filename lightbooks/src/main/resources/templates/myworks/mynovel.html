@@ -84,29 +84,8 @@
 	
 	<body>
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{/layout/myworks-fragments :: myworksHeader}"></th:block>
 		<main>
-		    <div class="container ">
-		        <ul>
-		            <li class="nav-work">
-		                <a class="nav-link active" th:href="@{/novel/my-works(id=${#authentication.principal.id})}">내 작품</a>
-		            </li>
-		            <li class="nav-work">
-		                <a class="nav-link" th:href="@{/novel/my-works/donation}">후원관리</a>
-		            </li>
-		            <li class="nav-work">
-		                <a class="nav-link" th:href="@{/novel/my-works/stats}">통계</a>
-		            </li>
-		            <li class="nav-work">
-		                <a class="nav-link" th:href="@{/novel/my-works/withdraw}">정산</a>
-		            </li>
-		        </ul>    
-		    </div>
-		    
-		    <div class="novelWriter">
-				<a class="btn btn-success form-control" th:href="@{/novel/new}">작품작성</a>	    	
-		    </div>
-			
-			<hr/>
 			<div class="novelList">
 				<div th:each="novel : ${novels}" th:object="${novel}">
 					<div class="my-novel" >

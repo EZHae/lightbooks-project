@@ -165,28 +165,6 @@ public class NovelController {
         
        return "novel/details";
     }
-
-    
-    // 내 작품 페이지
-    @GetMapping("/my-works")
-    public String myWorks(@RequestParam(name = "id") Long id, Model model) {
-    	log.info("myWorks()");
-    	log.info("현재 접속 아이디: {}", id);
-    	
-    	// 유저의 소설 목록 가져오기
-    	List<NovelResponseDto> novels = novelService.getNovelByUserId(id);
-    	log.info("novels : {}", novels);
-    	
-    	// 해당 유저의 프리미엄 신청 status 확인
-    	Map<Long, String> premiumStatus = novelService.getUserPremiumStatus(id);
-    	log.info("premiumStatus : {}", premiumStatus);
-    	
-    	model.addAttribute("novels", novels);
-    	model.addAttribute("premiumStatus", premiumStatus);
-    	
-    	return "mypage/my-works";
-    	
-    }
     
     // 작품 수정 페이지
     @GetMapping("/modify/{id}")
