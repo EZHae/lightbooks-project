@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 무료 - 오늘신작')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 무료 - 오늘신작')}"></head>
 	
 	<!-- 스와이퍼 -->
 	<link
@@ -8,7 +8,7 @@
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
 	<body th:attr="data-screen-id=${screenId}">
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
 				<div class="container">
 					
@@ -25,9 +25,9 @@
 					</div>
 				</div>
 			</div>	
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/home-paid.js}"></script>
         
         <!-- 스와이퍼 -->

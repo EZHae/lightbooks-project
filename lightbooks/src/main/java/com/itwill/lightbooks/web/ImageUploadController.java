@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.qos.logback.core.status.Status;
 import lombok.RequiredArgsConstructor;
 
 @RestController

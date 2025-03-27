@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 유료 - 프리미엄')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 유료 - 프리미엄')}"></head>
 	<!-- 스와이퍼 -->
 	<link
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
 	<body th:attr="data-screen-id=${screenId}">
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
 				<div class="container">
 				
@@ -72,22 +72,22 @@
 						    <!-- Slides -->
 						    <div class="swiper-slide">
 						    	<a href="#">
-							    	<img alt="" src="/images/premium.jpg">
+							    	<img alt="" th:src="@{/images/premium.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/modernFantasy_1.jpg">
+						    	<img alt="" th:src="@{/images/modernFantasy_1.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/fantasy_11.jpg">
+						    	<img alt="" th:src="@{/images/fantasy_11.jpg}">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/romance_fantasy_6.jpg">
+						    	<img alt="" th:src="@{/images/romance_fantasy_6.jpg}">
 						    	</a>
 						    </div>
 						    
@@ -159,9 +159,9 @@
 				</div>
 			</div>
 		</div>	
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/home-paid.js}"></script>
         
         <!-- 스와이퍼 -->

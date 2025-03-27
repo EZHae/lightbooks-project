@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('Premuim Service')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('Premuim Service')}"></head>
 	
 	<style>
 		.top-banner {
@@ -115,7 +115,7 @@
 		
 	</style>
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
 		<main>
 			<div class="top-banner">
@@ -137,7 +137,7 @@
 						<h5>프리미엄 전환 소설</h5>
 						<div class="my-novel">
 							<div class="novelCoverImg">
-								<img class="coverImg" th:src="@{{novel.coverSrc}(novel.coverSrc=${novel.coverSrc})}">
+								<img class="coverImg" th:src="@{${novel.coverSrc}}">
 							</div>
 							<div class="novelContent">
 								<a th:href="@{/novel/{id}(id=${novel.id})}">
@@ -207,9 +207,9 @@
 				</div>
 			</div>
 		</main>
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/premium-apply.js}"></script>
 	</body>
 </html>

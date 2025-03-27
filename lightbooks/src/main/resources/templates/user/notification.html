@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('라잇북스 : : 내 알림')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 내 알림')}"></head>
 	
 	<style>
 		.notification-item:hover .notification-div {
@@ -9,7 +9,7 @@
 		}
 	</style>
 	<body>
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
 		<main>
 			<div class="container-sm w-50 mt-3">
@@ -22,10 +22,10 @@
 			</div>
 		</main>
 		
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
 		
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/user-notification.js}"></script>
 	</body>
 </html>

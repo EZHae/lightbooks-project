@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{/layout/fragments :: htmlHead('404 - 페이지를 찾을 수 없습니다.')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('404 - 페이지를 찾을 수 없습니다.')}"></head>
 	<style>
  		body.error-404-page {
             color: black;
@@ -44,7 +44,7 @@
 					  
 	</style>
 	<body class="error-404-page">
-		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
 		<main>
 	        <div class="container error-404-container">
@@ -56,8 +56,8 @@
 	    </main>
 		
 		
-		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
 	</body>
 </html>

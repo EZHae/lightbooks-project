@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+    <head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 지우지마세요 -->
@@ -200,7 +200,7 @@
         </style>
     </head>
     <body>
-       <th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
+       <th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
     
        <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
        <input type="hidden" id="inputNovelTitle" th:value="${episode.novel.title}" class="d-none"><!-- 지우면 안됨!!!!!!!!!!! -->
@@ -358,10 +358,10 @@
             </div>
          </div>
 
-      <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
-         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
-      <script src="/js/episode-listOfNovelDetails.js"></script>
-        <script src="/js/episode-details.js"></script>
+      <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+         <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
+      <script th:src="@{/js/episode-listOfNovelDetails.js}"></script>
+        <script th:src="@{/js/episode-details.js}"></script>
     </body>
 </html>
 
