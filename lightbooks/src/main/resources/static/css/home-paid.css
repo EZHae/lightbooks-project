@@ -86,7 +86,9 @@ body {
 	aspect-ratio: 2/3;
 	object-fit: cover;
 	height: 200px;
+	width: 133px;
 	margin-right: 6px;
+	display: block;
 }
 
 /* 카테고리 전체 wrapper */
@@ -162,7 +164,7 @@ span.font {
 }
 
 .novel-grid {
-	width: 860;
+	width: 860px;
 	margin: 10px auto 0 auto;
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
@@ -177,19 +179,110 @@ span.font {
 	border-radius: 12px;
 	text-align: center;
 	font-size: 14px;
-	
+	margin-bottom: 5px;
 }
 .novel-card > a {
-	color: black;
+	color: gray;
 	text-decoration: none;
 }
 .novel-card-title{
 	max-width: 140px;
+	color: black;
 	font-weight: bold;
-	text-overflow: ellipsis;
+	overflow: hidden;
+  	white-space: nowrap;
+  	text-overflow: ellipsis;
 }
 
 .novel-card-totalViews, .novel-card-rating,
 .novel-card-like, .novel-card-writer {
 	font-size: 12px;
+}
+
+.novel-image-wrapper{
+	position: relative;
+}
+.novel-card-grade {
+	position: absolute;
+	z-index: 3;
+	top:6px;
+	left:6px;
+	width: 30px;
+	height: 18px;
+	color: white;
+	font-size: 9px;
+	padding: 2px 6px;
+	border-radius: 6px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+	isolation: isolate;
+}
+.grade-free {
+  background-color: #28a745;
+}
+.grade-free:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0, 140, 44, 0.5);
+}
+
+.grade-paid {
+  background-color: #dc3545;
+}
+
+/* shimmer 효과 */
+.novel-card-grade::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: badge-shimmer 2s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.shimmer {
+	overflow: hidden;
+}
+
+/* home.css 또는 전역 CSS에 추가 */
+.skeleton {
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  animation: skeleton-shimmer 1.5s infinite linear;
+}
+
+/* 키프레임 */
+@keyframes badge-shimmer {
+  0%   { left: -100%; }
+  50%  { left: 100%; }
+  100% { left: 100%; }
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+  background-size: 400% 100%;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 16px;
+  margin-top: 8px;
+}
+
+.skeleton-card {
+  width: 120px;
 }

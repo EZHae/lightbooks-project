@@ -6,7 +6,7 @@
 	  rel="stylesheet"
 	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
 	/>
-	<body>
+	<body th:attr="data-screen-id=${screenId}">
 		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 			<div class="wrapper">
 				<div class="container">
@@ -48,22 +48,22 @@
 						    <!-- Slides -->
 						    <div class="swiper-slide">
 						    	<a href="#">
-							    	<img alt="" src="/images/cat1.jpg">
+							    	<img alt="" src="/images/cat1.jpg" loading="lazy">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/cat2.jpg">
+						    	<img alt="" src="/images/cat2.jpg" loading="lazy">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/cat3.jpg">
+						    	<img alt="" src="/images/cat3.jpg" loading="lazy">
 						    	</a>
 						    </div>
 						    <div class="swiper-slide">
 						    	<a href="#">
-						    	<img alt="" src="/images/cat1.jpg">
+						    	<img alt="" src="/images/cat1.jpg" loading="lazy">
 						    	</a>
 						    </div>
 						    
@@ -88,29 +88,8 @@
 								<span class="font">라잇 베스트</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${bestNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-									
-										<!-- 표지 이미지 -->
-							        	<img class="novelImgs" th:src="${novel.coverSrc}">
-							        	<!-- 제목 -->
-							        	<span class="novel-card-title" th:text="${novel.title}"></span>
-							        	</br>
-							        	<!-- 작가 -->
-							        	<span class="novel-card-writer" th:text="|${novel.writer} · ${novel.genres}|"></span>
-							        	</br>
-							        	<!-- 좋아요 -->
-							        	<i class="bi bi-heart"></i>
-									  	<span class="novel-card-like" th:if="${novel.likeCount != null}" th:text="${novel.likeCount}"></span>
-									  	<!-- 평점 -->
-									  	<i class="bi bi-star"></i>
-									  	<span class="novel-card-rating" th:if="${novel.rating != null}" th:text="${novel.rating}"></span>
-									  	<!-- 조회수 -->									  	
-									  	<i class="bi bi-person-plus-fill"></i>
-									  	<span class="novel-card-totalViews"  th:if="${novel.totalViews != null}" th:text="${novel.totalViews}"></span>
-									</a>
-								</div>
+							<div id="bestNovelsContainer" class="novel-grid">
+							
 							</div>
 						</section>
 							
@@ -120,13 +99,9 @@
 								<span class="font">라잇 무</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${freeNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-										<!-- 표지 이미지 -->
-							        	<img class="novelImgs" th:src="${novel.coverSrc}">
-									</a>
-								</div>
+							<div id="freeNovelsContainer" class="novel-grid">
+							
+							
 							</div>
 						</section>
 						
@@ -137,35 +112,18 @@
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
 						
-							<div class="novel-grid">
-								<div class="novel-card"  th:each="novel : ${paidNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-										<img class="novelImgs" th:src="${novel.coverSrc}" alt="cover">
-									</a>
-								</div>
+							<div id="paidNovelsContainer" class="novel-grid">
+							
+							
 							</div>
 						</section>
 											
 						
 					
 						<section class="genre-novels">
-							<div th:each="entry : ${genreNovelsMap}">
-								
-								<!-- 장르명 -->
-								<div class="subTitle">
-									<span class="font" th:text="${entry.key} + ' 소설'"></span>
-									<i class="bi bi-caret-right-fill"></i>
-								</div>
-						
-								<!-- 소설 목록 (그리드) -->
-								<div class="novel-grid">
-									<div class="novel-card" th:each="novel : ${entry.value}">
-										<a th:href="@{/novel/{id}(id=${novel.id})}">
-											<img class="novelImgs" th:src="${novel.coverSrc}" alt="cover">
-										</a>
-									</div>
-								</div>
-							</div>
+						  <div id="genreNovelsContainer">
+					
+						  </div>
 						</section>
 						
 						<section class="eventNovels">
@@ -173,12 +131,8 @@
 								<span class="font">라잇 이벤트</span>			
 								<i class="bi bi-caret-right-fill"></i>											
 							</div>
-							<div class="novel-grid">
-								<div class="novel-card" th:each="novel : ${eventNovels}">
-									<a th:href="@{/novel/{id}(id=${novel.id})}">
-										<img class="novelImgs" th:src="${novel.coverSrc}" alt="cover">
-									</a>
-								</div>
+							<div id="eventNovelsContainer" class="novel-grid">
+							
 							</div>
 						</section>
 				</div>

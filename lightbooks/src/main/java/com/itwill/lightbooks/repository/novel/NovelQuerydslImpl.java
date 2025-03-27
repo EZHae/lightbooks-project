@@ -1,6 +1,7 @@
 package com.itwill.lightbooks.repository.novel;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,12 +20,13 @@ import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -158,120 +160,178 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 		return result;
 	}
 
-	
+
+	// ================================== 메인 홈 =================================
 	// 베스트 소설 조회
 	@Override
 	public List<NovelListItemDto> findRandomBestNovels(int count) {
 		QNovel novel = QNovel.novel;
+	    QNGenre nGenre = QNGenre.nGenre;
+	    QGenre genre = QGenre.genre;
 		
-		// 조건이 좋아요 100이상, 평점 4.0이상, 조회수 1000이상
+		// 조건이 좋아요 100이상, 평점 4.0이상
 		BooleanExpression condition = novel.likeCount.goe(100)
 				.and(novel.rating.goe(BigDecimal.valueOf(4.0)));
 		
-		// 조건에 맞는 소설 랜덤 조회
-		List<Novel> novels = queryFactory.selectFrom(novel)
+		
+		// 아이디 먼저 조회
+		List<Long> ids = queryFactory.select(novel.id)
+				.from(novel)
 				.where(condition)
-				.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc()) // function('rand')는 DB에서 랜덤 정렬
-				.limit(count)
 				.fetch();
 		
-		// id 
-		List<Long> novelIds = novels.stream()
-				.map(Novel :: getId)
-				.collect(Collectors.toList());
+		// 셔플하고 랜덤 일부 추출
+		Collections.shuffle(ids);
+		List<Long> selectedIds = ids.stream().limit(count).toList();
+		
+		// 조건에 맞는 소설 + 장르 조회
+		List<Novel> novels = queryFactory.selectFrom(novel)
+				.leftJoin(novel.novelGenre, nGenre).fetchJoin()
+				.leftJoin(nGenre.genre, genre).fetchJoin()
+				.where(novel.id.in(selectedIds))
+				.fetch();
 		
 		// 조회수
-		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
+		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(selectedIds);
 		
 		// DTO로 변환해서 조회수 포함시켜 반환
-		return novels.stream()
-				.map(n -> NovelListItemDto.fromEntity(n, viewsMap.getOrDefault(n.getId(), 0L)))
-				.collect(Collectors.toList());
+		return toDtoListFull(novels, viewsMap);
 	}
 
 
 	// 무료 소설 조회
 	@Override
-	public List<Novel> findFreeNovels(int limit) {
+	public List<NovelListItemDto> findFreeNovels(int limit) {
 		QNovel novel = QNovel.novel;
-		
-	    return queryFactory
-	            .selectFrom(novel)
-	            .where(novel.grade.eq(0)) // 무료
-	            .orderBy(novel.createdTime.desc()) // 최신순
-	            .limit(limit)
-	            .fetch();
-		
+
+	    List<Novel> novels = queryFactory
+	        .selectFrom(novel)
+	        .where(novel.grade.eq(0))
+	        .orderBy(novel.createdTime.desc())
+	        .limit(limit)
+	        .fetch();
+
+	    return toDtoList(novels);
 	}
 
 	// 유료 소설 조회
 	@Override
-	public List<Novel> findPaidNovels(int limit) {
+	public List<NovelListItemDto> findPaidNovels(int limit) {
 		QNovel novel = QNovel.novel;
-		
-	    return queryFactory
-	            .selectFrom(novel)
-	            .where(novel.grade.eq(1)) // 유료
-	            .orderBy(novel.createdTime.desc()) // 최신순
-	            .limit(limit)
-	            .fetch();
+
+	    List<Novel> novels = queryFactory
+	        .selectFrom(novel)
+	        .where(novel.grade.eq(1))
+	        .orderBy(novel.createdTime.desc())
+	        .limit(limit)
+	        .fetch();
+
+	    return toDtoList(novels);
 	}
 
 
-	// 장르별 소설 조회
 	@Override
-	public List<Novel> findNovelsByGenreName(String genreName, int limit) {
+	public List<NovelListItemDto> findNovelsByGenreName(String genreName, int limit) {
 	    QNovel novel = QNovel.novel;
 	    QNGenre nGenre = QNGenre.nGenre;
 	    QGenre genre = QGenre.genre;
-	    
-	    return queryFactory
-	            .selectFrom(novel)
-	            .join(novel.novelGenre, nGenre)
-	            .join(nGenre.genre, genre)
-	            .where(genre.name.eq(genreName))
-	            .orderBy(novel.createdTime.desc())
-	            .limit(limit)
-	            .fetch();
-	}
 
+	    // genre.name까지 select
+	    List<Tuple> results = queryFactory
+	        .select(novel, genre.name)
+	        .from(novel)
+	        .join(novel.novelGenre, nGenre).fetchJoin()
+	        .join(nGenre.genre, genre).fetchJoin()
+	        .where(genre.name.eq(genreName))
+	        .orderBy(novel.createdTime.desc())
+	        .limit(limit)
+	        .fetch();
 
-
-	@Override
-	public List<Novel> findRandomNovels(int limit) {
-		QNovel novel = QNovel.novel;
-		return queryFactory
-				.selectFrom(novel)
-				.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
-				.limit(limit)
-				.fetch();
-	}
-
-
-	// 여기서 부터 무료
-	// 추천 신작 무료 소설 (최근순)
-	@Override
-	public List<NovelListItemDto> findByFreeGradeOrderByNew(int limit) {
-		QNovel novel = QNovel.novel;
-		
-		List<Novel> novels = queryFactory
-				.selectFrom(novel)
-				.where(novel.grade.eq(0))
-				.orderBy(novel.likeCount.desc(), novel.rating.desc(), novel.modifiedTime.desc())
-				.limit(limit)
-				.fetch();
-		
-		return toDtoList(novels);
+	    return results.stream()
+	        .map(tuple -> NovelListItemDto.fromEntity(
+	            tuple.get(novel),
+	            tuple.get(genre.name), // genreName 전달!
+	            0L // 조회수 없으면 0L
+	        ))
+	        .toList();
 	}
 	
-	// 인기 연재 무료 소설 (좋아요/평점순)
 	@Override
-	public List<NovelListItemDto> findByFreeGradeAndSerialOrderByPopularity(int limit) {
+	public List<NovelListItemDto> findRandomNovels(int limit) {
+	    QNovel novel = QNovel.novel;
+
+	    List<Long> allIds = queryFactory	
+	        .select(novel.id)
+	        .from(novel)
+	        .fetch();
+
+	    if (allIds.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+
+	    Collections.shuffle(allIds);
+
+	    List<Long> selectedIds = allIds.stream()
+	        .limit(limit)
+	        .toList();
+
+	    List<Novel> novels = queryFactory
+	        .selectFrom(novel)
+	        .where(novel.id.in(selectedIds))
+	        .fetch();
+
+	    return toDtoList(novels);
+	}
+
+	// 추천 - 베스트 탭
+	@Override
+	public List<NovelListItemDto> findAllOrderByLikeDesc(int limit) {
+	    QNovel novel = QNovel.novel;
+
+	    List<Novel> novels = queryFactory
+	        .selectFrom(novel)
+	        .orderBy(novel.likeCount.desc(), novel.rating.desc())
+	        .limit(limit)
+	        .fetch();
+
+	    return novels.stream()
+	        .map(n -> NovelListItemDto.fromEntity(n, "", 0L))
+	        .toList();
+	}
+	
+	
+
+	// ========================= 여기서 부터 무료/유료  =========================
+	// 추천 신작 소설 (최근순)
+	@Override
+	public List<NovelListItemDto> findByGradeOrderByNew(int grade, int limit) {
+	    QNovel novel = QNovel.novel;
+	    QNGenre nGenre = QNGenre.nGenre;
+	    QGenre genre = QGenre.genre;
+		
+		List<Novel> novels = queryFactory
+				.selectFrom(novel)
+				.leftJoin(novel.novelGenre, nGenre).fetchJoin()
+		        .leftJoin(nGenre.genre, genre).fetchJoin()
+		        .where(novel.grade.eq(grade))
+		        .orderBy(novel.likeCount.desc(), novel.rating.desc(), novel.createdTime.desc())
+		        .limit(limit)
+		        .fetch();
+		
+		// 조회수 
+		List<Long> novelIds = novels.stream().map(Novel::getId).toList();
+		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
+		return toDtoListFull(novels, viewsMap);
+	}
+	
+	// 인기 연재 소설 (좋아요/평점순)
+	@Override
+	public List<NovelListItemDto> findByGradeAndSerialOrderByPopularity(int grade,int state,int limit) {
 		QNovel novel = QNovel.novel;
 		
 		List<Novel> novels = queryFactory
 				.selectFrom(novel)
-				.where(novel.grade.eq(0).and(novel.state.eq(1)))
+				.where(novel.grade.eq(grade).and(novel.state.eq(state)))
 				.orderBy(novel.likeCount.desc(), novel.rating.desc())
 				.limit(limit)
 				.fetch();
@@ -279,14 +339,14 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 		return toDtoList(novels);
 	}
 	
-	// 인기 완결 무료 소설
+	// 인기 완결 소설
 	@Override
-	public List<NovelListItemDto> findByFreeGradeAndCompletedOrderByPopularity(int limit) {
+	public List<NovelListItemDto> findByGradeAndCompletedOrderByPopularity(int grade,int state ,int limit) {
 		QNovel novel = QNovel.novel;
 		
 		List<Novel> novels = queryFactory
 				.selectFrom(novel)
-				.where(novel.grade.eq(0).and(novel.state.eq(0)))
+				.where(novel.grade.eq(grade).and(novel.state.eq(state)))
 				.orderBy(novel.createdTime.desc())
 				.limit(limit)
 				.fetch();
@@ -294,24 +354,23 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 		return toDtoList(novels);
 	}
 	
-	// 무료 이벤트 소설
+	// 이벤트 소설
 	@Override
-	public List<NovelListItemDto> findByFreeGradeEventOrderByNew(int limit) {
+	public List<NovelListItemDto> findByGradeEventOrderByNew(int grade, int limit) {
 		QNovel novel = QNovel.novel;
 		
 		List<Novel> novels = queryFactory
 				.selectFrom(novel)
-				.where(novel.grade.eq(0)) // 추후에 .where(novel.grade.eq(0).and(novel.isEvent.isTrue())) 이벤트
+				.where(novel.grade.eq(grade)) // 추후에 .where(novel.grade.eq(grade).and(novel.isEvent.isTrue())) 이벤트
 				.orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc()) 
 				.limit(limit)
 				.fetch();
 		
 		return toDtoList(novels);
 	}
-
-	// 무료 장르별 소설 (장르 지정)
+	// 장르별 소설 (장르 지정)
 	@Override
-	public List<NovelListItemDto> findByFreeGradeAndGenreRandom(String genreName, int limit) {
+	public List<NovelListItemDto> findByGradeAndGenreRandom(int grade, String genreName, int limit) {
 		QNovel novel = QNovel.novel;
 	    QNGenre nGenre = QNGenre.nGenre;
 	    QGenre genre = QGenre.genre;
@@ -320,34 +379,33 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 	            .selectFrom(novel)
 	            .join(novel.novelGenre, nGenre)
 	            .join(nGenre.genre, genre)
-	            .where(genre.name.eq(genreName).and(novel.grade.eq(0)))
+	            .where(genre.name.eq(genreName).and(novel.grade.eq(grade)))
 	            .orderBy(novel.createdTime.desc())
 	            .limit(limit)
 	            .fetch();
 		
 		return toDtoList(novels);
 	}
-	// DTO 변환
-	private List<NovelListItemDto> toDtoList(List<Novel> novels) {
-		return novels.stream()
-				.map(NovelListItemDto::fromEntity) // 단순히 변환
-				.toList();
-	}
-
+	
 	@Override
-	public List<Novel> findFreeOrderByLikeDesc() {
-		QNovel novel = QNovel.novel;
-		return queryFactory
-				.selectFrom(novel)
-				.where(novel.grade.eq(0))
-				.orderBy(novel.likeCount.desc(), novel.rating.desc())
-				.fetch();
+	public List<NovelListItemDto> findOrderByLikeDesc(int grade, int limit) {
+	    QNovel novel = QNovel.novel;
+
+	    List<Novel> novels = queryFactory
+	        .selectFrom(novel)
+	        .where(novel.grade.eq(grade))
+	        .orderBy(novel.likeCount.desc(), novel.rating.desc())
+	        .limit(limit)
+	        .fetch();
+
+	    return novels.stream()
+	        .map(n -> NovelListItemDto.fromEntity(n, "", 0L))
+	        .toList();
 	}
-
-
-
+	
+	
 	@Override
-	public List<NovelListItemDto> findbyGradeAndGenre(int grade, String genreName, int limit) {
+	public List<NovelListItemDto> findByGradeAndGenre(int grade, String genreName, int limit) {
 		QNovel novel = QNovel.novel;
 	    QNGenre nGenre = QNGenre.nGenre;
 	    QGenre genre = QGenre.genre;
@@ -356,12 +414,38 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 	            .selectFrom(novel)
 	            .join(novel.novelGenre, nGenre)
 	            .join(nGenre.genre, genre)
-	            .where(genre.name.eq(genreName).and(novel.grade.eq(0)))
+	            .where(genre.name.eq(genreName).and(novel.grade.eq(grade)))
 	            .orderBy(novel.modifiedTime.desc(), novel.rating.desc(), novel.likeCount.desc())
-	            .limit(300)
+	            .limit(limit)
 	            .fetch();
 		
 		return toDtoList(novels);
 	}			
 	
+	// DTO 변환
+	private List<NovelListItemDto> toDtoList(List<Novel> novels) {
+	    return novels.stream()
+	            .map(novel -> NovelListItemDto.fromEntity(novel, "", 0L))
+	            .toList();
+	}
+	
+	// 조회수 포함 + 장르 포함
+	private List<NovelListItemDto> toDtoListFull(List<Novel> novels, Map<Long, Long> viewsMap) {
+	    return novels.stream()
+	            .map(novel -> {
+	            	String genres =  novel.getNovelGenre().stream()
+	            			.map(nGenre -> nGenre.getGenre().getName())
+	            			.collect(Collectors.joining(", "));
+	            	
+	            	return NovelListItemDto.fromEntity(
+		                novel, 
+		                genres, // 장르 정보가 없을 때는 빈 문자열 처리!
+		                viewsMap.getOrDefault(novel.getId(), 0L)
+	            		);
+	            })
+	            .toList();
+	}
+
+
+
 }
