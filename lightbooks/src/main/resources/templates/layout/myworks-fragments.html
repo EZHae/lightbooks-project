@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{/layout/fragments :: htmlHead('insert title')}"></head>
+	<body>
+		<nav th:fragment="myworksHeader">
+			<style>
+				.myworksNavbar {
+				/*
+					background-color: white;
+					max-width: 100%;
+					height: 50px;
+					margin: 0 auto;
+					padding-left: 10%;  
+					padding-right: 10%; 
+					*/
+					position: fixed;
+				    top: 60px; /* pageHeader 높이에 맞게 조정 */
+				    left: 0;
+				    width: 100%;
+				    z-index: 999;
+				    background-color: white;
+				}
+				.myworksNavItem {
+					color: #474747;
+					text-decoration: none;
+				}
+				.myworksNavItem:hover {
+					color: #000000;
+					text-decoration: underline;
+				}
+			</style>
+			<div class="border-top border-bottom">
+				<nav class="myworksNavbar w-100">
+					<div class="p-2 fs-5 fw-bold d-flex align-items-center">
+						<a class="myworksNavItem me-4" th:href="@{/myworks/mynovel(id=${#authentication.principal.id})}">내 작품</a>
+						<a class="myworksNavItem me-4" th:href="@{/novel/new}">작품 작성</a>
+						<a class="myworksNavItem me-4" th:href="@{#}">후원 관리</a>
+						<a class="myworksNavItem" th:href="@{/user/coinpayment(id=${#authentication.principal.id})}">정산</a>
+					</div>
+				</nav>
+			</div>
+		</nav>
+		
+        <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
+	</body>
+</html>
