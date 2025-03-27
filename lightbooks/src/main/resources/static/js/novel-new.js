@@ -33,49 +33,69 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 	
+	//  파일 선택시 미리 보기만 
+	let selectedFile = null;
 	
 	document.getElementById('coverInput').addEventListener('change', function(e) {
 		const file = e.target.files[0];
 		if(!file) return;
 		
-		const img = new Image();
-		img.src = URL.createObjectURL(file);
+		selectedFile = file;
 		
-		// 픽셀 허용 범위 추가
-		const minWidth = 395;
-		const maxWidth = 405;
-		const minHeight = 595;
-		const maxHeight = 605;
-		
-		console.log("선택한 파일:", file);
-		
-		img.onload = () => {
-			// 사이즈 검사 (400 x 600)
-			console.log("이미지 로드 성공!", img.width, img.height);
+		 
+		const reader = new FileReader();
+		reader.onload = function (e) {
 			
-			if(img.width < minWidth || img.width > maxWidth || img.hight < minHeight || img.hight > maxHeight) {
-				alert('이미지는 400x600 사이즈여야 합니다!');
-				e.target.value = '';
-				document.getElementById('coverPreview').src = "/images/defaultCover.jpg";
-				document.getElementById('coverSrc').value = '';
-				return;
-			}
-			
-			// 비동기 업로드
+			const img = new Image();
+			img.onload = function () {
+				
+				console.log("선택한 파일:", file);
+				const minWidth = 395;
+				const maxWidth = 405;
+				const minHeight = 595;
+				const maxHeight = 605;
+				// 픽셀 허용 범위 추가
+				// 사이즈 검사 (400 x 600)
+					if(img.width < minWidth || img.width > maxWidth || img.height < minHeight || img.height > maxHeight) {
+						alert('이미지는 400x600 사이즈여야 합니다!');
+						document.getElementById('coverInput').value = '';
+						document.getElementById('coverPreview').src = "/images/defaultCover.jpg";
+						document.getElementById('coverSrc').value = '';
+						return;
+					}
+				console.log("이미지 로드 성공!", img.width, img.height);
+				document.getElementById('coverPreview').src = e.target.result;
+			};
+			img.src = e.target.result;
+		};
+		reader.readAsDataURL(file);
+	});
+		
+	// 작성 완료시
+	document.getElementById('novelForm').addEventListener('submit', function (e) {
+		e.preventDefault(); // 기본 제출 막기
+		
+		// 비동기 이미지 업로드
+		if(selectedFile){
 			const formData = new FormData();
-			formData.append("file", file);
+			formData.append("file", selectedFile);
 			
 			axios.post("/upload/image", formData)
 			.then(response => {
 				const path = response.data; // 서버에서 이미지 경로 문자열로 반환
-				
-				document.getElementById('coverPreview').src = path;
 				document.getElementById('coverSrc').value = path;
+				
+				// 커버 경로 세팅 끝났으니 폼 제출 강제 실행!
+				document.getElementById('novelForm').submit();
 			})
 			.catch(error => {
 				console.error(error);
 				alert('이미지 업로드 중 오류가 발생했습니다.')
 			});
+		} else {
+			// 이미지 없이 등록 가능할 때
+			document.getElementById('coverSrc').value = "/images/defaultCover.jpg";
+			document.getElementById("novelForm").submit();
 		}
 	});
 });
