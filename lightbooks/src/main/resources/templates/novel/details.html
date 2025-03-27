@@ -130,7 +130,7 @@
                         <div class="image-container">
                            <div class="image-wrapper">
                               <span id="novelgrade" th:text="*{grade == 0 ? '무료' : '유료'}"></span>
-                              <img th:src="@{/images/testimg.jpg}" alt="섬네일" style="width: 90%">
+                              <img th:src="@{${novel.coverSrc}}" alt="섬네일" style="width: 90%">
                            </div>
                         </div>
                         

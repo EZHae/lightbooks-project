@@ -32,4 +32,50 @@ document.addEventListener('DOMContentLoaded', () => {
 			event.preventDefault();
 		}
 	});
+	
+	
+	document.getElementById('coverInput').addEventListener('change', function(e) {
+		const file = e.target.files[0];
+		if(!file) return;
+		
+		const img = new Image();
+		img.src = URL.createObjectURL(file);
+		
+		// 픽셀 허용 범위 추가
+		const minWidth = 395;
+		const maxWidth = 405;
+		const minHeight = 595;
+		const maxHeight = 605;
+		
+		console.log("선택한 파일:", file);
+		
+		img.onload = () => {
+			// 사이즈 검사 (400 x 600)
+			console.log("이미지 로드 성공!", img.width, img.height);
+			
+			if(img.width < minWidth || img.width > maxWidth || img.hight < minHeight || img.hight > maxHeight) {
+				alert('이미지는 400x600 사이즈여야 합니다!');
+				e.target.value = '';
+				document.getElementById('coverPreview').src = "/images/defaultCover.jpg";
+				document.getElementById('coverSrc').value = '';
+				return;
+			}
+			
+			// 비동기 업로드
+			const formData = new FormData();
+			formData.append("file", file);
+			
+			axios.post("/upload/image", formData)
+			.then(response => {
+				const path = response.data; // 서버에서 이미지 경로 문자열로 반환
+				
+				document.getElementById('coverPreview').src = path;
+				document.getElementById('coverSrc').value = path;
+			})
+			.catch(error => {
+				console.error(error);
+				alert('이미지 업로드 중 오류가 발생했습니다.')
+			});
+		}
+	});
 });
