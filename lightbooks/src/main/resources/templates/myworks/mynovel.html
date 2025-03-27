@@ -90,7 +90,7 @@
 				<div th:each="novel : ${novels}" th:object="${novel}">
 					<div class="my-novel" >
 						<div class="novelCoverImg">
-							<img class="coverImg" th:src="@{{novel.coverSrc}(novel.coverSrc=${novel.coverSrc})}">
+							<img class="coverImg" th:src="@{/uploads/novelcovers/${novel.coverImageName}}">
 						</div>
 						<div class="novelContent">
 							<div class="gradeIcon">

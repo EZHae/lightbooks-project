@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/uploads/novel-covers/**") // 사용자가 접근할 URL 패턴
+		registry.addResourceHandler("/uploads/novelcovers/**") // 사용자가 접근할 URL 패턴
 				.addResourceLocations(
 						// 실제 파일이 저장된 로컬/서버 경로를 지정 (os에 따라 다르게 설정)
 						"file:/home/ezhae3221/gcp/upload/images/novelcovers/", // 리눅스 서버용

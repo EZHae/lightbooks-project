@@ -39,7 +39,7 @@ public class ImageUploadController {
 			Files.createDirectories(savePath.getParent());
 			file.transferTo(savePath);
 			
-			return ResponseEntity.ok("/uploads/novel-covers/" + savedName);
+			return ResponseEntity.ok("/uploads/novelcovers/" + savedName);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,108 +4,121 @@
 	<body>
  		<th:block th:replace="~{/layout/fragments :: pageHeader}"></th:block>
 
-		<main class="card">
-			<div class="card-body">
-				<form id="novelForm" method="post" th:action="@{/novel/new}">
-					<div class="row mg-b-25">
-						<div class="col-4">
-							<!-- 이미지 미리보기 -->
-							<img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기" style="width: 400px; height:600px;">
-						</div>
-						<div class="col-lg-8">
-							<div class="d-none">
-								<input type="text" name="userId" class="form-control" th:value="${#authentication.principal.id}">
-							</div>
-				            <div>
-				                <label class="form-label" for="title" >작품명</label>
-				                <input type="text" name="title" class="form-control" required>
-				            </div>
-				            
-				            <div class="d-none">
-				                <label class="form-label" for="writer">작성자</label>
-				                <input type="text" name="writer" class="form-control" th:value="${#authentication.principal.nickname}" readonly>
-				            </div>
-				            
-				            <div>
-				                <label class="form-label">메인장르</label>
-				                <select class="form-select" name="genre" required>
-				            		<option value="1">판타지</option>
-				            		<option value="2">로맨스</option>
-				            		<option value="3">무협</option>
-				            		<option value="4">로판</option>
-				            		<option value="5">현판</option>
-				            		<option value="6">드라마</option>
-				            	</select>
-				            </div>
-				            
-				            <div>
-				                <label class="form-label">연재요일</label>
-				                <br/>
-				                <div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox1" value="월요일">
-									<label class="form-check-label" for="inlineCheckbox1">월요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일">
-									<label class="form-check-label" for="inlineCheckbox2">화요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일">
-									<label class="form-check-label" for="inlineCheckbox3">수요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일">
-									<label class="form-check-label" for="inlineCheckbox4">목요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일">
-									<label class="form-check-label" for="inlineCheckbox5">금요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일">
-									<label class="form-check-label" for="inlineCheckbox6">토요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox7" value="일요일">
-									<label class="form-check-label" for="inlineCheckbox7">일요일</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox0" value="비정기">
-									<label class="form-check-label" for="inlineCheckbox0">비정기</label>
-								</div>
-				            </div>
-				            <div>	
-				            	<label class="form-label" for="ageLimit">연령</label>
-				            	<select class="form-select" name="ageLimit">
-				            		<option value="0" autofocus>전 연령</option>
-				            		<option value="1">15세 연령가</option>
-				            		<option value="2">19세 연령가</option>
-				            	</select>
-				            </div>
-				            <div>
-				                <label class="form-label" for="intro">작품소개</label>
-				                <textarea class="form-control" rows="5" name="intro" required></textarea>
-				            </div>
-				            <div>
-				                <label class="form-label">북커버 표지(400x600)</label>
-								<br/>
-								
-								<!-- 파일 선택 (jpeg, png, gif, webp) -->
-								<input type="file" id="coverInput" accept="image/*" value="파일선택"/> 
-								<input type="hidden" name="coverSrc" id="coverSrc">
-				            </div>
-				            <div>
-								<input id="uploadBtn" class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
-				            </div>
-						</div>
+		<main>
+			<div class="wrapper">
+				<div class="container">
+					<div class="infotitle">
+						<span class="labeltitle">작품설정<span class="text-danger">*</span>
+						</span>
+						<span>작품에 대한 정보를 입력해 주세요</span>
 					</div>
-				</form>
+					<form id="novelForm" method="post" th:action="@{/novel/new}">
+						<div class="d-flex-area">
+							<div class="image-box">
+								<div class="image-label">
+									
+									<!-- 이미지 미리보기 -->
+									<img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기">
+								</div>
+							</div>
+							<div class="">
+								<div class="inputContainer">
+									<div class="d-none">
+										<input type="text" name="userId" class="form-control" th:value="${#authentication.principal.id}">
+									</div>
+						            <div>
+						                <label class="form-label" for="title" >작품명</label>
+						                <input type="text" name="title" class="form-control" required>
+						            </div>
+						            
+						            <div class="d-none">
+						                <label class="form-label" for="writer">작성자</label>
+						                <input type="text" name="writer" class="form-control" th:value="${#authentication.principal.nickname}" readonly>
+						            </div>
+						            
+						            <div>
+						                <label class="form-label">장르</label>
+						                <select class="form-select" name="genre" required>
+						            		<option value="1">판타지</option>
+						            		<option value="2">로맨스</option>
+						            		<option value="3">무협</option>
+						            		<option value="4">로판</option>
+						            		<option value="5">현판</option>
+						            		<option value="6">드라마</option>
+						            	</select>
+						            </div>
+						            
+						            <div>
+						                <label class="form-label">연재요일</label>
+						                <br/>
+						                <div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox1" value="월요일">
+											<label class="form-check-label" for="inlineCheckbox1">월요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox2" value="화요일">
+											<label class="form-check-label" for="inlineCheckbox2">화요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox3" value="수요일">
+											<label class="form-check-label" for="inlineCheckbox3">수요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox4" value="목요일">
+											<label class="form-check-label" for="inlineCheckbox4">목요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox5" value="금요일">
+											<label class="form-check-label" for="inlineCheckbox5">금요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox6" value="토요일">
+											<label class="form-check-label" for="inlineCheckbox6">토요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox7" value="일요일">
+											<label class="form-check-label" for="inlineCheckbox7">일요일</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox0" value="비정기">
+											<label class="form-check-label" for="inlineCheckbox0">비정기</label>
+										</div>
+						            </div>
+						            <div>	
+						            	<label class="form-label" for="ageLimit">연령</label>
+						            	<select class="form-select" name="ageLimit">
+						            		<option value="0" autofocus>전 연령</option>
+						            		<option value="1">15세 연령가</option>
+						            		<option value="2">19세 연령가</option>
+						            	</select>
+						            </div>
+						            <div>
+						                <label class="form-label" for="intro">작품소개</label>
+						                <textarea class="form-control" rows="5" name="intro" required></textarea>
+						            </div>
+						            <div>
+						                <label class="form-label">북커버 표지(400x600)</label>
+										<br/>
+										
+										<!-- 파일 선택 (jpeg, png, gif, webp) -->
+										<input type="file" id="coverInput" accept="image/*" value="파일선택"/> 
+										<input type="hidden" name="coverSrc" id="coverSrc">
+						            </div>
+						            <div>
+										<input id="uploadBtn" class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
+						            </div>
+								</div>
+							</div>
+						</div>
+					</form>
+					
+				</div>
             </div>
         </main>
-		
 		<th:block th:replace="~{/layout/fragments :: footer}"></th:block>
         <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
         <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
         <script th:src="@{/js/novel-new.js}"></script>
 	</body>
+	<link rel="stylesheet" th:href="@{/css/novel-new.css}" />
 </html>

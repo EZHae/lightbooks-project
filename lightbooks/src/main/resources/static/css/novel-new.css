@@ -1,0 +1,107 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 전체 wrapper 정렬 */
+.wrapper {
+	display: flex;
+	justify-content: center;
+	padding: 40px 0;
+	background-color: #f8f9fa;
+}
+
+.infotitle {
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 20px;
+}
+
+/* 컨테이너 카드 */
+.container {
+	width: 100%;
+	max-width: 950px;
+	background-color: #fff;
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* flex 정렬 영역 */
+.d-flex-area {
+	display: flex;
+	gap: 40px;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+}
+
+/* 이미지 영역 */
+.image-box {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+/* 입력 영역 */
+.inputContainer {
+	flex: 2 1 500px;
+	justify-content: center;
+	min-width: 0;
+}
+
+#coverPreview {
+	max-width: 100%;
+	width: 300px;
+	height: auto;
+	object-fit: cover;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	margin-bottom: 20px;
+}
+/* 폼 내부 input, textarea, select 공통 스타일 */
+.inputContainer input[type="text"], .inputContainer input[type="file"],
+	.inputContainer input[type="submit"], .inputContainer textarea,
+	.inputContainer select {
+	width: 100%;
+	padding: 10px;
+	margin-top: 0px;
+	margin-bottom: 18px;
+	border-radius: 6px;
+	border: 1px solid #ccc;
+	font-size: 13px;
+	box-sizing: border-box;
+}
+
+/* 버튼 */
+#uploadBtn {
+	background-color: #008C2C;
+	color: white;
+	border: none;
+	font-size: 18px;
+	padding: 12px;
+	border-radius: 8px;
+	transition: background-color 0.2s ease;
+}
+
+#uploadBtn:hover {
+	background-color: #007026;
+	cursor: pointer;
+}
+
+/* 모바일 대응 */
+@media ( max-width : 768px) {
+	.d-flex-area {
+		flex-direction: column;
+		align-items: center;
+	}
+	.inputContainer {
+		width: 100%;
+	}
+	.image-box {
+		width: 100%;
+	}
+	#coverPreview {
+		width: 100%;
+		max-width: 400px;
+	}
+}
