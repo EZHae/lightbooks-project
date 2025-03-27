@@ -109,24 +109,22 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" th:action="@{/user/signin}">
-                            <div>
-                            	<span>환불 가능 코인</span>
-                            	<strong id="reAppPossibleCoin">0</strong>
-                            </div>
-                            <div class="mt-2">
-                            	<label for="reAppCoin">환불 신청 코인</label>
-                            	<input type="number" id="reAppCoin" class="form-control" min=100 />
-                            </div>
-                            <div>
-                            	<label for="resultCash">환불 금액</label>
-                            	<input type="number" id="resultCash" class="form-control" readonly>
-                            </div>
-                            <div>
-                            	<strong>환불/환전 신청은 100코인부터 가능합니다.</strong> <br>
-                            	<strong>환불/환전은 1코인당 90원으로 신청됩니다.</strong>
-                            </div>
-                        </form>
+						<div>
+							<span>환불 가능 코인</span>
+							<strong id="reAppPossibleCoin">0</strong>
+						</div>
+						<div class="mt-2">
+							<label for="reAppCoin">환불 신청 코인</label>
+							<input type="number" id="reAppCoin" class="form-control" min=100 />
+						</div>
+						<div>
+							<label for="resultCash">환불 금액</label>
+							<input type="number" id="resultCash" class="form-control" readonly>
+						</div>
+						<div>
+							<strong>환불/환전 신청은 100코인부터 가능합니다.</strong> <br>
+							<strong>환불/환전은 1코인당 90원으로 신청됩니다.</strong>
+						</div>
                     </div>
                     <div class="modal-footer">
                         <button id=btnReAppSubmit class="btn btn-danger disabled">환불/환전 신청</button>

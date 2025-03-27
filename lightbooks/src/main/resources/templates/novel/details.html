@@ -141,6 +141,8 @@
                         <div>
                            <div class="novel-content">
                               <!-- 타이틀 -->
+                              <span class="d-none" id="novelUserId" th:text="*{userId}"></span>
+                              <span class="d-none" id="novelId" th:text="*{id}"></span>
                               <span id="inputNovelTitle" th:text="*{title}"></span>
                               
                               <span id="novelwriter" th:text="*{writer}"></span>
@@ -183,6 +185,13 @@
                            data-bs-toggle="modal" data-bs-target="#ratingModal">
                            <i class="bi bi-star-fill"></i>
                            <span id="averageRating">0.0</span> / 5.0
+                        </button>
+                     </div>
+                     
+                     <div>
+                        <button id="openDonationBtn" class="btn">
+                           <i class="bi bi-cash-coin"></i>
+                           <span>작품후원</span>
                         </button>
                      </div>
    
@@ -327,6 +336,7 @@
       </div>
    </div>
 
+   <div th:replace="~{/novel/donation-modal :: donationModal}"></div>
 
    <th:block th:replace="~{/layout/fragments :: bootstrapJS}"></th:block>
    <th:block th:replace="~{/layout/fragments :: axiosJS}"></th:block>
@@ -334,6 +344,7 @@
    <script th:src="@{/js/episode-listOfNovelDetails.js}"></script>
    <script th:src="@{/js/novel-details.js}"></script>
    <script th:src="@{/js/commentList.js}"></script>
+   <script th:src="@{/js/novel-donation-modal.js}"></script>
 </body>
    <link rel="stylesheet" th:href="@{/css/comment.css}" />
 </html>
