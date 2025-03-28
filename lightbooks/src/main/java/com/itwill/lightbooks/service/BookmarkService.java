@@ -200,7 +200,7 @@ public class BookmarkService {
     @Transactional(readOnly = true)
     public Page<LikedNovelBookmarkDto> getLikedNovels(Long userId, int pageNo, Sort sort) {
         PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
-        Page<Bookmark> page = bookmarkRepo.findLikedNovelsByUserIdOrderByLikeCountDesc(userId, pageRequest);
+        Page<Bookmark> page = bookmarkRepo.findLikedNovelsByUserIdOrderByLikeCountDesc(userId, pageRequest);//
 
         return page.map(bookmark -> {
             Novel novel = bookmark.getNovel(); // 레포지토리에서 Novel을 함께 가져왔으므로 bookmark에서 직접 접근
