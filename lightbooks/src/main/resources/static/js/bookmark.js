@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	        }
 
 	        let row = document.createElement('div'); // row 컨테이너 생성
-	        row.classList.add('card-grid'); // row 클래스 추가
+	        row.classList.add('card-grid'); 
 
 	        data.content.forEach(item => {
 	            let itemHtml = `

@@ -246,7 +246,7 @@ public class BookmarkService {
  // 추가) 구매한 소설 목록 조회
     @Transactional(readOnly = true)
     public Page<PurchasedNovelBookmarkDto> getPurchasedNovels(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 10, sort);
+        PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
         Page<Bookmark> page = bookmarkRepo.findPurchasedNovelsWithNovelByUserIdOrderByCreatedTimeDesc(userId, pageRequest);
 
         return page.map(bookmark -> {
