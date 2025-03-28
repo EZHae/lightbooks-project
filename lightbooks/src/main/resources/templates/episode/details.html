@@ -16,7 +16,6 @@
              overflow-y: auto;
              height: 100%;
              background-color: #ffffff;
-             font-family: 'Nanum Gothic', sans-serif;
          }
          
          /* 상단 바 스타일 */
@@ -35,20 +34,7 @@
              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 입체감 추가 */
              z-index: 1000;
          }
-         
-         .global-menu-bar button {
-             background-color: #e9ecef;
-             color: #000000;
-             border: 1px solid #ced4da;
-             padding: 8px 15px;
-             border-radius: 5px;
-             cursor: pointer;
-         }
-         
-         .global-menu-bar button:hover {
-             background-color: #dee2e6; /* 버튼 호버 시 밝은 회색 */
-         }
-         
+             
          /* 본문 제목 스타일 */
          .episode-title-main {
              font-size: 2.5rem; /* 제목 크기 */
@@ -85,7 +71,6 @@
              word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
              line-height: 1.8; /* 줄 간격 */
              font-size: 1.1rem; /* 텍스트 크기 */
-             font-family: 'Nanum Gothic', sans-serif;
              color: #333333; /* 본문 텍스트 색상 */
          }
          
@@ -168,18 +153,36 @@
              color: #ffffff !important; /* 다크모드에서 텍스트 흰색으로 고정 */
          }
          
-         /* 이전화, 다음화, 수정 버튼 */
-         .btn-secondary,
-         .btn-primary {
-             color: #ffffff !important; /* 버튼 텍스트 흰색 */
-             background-color: #444444; /* 버튼 배경 어두운 회색 */
-             border: 1px solid #666666;
+         /* 이전화, 다음화 */
+         .btn-secondary {
+             color: #ffffff !important;
+             background-color: #66b2ff; 
+             border: none;
+             font-size: 17px;
          }
          
-         .btn-secondary:hover,
-         .btn-primary:hover {
-             background-color: #555555; /* 호버 시 밝은 회색 */
+         .btn-secondary:hover {
+             background-color: #007bff; 
          }
+         
+         /* 수정 버튼 */
+         #modifybutton {
+            background-color: #6c757d; /* 회색 배경 */
+            color: #ffffff; /* 흰색 텍스트 */
+            border: 1px solid #6c757d; /* 테두리 색상 */
+            float: right; /* 버튼을 오른쪽으로 정렬 */
+            margin-right: 0; /* 오른쪽 여백 */
+            padding: 5px 10px; /* 버튼 내부 여백 */
+            border-radius: 5px; /* 모서리 둥글게 */
+            text-decoration: none; /* 링크 밑줄 제거 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+            font-size: 17px;
+        }
+
+        #modifybutton.hover {
+            background-color: #4a5568; /* 호버 시 더 진한 회색 */
+            border-color: #4a5568;  /* 테두리도 동일하게 */
+        }
          
          /* 다크모드에서 메뉴바 기본 스타일 유지 */
          .dark-mode .global-menu-bar {
@@ -208,25 +211,29 @@
        
         <!-- 상단 메뉴바 -->
         <div class="global-menu-bar">
-            <h1 style="font-size: 1.2rem; margin: 0;">
+            <div style="font-size: 1.2rem; margin: 0;">
                 <a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}" style="text-decoration: none; color: inherit;">
                     <i class="bi bi-house"></i> <span th:text="${episode.novel.title}">소설 제목</span>
                 </a>
-            </h1>
-            <div>
-                <button>가로보기</button>
-                <div>
-                   <a class="button" th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">댓글</a>
-                </div>
             </div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 1.2rem;">
+			    <button style="background-color: white; border: none; color: black;">
+				    가로보기
+				</button>
+				<span style="color: black;">│</span>
+			    <a id="commentButton" class="button" style="margin-right: 10px; font-size: 1.2rem; text-decoration: none; color: black;" 
+				   th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">
+				   &nbsp;<i class="bi bi-chat"></i>&nbsp;댓글
+				</a>
+			</div>
         </div>
 
         <!-- 본문 -->
         <div class="container">
             <div class="episode-container">
-                <h1 class="episode-title-main" th:text="${episode.novel.title}">소설 제목</h1>
-                <h2 class="episode-title-sub" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></h2>
-                <h3 class="episode-stage-sub" th:text="${episode.title}"></h3>
+                <div class="episode-title-main font-size: 40px;" th:text="${episode.novel.title}">소설 제목</div>
+                <div class="episode-title-sub font-size: 30px;" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></div>
+                <div class="episode-stage-sub font-size: 20px;" th:text="${episode.title}"></div>
                 <hr>
                 <div class="episode-content" th:utext="${episode.content}"></div>
                 <div style="display: flex; justify-content: space-between; margin-top: 20px;">
@@ -254,11 +261,17 @@
                         >다음 화</a><!-- 지우지마세요 -->
                 </div>
                 <div th:if="${episode.novel.userId eq #authentication.principal.id}">
-                    <a class="btn btn-primary btn-sm" th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">수정</a>
+                    <a id ="modifybutton" class="btn btn-primary mt-2" style="float: right; margin-right: 0;" th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">&nbsp;&nbsp;수정&nbsp;&nbsp;</a>
                 </div>
+                <br>
+                <br>
+                <br>
                 <div>
-                    <a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}">뒤로가기</a>
-                </div>
+				    <a style="float: right; margin-right: 0; text-decoration: none; color: black; font-size: 17px;" 
+				       th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}">
+				       <i class="bi bi-caret-left-fill"></i>뒤로가기
+				    </a>
+				</div>
             </div>
         </div>
 
