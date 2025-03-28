@@ -190,7 +190,7 @@ public class NovelController {
     	
     	novelService.deleteById(id);
     		
-    	return "redirect:/novel/my-works?id=" + userId;
+    	return "redirect:/myworks/mynovel?id=" + userId;
     }
     
     // 작품 업데이트

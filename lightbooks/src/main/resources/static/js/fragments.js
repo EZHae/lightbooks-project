@@ -229,14 +229,28 @@ document.addEventListener('DOMContentLoaded', () => {
 		navbar.style.zIndex = '1200'
 	});
 
-	// 스크롤 이벤트 리스너 추가
 	window.addEventListener('scroll', () => {
-	  // 스크롤이 10px 이상 내렸다면
-	  if (window.scrollY > 10) {
-	    navbar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)'; // 그림자 효과 추가
-	  } else {
-	    navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
-	  }
+		const pageHeader = document.getElementById('pageHeader');
+		const isMyworksPage = document.body.classList.contains('myworks-page');
+		const myworksNavbar = document.querySelector('.myworksNavbar');
+		
+		// pageHeader가 존재할 때만 처리
+		if (pageHeader) {
+		  if (isMyworksPage) {
+		    pageHeader.style.boxShadow = 'none';
+		  } else {
+		    pageHeader.style.boxShadow = window.scrollY > 10 
+		      ? '0 4px 8px rgba(0, 0, 0, 0.05)' 
+		      : 'none';
+		  }
+		}
+
+		// myworks 페이지 전용 헤더에 그림자 적용
+		if (isMyworksPage && myworksNavbar) {
+		  myworksNavbar.style.boxShadow = window.scrollY > 10 
+		    ? '0 4px 8px rgba(0, 0, 0, 0.08)' 
+		    : 'none';
+		}
 	});
 	
 	function formatDateTime(dateTimeString) {

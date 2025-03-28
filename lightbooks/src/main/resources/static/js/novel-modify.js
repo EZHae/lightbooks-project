@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			axios.post(url)
 			.then(() => {
 				alert("삭제가 완료되었습니다.")
-				window.location.href = `/novel/my-works?id=${userId}`;	
+				window.location.href = `/myworks/mynovel?id=${userId}`;	
 			})
 			.catch(error => {
 				alert("삭제 중 오류가 발생했습니다.");

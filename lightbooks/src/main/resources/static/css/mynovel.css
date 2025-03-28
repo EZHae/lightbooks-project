@@ -1,0 +1,196 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh; /* 전체 화면을 차지하도록 설정 */
+}
+
+.container {
+	max-width: 1200px; /* 원하는 최대 너비 지정 가능 */
+	margin: 0 auto; /* 중앙 정렬 */
+	padding: 20px;
+}
+
+.novelList {
+	margin-top: 30px;
+}
+
+.my-novel {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  margin-bottom: 24px;
+  align-items: stretch; /* 세 영역을 개별 기준으로 정렬하게 함 */
+}
+
+.novelContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 이게 핵심 */
+}
+
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 제목 */
+.novelContent a {
+	font-size: 20px;
+	font-weight: bold;
+	color: #222;
+	text-decoration: none;
+}
+
+.novelContent a:hover {
+	text-decoration: underline;
+}
+
+
+.novelWriter {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	margin-top: 20px;
+	padding: 5px;
+}
+
+div.container {
+	background: white;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	margin-top: 20px;
+}
+
+.novelContent .intro {
+  min-height: 72px; /* 약 3줄 정도의 높이 확보 (폰트 크기에 따라 조정 가능) */
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.intro, .stats, .genres{
+	margin-top: 5px;
+}
+
+.nav-work {
+	background: white;
+	height: 80px;
+	width: 160px;
+	float: left;
+	border: 1px solid gray;
+	border-radius: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 10px;
+}
+
+.nav-link {
+	text-align: center;
+}
+
+/* 오른쪽 버튼 영역 */
+.novelModifyBtn {
+	width: 160px; /* ➤ 버튼 영역 넓이 설정 */
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: stretch; /* 버튼 너비 꽉 채움 */	
+	justify-content: center;
+}
+
+.novelModifyBtn .btn {
+	padding: 10px 16px;
+	font-size: 15px;
+	border-radius: 8px;
+	background-color: #f1f1f1;
+	color: #333;
+	border: 1px solid #ccc;
+	text-align: center;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.novelModifyBtn .btn:hover {
+	background-color: #e0e0e0;
+	color: #000;
+}
+
+.novelModifyBtn .btn:disabled {
+	background-color: #e9ecef;
+	color: #999;
+	cursor: not-allowed;
+	border: 1px solid #ddd;
+}
+
+
+/* 이미지 */
+.novelCoverImg {
+  position: relative;
+  width: 130px; /* 이미지 가로 크기에 맞게 */
+}
+.coverImg {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+
+/* 뱃지 스타일 */
+.gradeIcon .badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: white;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* 무료/유료 색상 구분 */
+.grade-free {
+  background-color: #28a745; /* 초록 */
+}
+
+.grade-paid {
+  background-color: #dc3545; /* 빨강 */
+}
+
+/* shimmer 효과 */
+.badge.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-20deg);
+  animation: badge-shimmer 1.5s infinite;
+}
+
+@keyframes badge-shimmer {
+  0%   { left: -100%; }
+  50%  { left: 100%; }
+  100% { left: 100%; }
+}

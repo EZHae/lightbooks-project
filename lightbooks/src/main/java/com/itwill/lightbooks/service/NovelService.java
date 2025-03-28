@@ -60,6 +60,12 @@ public class NovelService {
 	      
 	      log.info("해당 유저 소설 : {}", novels);
 	      
+	      List<Long> novelIds = novels.stream()
+	    		  .map(Novel::getId).collect(Collectors.toList());
+	      
+	      // 회차 조회수 Map 가져오기
+	      Map<Long, Long> totalViewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
+	      
 	      return novels.stream().map(novel -> new NovelResponseDto(
 	            novel.getId(),
 	            novel.getTitle(),
@@ -72,9 +78,9 @@ public class NovelService {
 	            novel.getNovelGenre()
 	            .stream().map(novelGenre -> novelGenre.getGenre().getName())
 	            .collect(Collectors.toList()),
-	            novel.getRating() // 데시멀이라서 stream할 필요없음
-	            ))
-	            .collect(Collectors.toList());
+	            novel.getRating(), // 데시멀이라서 stream할 필요없음
+	            totalViewsMap.getOrDefault(novel.getId(), 0L)
+	            )).collect(Collectors.toList());
 	   }
 	
 	// 소설 하나만 가져오는 기능
