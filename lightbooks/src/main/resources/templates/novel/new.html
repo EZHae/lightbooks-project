@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{layout/fragments :: htmlHead('라잇북스')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 작품작성')}"></head>
 	<body>
  		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 
@@ -31,7 +31,7 @@
 									</div>
 						            <div>
 						                <label class="form-label" for="title" >작품명 <span class="text-danger">*</span></label>
-						                <input type="text" name="title" class="form-control" required>
+						                <input type="text" name="title" class="form-control" maxlength="30" required>
 						            </div>
 						            
 						            <div class="d-none">
@@ -51,7 +51,7 @@
 						            	</select>
 						            </div>
 						            
-						            <div>
+						            <div class="checkBox">
 						                <label class="form-label">연재요일 <span class="text-danger">*</span></label>
 						                <br/>
 						                <div class="form-check form-check-inline">
@@ -88,27 +88,30 @@
 										</div>
 						            </div>
 						            <div>	
-						            	<label class="form-label" for="ageLimit">연령</label>
+						            	<label class="form-label" for="ageLimit">연령 <span class="text-danger">*</span></label>
 						            	<select class="form-select" name="ageLimit">
 						            		<option value="0" autofocus>전 연령</option>
 						            		<option value="1">15세 연령가</option>
 						            		<option value="2">19세 연령가</option>
 						            	</select>
 						            </div>
-						            <div>
-						                <label class="form-label" for="intro">작품소개 <span class="text-danger">*</span></label>
-						                <textarea class="form-control" rows="5" name="intro" required></textarea>
+						            <div class="intro-group">
+						                <label class="form-label intro-label" for="intro" >작품소개 <span class="text-danger">*</span> <span id="introLength">0 / 200</span></label>
+						                <textarea name="intro" id="intro" class="form-control" maxlength="200" rows="5" required></textarea>
 						            </div>
 						            <div>
 						                <label class="form-label">북커버 표지(400x600)</label>
 										<br/>
 										
+										<div class="fileBtnWrap">
 										<!-- 파일 선택 (jpeg, png, gif, webp) -->
-										<input type="file" id="coverInput" accept="image/*" value="파일선택"/> 
-										<input type="hidden" name="coverSrc" id="coverSrc">
+											<input type="file" id="coverInput"  accept="image/*" value="파일선택"/> 
+											<input type="button" id="resetImageBtn" class="btn btn-sm btn-outline-danger" value="삭제">
+											<input type="hidden" name="coverSrc" id="coverSrc">
+										</div>
 						            </div>
 						            <div>
-										<input id="uploadBtn" class="btn btn-success form-control mt-2" type="submit" value="작성완료" />
+										<input id="uploadBtn" class="btn btn-success form-control" type="submit" value="작성완료" />
 						            </div>
 								</div>
 							</div>

@@ -98,4 +98,31 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.getElementById("novelForm").submit();
 		}
 	});
+	
+	document.getElementById('resetImageBtn').addEventListener('click', function() {
+		const fileInput = document.getElementById('coverInput');
+		const preview = document.getElementById('coverPreview');
+		const hiddenInput = document.getElementById('coverSrc');
+		
+		// 파일 초기화
+		fileInput.value = '';
+		
+		// 미리보기 이미지 디폴트로 변경
+		preview.src = "/images/defaultCover.jpg";
+		
+		// hidden input 비우기
+		hiddenInput.value = '';
+		
+		selectedFile = null;
+		
+		console.log("이미지 리셋 완료");
+	});
+	
+	// 글자수
+	const introInput = document.getElementById("intro");
+	const introLength = document.getElementById("introLength");
+
+	introInput.addEventListener("input", () => {
+	  introLength.textContent = `${introInput.value.length} / 200`;
+	});
 });
