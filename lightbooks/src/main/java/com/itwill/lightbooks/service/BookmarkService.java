@@ -199,8 +199,8 @@ public class BookmarkService {
  // 추가) 좋아요 누른 소설 목록 조회
     @Transactional(readOnly = true)
     public Page<LikedNovelBookmarkDto> getLikedNovels(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 10, sort);
-        Page<Bookmark> page = bookmarkRepo.findLikedNovelsByUserIdOrderByLikeCountDesc(userId, pageRequest);
+        PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
+        Page<Bookmark> page = bookmarkRepo.findLikedNovelsByUserIdOrderByLikeCountDesc(userId, pageRequest);//
 
         return page.map(bookmark -> {
             Novel novel = bookmark.getNovel(); // 레포지토리에서 Novel을 함께 가져왔으므로 bookmark에서 직접 접근
@@ -246,7 +246,7 @@ public class BookmarkService {
  // 추가) 구매한 소설 목록 조회
     @Transactional(readOnly = true)
     public Page<PurchasedNovelBookmarkDto> getPurchasedNovels(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 10, sort);
+        PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
         Page<Bookmark> page = bookmarkRepo.findPurchasedNovelsWithNovelByUserIdOrderByCreatedTimeDesc(userId, pageRequest);
 
         return page.map(bookmark -> {

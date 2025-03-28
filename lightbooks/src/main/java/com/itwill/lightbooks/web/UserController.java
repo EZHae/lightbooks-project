@@ -166,7 +166,7 @@ public class UserController {
 		}
 
 		Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-		Pageable pageable = PageRequest.of(pageNo, 20, sort);
+		Pageable pageable = PageRequest.of(pageNo, 12, sort);
 
 		// 타입별 데이터 반환
 		switch (type) {
