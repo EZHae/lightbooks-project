@@ -138,6 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
 						document.getElementById('coverInput').value = '';
 						document.getElementById('coverPreview').src = "/images/defaultCover.jpg";
 						document.getElementById('coverSrc').value = '';
+						
+						selectedFile = null;
+						fileNameSpan.textContent = "선택된 파일 없음";
+						
 						return;
 					}
 				console.log("이미지 로드 성공!", img.width, img.height);

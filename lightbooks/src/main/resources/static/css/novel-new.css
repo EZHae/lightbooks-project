@@ -121,6 +121,7 @@ body {
   border: 1px solid #dc3545;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: auto;
 }
 #resetImageBtn:hover {
 	color: white;
