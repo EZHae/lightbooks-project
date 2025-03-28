@@ -159,12 +159,20 @@
 					background-color: #f0f0f0;
 					font-weight: bold;
 				}
+				.navbar-brand{
+					margin: 0 auto;
+				}
+				
+				.navbar-brand img{
+					width:55px; height:30px;
+					margin-bottom: 2px;
+				}
+				
 				
             </style>
             <div class="container-fluid">
                 <a class="navbar-brand" th:href="@{/}">
-                    <img th:src="@{#}" />
-                    로고예정
+                    <img th:src="@{/images/logo_light.png}" />
                 </a>
                 <button
                     class="navbar-toggler"

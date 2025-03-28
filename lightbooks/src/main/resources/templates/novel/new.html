@@ -11,20 +11,21 @@
 						<div class="d-flex-area">
 						
 							<div class="image-box">
-							  <div class="image-card">
-							    <!-- 위쪽 텍스트 -->
-							    <div class="image-label">대표이미지</div>
-							    
-							    <!-- 이미지 자체 -->
-							    <div class="image-wrapper">
-							      <img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기">
-							    </div>
-							
-							    <!-- 아래쪽 설명 -->
-							    <div class="image-caption">대표 이미지로 사용될 썸네일입니다.</div>
-							  </div>
+								  <div class="image-card">
+								    <!-- 위쪽 텍스트 -->
+								    <div class="image-label">대표이미지</div>
+								    
+								    <!-- 이미지 자체 -->
+								    <div class="image-wrapper">
+								      <img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기">
+								    </div>
+								
+								    <!-- 아래쪽 설명 -->
+								    <div class="image-caption">대표 이미지로 사용될 썸네일입니다.</div>
+								  </div>
 							</div>
-							<div class="">
+							
+							<div>
 								<div class="inputContainer">
 									<div class="d-none">
 										<input type="text" name="userId" class="form-control" th:value="${#authentication.principal.id}">
@@ -105,7 +106,11 @@
 										
 										<div class="fileBtnWrap">
 										<!-- 파일 선택 (jpeg, png, gif, webp) -->
-											<input type="file" id="coverInput"  accept="image/*" value="파일선택"/> 
+											<input type="file" id="coverInput"  accept="image/*" style="display: none;"/> 
+											<div class="">
+												<button type="button" id="customFileBtn"><i class="bi bi-folder2-open"></i> 파일선택</button>
+												<span id="fileName">선택된 파일 없음</span> <!-- 파일명 표시 영역 -->
+											</div>
 											<input type="button" id="resetImageBtn" class="btn btn-sm btn-outline-danger" value="삭제">
 											<input type="hidden" name="coverSrc" id="coverSrc">
 										</div>

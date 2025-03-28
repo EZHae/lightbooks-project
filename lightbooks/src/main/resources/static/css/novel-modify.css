@@ -121,6 +121,7 @@ body {
   border: 1px solid #dc3545;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: auto;
 }
 #resetImageBtn:hover {
 	color: white;
@@ -202,7 +203,6 @@ div.btnModify {
 	display: flex;
 	justify-content: flex-end;
 }
-
 #customFileBtn {
   padding: 6px 12px;
   font-size: 14px;
@@ -221,6 +221,7 @@ div.btnModify {
   background-color: #007bff;
   color: #fff;
 }
+
 /* 모바일 대응 */
 @media ( max-width : 768px) {
 	.d-flex-area {

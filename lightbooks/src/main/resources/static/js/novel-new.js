@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 	
+	
+	
 	//  파일 선택시 미리 보기만 
 	let selectedFile = null;
 	
@@ -74,6 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 작성 완료시
 	document.getElementById('novelForm').addEventListener('submit', function (e) {
 		e.preventDefault(); // 기본 제출 막기
+
+		document.getElementById('uploadBtn').disabled = true;
+		document.getElementById('coverInput').disabled = true;
+		document.getElementById('resetImageBtn').disabled = true;
 		
 		// 비동기 이미지 업로드
 		if(selectedFile){
@@ -114,6 +120,54 @@ document.addEventListener('DOMContentLoaded', () => {
 		hiddenInput.value = '';
 		
 		selectedFile = null;
+		
+		console.log("이미지 리셋 완료");
+	});
+	
+	let selectedFileName = document.getElementById('fileName').textContent;
+
+	// 파일 이름 ux 변경
+	const fileInput = document.getElementById('coverInput');
+	const customeFileBtn = document.getElementById('customFileBtn');
+	const fileNameSpan = document.getElementById('fileName');
+	const preview = document.getElementById('coverPreview');
+	const hiddenInput = document.getElementById('coverSrc');
+
+	customeFileBtn.addEventListener('click', () => {
+		fileInput.click();
+	});
+
+	// 파일 이름 변경 - 파일 선택 후 다시 파일 선택 취소 시 선택된 파일 이름
+	fileInput.addEventListener('change', (e) => {
+		const file = e.target.files[0];
+		if(file) {
+			const reader = new FileReader();
+			reader.onload = function(event) {
+				preview.src = event.target.result;
+			}
+			reader.readAsDataURL(file);
+			
+			selectedFileName = file.name;
+			fileNameSpan.textContent = file.name;
+		} else {
+			fileNameSpan.textContent = selectedFileName;
+		}
+	});
+	
+	// 이미지 삭제 버튼
+	document.getElementById('resetImageBtn').addEventListener('click', function() {
+		
+		// 파일 초기화
+		fileInput.value = '';
+		
+		// 미리보기 이미지 디폴트로 변경
+		preview.src = "/images/defaultCover.jpg";
+		
+		// hidden input 비우기
+		hiddenInput.value = '';
+		
+		selectedFile = null;
+		fileNameSpan.textContent = '선택된 파일 없음';
 		
 		console.log("이미지 리셋 완료");
 	});
