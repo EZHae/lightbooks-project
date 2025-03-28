@@ -71,7 +71,7 @@ public class SecurityConfig {
         http.exceptionHandling(t -> t.authenticationEntryPoint(new AuthenticationEntryPoint() {
             @Override
             public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                response.sendRedirect("/error/403");
             }
         }));
 
