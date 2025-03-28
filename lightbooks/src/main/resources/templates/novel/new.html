@@ -7,19 +7,22 @@
 		<main>
 			<div class="wrapper">
 				<div class="container">
-					<div class="infotitle">
-						<span class="labeltitle">작품설정<span class="text-danger">*</span>
-						</span>
-						<span>작품에 대한 정보를 입력해 주세요</span>
-					</div>
 					<form id="novelForm" method="post" th:action="@{/novel/new}">
 						<div class="d-flex-area">
+						
 							<div class="image-box">
-								<div class="image-label">
-									
-									<!-- 이미지 미리보기 -->
-									<img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기">
-								</div>
+							  <div class="image-card">
+							    <!-- 위쪽 텍스트 -->
+							    <div class="image-label">대표이미지</div>
+							    
+							    <!-- 이미지 자체 -->
+							    <div class="image-wrapper">
+							      <img id="coverPreview" th:src="@{/images/defaultCover.jpg}" alt="미리보기">
+							    </div>
+							
+							    <!-- 아래쪽 설명 -->
+							    <div class="image-caption">대표 이미지로 사용될 썸네일입니다.</div>
+							  </div>
 							</div>
 							<div class="">
 								<div class="inputContainer">
@@ -27,7 +30,7 @@
 										<input type="text" name="userId" class="form-control" th:value="${#authentication.principal.id}">
 									</div>
 						            <div>
-						                <label class="form-label" for="title" >작품명</label>
+						                <label class="form-label" for="title" >작품명 <span class="text-danger">*</span></label>
 						                <input type="text" name="title" class="form-control" required>
 						            </div>
 						            
@@ -37,7 +40,7 @@
 						            </div>
 						            
 						            <div>
-						                <label class="form-label">장르</label>
+						                <label class="form-label">장르 <span class="text-danger">*</span></label>
 						                <select class="form-select" name="genre" required>
 						            		<option value="1">판타지</option>
 						            		<option value="2">로맨스</option>
@@ -49,7 +52,7 @@
 						            </div>
 						            
 						            <div>
-						                <label class="form-label">연재요일</label>
+						                <label class="form-label">연재요일 <span class="text-danger">*</span></label>
 						                <br/>
 						                <div class="form-check form-check-inline">
 											<input class="form-check-input" type="checkbox" name="days" id="inlineCheckbox1" value="월요일">
@@ -93,7 +96,7 @@
 						            	</select>
 						            </div>
 						            <div>
-						                <label class="form-label" for="intro">작품소개</label>
+						                <label class="form-label" for="intro">작품소개 <span class="text-danger">*</span></label>
 						                <textarea class="form-control" rows="5" name="intro" required></textarea>
 						            </div>
 						            <div>

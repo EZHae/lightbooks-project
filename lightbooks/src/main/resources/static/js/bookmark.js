@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const uri = `/user/bookmark/data`;
         try {
-            const requestBody = { id: userId, type, p: pageNo, s: sortBy, d: direction };
+            const requestBody = { id: userId, type, p: pageNo, s: sortBy, d: direction, size: 12 };
             const { data } = await axios.post(uri, requestBody);
          console.log("Request Body:", {
              id: userId,
              type: type,
              p: pageNo,
              s: sortBy,
-             d: direction
+             d: direction,
          }); // 모든 요청 데이터 확인
          
             currentPageNo = data.number;
@@ -76,15 +76,21 @@ document.addEventListener('DOMContentLoaded', () => {
 	        console.log("data.content:", data.content);
 	        console.log("itemList", itemList);
 	        if (reset) itemList.innerHTML = '';
-	        if (!data.content || data.content.length === 0) {
+			
+			let row =itemList.querySelector('.card-grid');
+			// 첫 페이지면 새로 만들고 append
+			if (!row) {
+			    row = document.createElement('div');
+			    row.classList.add('card-grid');
+				itemList.appendChild(row);
+			}
+			
+			if (!data.content || data.content.length === 0) {
 	            if (reset) {
 	                itemList.innerHTML = '<p>저장된 작품이 없습니다.</p>' + '<br>'.repeat(8);
-	            }
+	            }	
 	            return;
 	        }
-
-	        let row = document.createElement('div'); // row 컨테이너 생성
-	        row.classList.add('card-grid'); 
 
 	        data.content.forEach(item => {
 	            let itemHtml = `

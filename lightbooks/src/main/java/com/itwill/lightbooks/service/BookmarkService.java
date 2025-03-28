@@ -65,7 +65,7 @@ public class BookmarkService {
     
  // 추가) 최근 본 회차 가져오기(공지 제외)
     public Page<RecentlyWatchedEpisodeDto> getRecentlyWatchedEpisodes(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 10, sort);
+        PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
         Page<Bookmark> page = bookmarkRepo.findRecentlyWatchedEpisodesWithNovelByUserIdExcludeNotice(userId, pageRequest);
 
         return page.map(bookmark -> {
@@ -199,7 +199,7 @@ public class BookmarkService {
  // 추가) 좋아요 누른 소설 목록 조회
     @Transactional(readOnly = true)
     public Page<LikedNovelBookmarkDto> getLikedNovels(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 10, sort);
+        PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
         Page<Bookmark> page = bookmarkRepo.findLikedNovelsByUserIdOrderByLikeCountDesc(userId, pageRequest);
 
         return page.map(bookmark -> {
@@ -246,7 +246,7 @@ public class BookmarkService {
  // 추가) 구매한 소설 목록 조회
     @Transactional(readOnly = true)
     public Page<PurchasedNovelBookmarkDto> getPurchasedNovels(Long userId, int pageNo, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
+        PageRequest pageRequest = PageRequest.of(pageNo, 12, sort);
         Page<Bookmark> page = bookmarkRepo.findPurchasedNovelsWithNovelByUserIdOrderByCreatedTimeDesc(userId, pageRequest);
 
         return page.map(bookmark -> {
