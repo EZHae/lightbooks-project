@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const uri = `/user/bookmark/data`;
         try {
-            const requestBody = { id: userId, type, p: pageNo, s: sortBy, d: direction, size: 12 };
+            const requestBody = { id: userId, type, p: pageNo, s: sortBy, d: direction};
             const { data } = await axios.post(uri, requestBody);
          console.log("Request Body:", {
              id: userId,
@@ -93,6 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	        }
 
 	        data.content.forEach(item => {
+				let trimmedIntro = item.novelIntro.length > 19 // 최대 글자수 지정.
+				        ? item.novelIntro.substring(0, 19) + "..."
+				        : item.novelIntro;
+				
 	            let itemHtml = `
 	                <div class="item">
 	                    <div class="image-container">
@@ -104,14 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	                                ${item.novelGrade === 0 ? '무료' : '유료'} 
 	                            </span>
 	                        </div>
-	                        <div>
-	                            <a href="/novel/${item.novelId}">${item.novelTitle}</a>
-	                            ${type === 'watched' ? `<span class="episode-num">${item.episodeNum}화</span>` : ''}
-	                            ${type === 'purchased' ? `<span class="episode-num">${item.episodeNum}화</span>` : ''}
+	                        <div class="mb-2">
+	                            <a href="/novel/${item.novelId}">${item.novelTitle}&nbsp;</a>
+	                            ${type === 'watched' ? `<span class="episode-num highlight-effect" style="font-size: 1.1em;"><strong>${item.episodeNum}화</strong></span>` : ''}
+	                            ${type === 'purchased' ? `<span class="episode-num highlight-effect" style="font-size: 1.1em;"><strong>${item.episodeNum}화</strong></span>` : ''}
 	                        </div>
 	                        <div><p>작가: ${item.novelWriter}</p></div>
 	                        <div><p>장르: ${item.novelGenres.join(', ')}</p></div>
-	                        <div><p>작품 소개: ${item.novelIntro}</p></div>
+	                        <div><p>작품 소개: ${trimmedIntro}</p></div>
 	                        <div class="view-container">
 	                            <i class="bi bi-person-plus-fill"></i>
 	                            <span>${item.totalViews}</span>

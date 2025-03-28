@@ -65,7 +65,7 @@
   font-size: 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
 }
 
 .gradeIcon span.free {
@@ -89,4 +89,15 @@
   color: #000;              
   font-weight: 600;         
   font-size: 18px;       
+}
+
+body {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.highlight-effect {
+    background-color: #f6f6f6;
+    color: #000000; /* 텍스트 색상을 검은색으로 설정 */
+    padding: 1px 2px; /* 배경색과 텍스트 간 여백 */
+    border-radius: 4px; /* 둥근 모서리 */
 }
