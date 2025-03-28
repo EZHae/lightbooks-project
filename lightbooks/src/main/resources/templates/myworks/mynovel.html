@@ -18,7 +18,9 @@
 										      th:text="*{grade == 0 ? '무료' : '유료'}">
 										</span>
 									</div>
-									<img class="coverImg" th:src="@{${novel.coverSrc}}">
+									<a th:href="@{/novel/{id}(id=*{id})}">
+										<img class="coverImg" th:src="@{${novel.coverSrc}}">
+									</a>
 								</div>
 								
 								
@@ -29,7 +31,7 @@
 											<b th:text="*{title}"></b>
 										</a>
 										
-										<div th:text="*{writer}"></div>
+										<div class="writer" th:text="*{writer}"></div>
 									</div>
 									
 									<div class="intro" th:text="*{intro}"></div>
@@ -54,7 +56,7 @@
 					                <button class="btn" th:onclick="'location.href=\'/novel/premium/' + ${novel.id} + '\''"
 					                 th:data-novel-id="${novel.id}"
 					                 th:disabled="${premiumStatus[novel.id] == '대기중' or premiumStatus[novel.id] == '완료'}"
-					                 th:text="${premiumStatus[novel.id] != null ? premiumStatus[novel.id] : '신청 가능'}">
+					                 th:text="${premiumStatus[novel.id] != null ? premiumStatus[novel.id] : '프리미엄 신청'}">
 					                 </button>
 								</div>
 							</div>

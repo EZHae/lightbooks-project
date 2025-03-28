@@ -24,4 +24,5 @@ public interface CoinPaymentRepository extends JpaRepository<CoinPayment, Long> 
             "LIMIT 10")
     List<Object[]> findDonationRankingByNovelId(@Param("novelId") Long novelId);
 	
+    Page<CoinPayment> findByNovelIdAndType(Long novelId, int type, Pageable pageable);
 }

@@ -85,7 +85,14 @@ div.container {
 }
 .intro, .stats, .genres{
 	margin-top: 5px;
+	color:gray;
+	font-size: 14px;
 }
+.writer {
+	color:gray;
+	font-size: 14px;
+}
+
 
 .nav-work {
 	background: white;
