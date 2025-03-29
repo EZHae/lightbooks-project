@@ -161,6 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	const preview = document.getElementById('coverPreview');
 	const hiddenInput = document.getElementById('coverSrc');
 	
+	if(!hiddenInput.value) {
+		
+		const currentSrc = document.getElementById('coverPreview').getAttribute('src');
+		hiddenInput.value = currentSrc;
+	}
+	
+	
 	customeFileBtn.addEventListener('click', () => {
 		fileInput.click();
 	});

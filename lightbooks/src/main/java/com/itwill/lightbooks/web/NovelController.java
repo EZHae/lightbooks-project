@@ -308,10 +308,13 @@ public class NovelController {
     	Long count = episodeService.getEpisodeCountByNovelId(novelId);
     	log.info("count : {}", count);
     	boolean canApply = novelService.canApplyForPremiun(novelId);
+    	Integer totalViewsMap = episodeService.getTotalViewsByNovelId(novelId);
+    	
     	
     	model.addAttribute("novel", novel);
     	model.addAttribute("count", count);
     	model.addAttribute("canApply", canApply);
+    	model.addAttribute("totalViews", totalViewsMap);
     	
 		return "/novel/premium";
 	}

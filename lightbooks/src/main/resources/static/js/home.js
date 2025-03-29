@@ -129,6 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		container.innerHTML = '';
 		
 		novels.forEach(novel => {
+			// 9999+ 포맷
+			const likeCount = (novel.likeCount > 9999) ? '9999+' : (novel.likeCount || 0);
+			const totalViews = (novel.totalViews > 9999) ? '9999+' : (novel.totalViews || 0);
 			const card = document.createElement('div');
 			card.classList.add('novel-card');
 			
@@ -142,9 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
 					</div>
 					<span class="novel-card-title">${novel.title}</span><br/>
 					<span class="novel-card-writer">${novel.writer} · ${novel.genres}</span><br/>
-					<i class="bi bi-heart"></i> ${novel.likeCount || 0}
+					<i class="bi bi-heart"></i> ${likeCount}
 					<i class="bi bi-star"></i> ${novel.rating || 0}
-					<i class="bi bi-person-plus-fill"></i> ${novel.totalViews || 0}
+					<i class="bi bi-person-plus-fill"></i> ${totalViews}
+					
+					
 				</a>
 			`;
 			

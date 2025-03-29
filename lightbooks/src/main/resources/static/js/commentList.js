@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	      </div>
 	    `;
 	  });
+	//  <span class="comment-title">[${novelTitle}] - ${episodeTitle}화</span>
 
 	  commentList.insertAdjacentHTML('beforeend', htmlStr);
 

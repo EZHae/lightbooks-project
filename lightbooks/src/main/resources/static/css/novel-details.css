@@ -1,0 +1,296 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh; /* 전체 화면을 차지하도록 설정 */
+}
+
+.container {
+	max-width: 1200px; /* 원하는 최대 너비 지정 가능 */
+	margin: 0 auto; /* 중앙 정렬 */
+	padding: 20px;
+}
+#commentList p{
+	margin: 5px;
+}
+.novel-details {
+  display: grid;
+  grid-template-columns: 350px 1fr; /* 왼쪽 영역 350px, 오른쪽 나머지 */
+  gap: 10px;
+  max-width: 1200px;
+  margin: 30px auto;
+  
+}
+
+.episodeListContainer{
+	border-bottom: 1px solid gray;
+}
+
+.episode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.episode-tabs{
+  display: flex;
+  align-items: center;
+}
+.episode-tab {
+  display: flex; /* flex 추가 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  padding: 6px 14px;
+  margin-right: 8px;
+  background-color: #f1f1f1;
+  border-radius: 30px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s ease;
+  min-width: 60px; 
+}
+
+.episode-tab a {
+	align-items: center;
+}
+.episode-tab.active,
+.episode-tab:hover {
+  background-color: #66b2ff;
+  color: white;
+  border-color: #66b2ff;
+}
+
+/* 회차 테이블 전체 */
+.episode-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;  /* 테이블 배경 */
+  border-radius: 8px;
+  border: 1px solid gray;
+  overflow: hidden;
+}
+
+.episode-table tbody {
+  display: table;
+  width: 100%;
+}
+
+
+/* 테이블 내부 줄 간격 */
+.episode-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  color: #333;
+}
+
+.episode-table tr {
+  height: 100px; /* 100px * 5 = 500px */
+  vertical-align: top;
+}
+
+/* 마지막 줄 테두리 없애기 */
+.episode-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* 회차 번호, 날짜 같은 디테일 */
+.episode-date,
+.episode-views,
+.episode-category {
+  color: #666;
+  font-size: 13px;
+}
+
+/* 제목 강조 */
+.episode-number, .episode-title {
+  color: #222;
+  text-decoration: none;
+  table-layout: fixed;
+  height: 500px;
+  margin-bottom: 0;
+  font-size: 15px;
+}
+
+.episode-title:hover {
+  text-decoration: underline;
+  color: #007bff;
+}
+
+/* 왼쪽 영역 */
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #f6f6f6;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+
+/* 제목 스타일 */
+#inputNovelTitle {
+  display: block;          /* inline 요소이므로 block 전환 */
+  font-size: 22px;         /* 크게 */
+  font-weight: bold;       /* 볼드 */
+  margin-top: 12px;
+}
+
+.novel-content #noveltitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.btnNovelDonation,
+.btnUserModify .btnNovelModify a,
+.btnUserModify .btnNpisodeModify a {
+  display: block;          /* 블록 요소로 바꿔야 width 적용됨 */
+  width: 100%;             /* 부모의 너비를 전부 차지 */
+  background: white;
+  color: #007bff;
+  padding: 10px 12px;
+  margin: 5px 0;
+  border-radius: 5px;
+  text-align: center;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: 1px solid #007bff;
+}
+
+.btnNovelDonation:hover,
+.btnUserModify .btnNovelModify a:hover,
+.btnUserModify .btnNpisodeModify a:hover {
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+
+.image-wrapper {
+  position: relative;
+  width: 100%; ; /* 카드 너비에 맞게 */
+  max-width: 350px;
+  min-width: 300px;
+  margin: 0 auto;
+}
+.novel-cover {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* 오른쪽 영역 */
+.right-section{
+	background-color: #f6f6f6;
+}
+
+.episode-table td,
+.episode-table th {
+  background-color: #f6f6f6 !important;
+}
+
+
+#novelwriter {
+  font-size: 12px;
+  color: gray;
+}
+
+.novel-item {
+  font-size: 12px;
+  color: gray;
+}
+
+
+.right-section .card {
+  min-width: 280px;
+  max-width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;          /* 줄바꿈 허용 */
+  justify-content: center;  /* 가운데 정렬 */
+  padding: 10px 0;
+}
+
+#stars .star {
+  font-size: 32px;       /* ⭐ 크기 키움 */
+  margin: 0 4px;
+  cursor: pointer;
+  color: gray;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.btnLikeWithRating{
+	margin: 20px 0;
+}
+
+/* 뱃지 스타일 */
+.gradeIcon.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: white;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* 무료/유료 색상 구분 */
+.grade-free {
+  background-color: #28a745; /* 초록 */
+}
+
+.grade-paid {
+  background-color: #dc3545; /* 빨강 */
+}
+
+/* shimmer 효과 */
+.badge.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-20deg);
+  animation: badge-shimmer 1.5s infinite;
+}
+
+@keyframes badge-shimmer {
+  0%   { left: -100%; }
+  50%  { left: 100%; }
+  100% { left: 120%; }
+}
+
+@media (max-width: 1035px) {
+	 .image-wrapper {
+    max-width: 90%;
+  }
+  .novel-details {
+    grid-template-columns: 1fr; /* 모바일에선 1열로 */
+  }
+}

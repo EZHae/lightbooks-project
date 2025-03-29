@@ -41,6 +41,9 @@ function renderResult(label, pageData, keyword, tp, wp, isTitle) {
 
 	// 각 소설 데이터를 반복하면서 생성
 	pageData.content.forEach(novel => {
+		// 9999+ 포맷
+		const likeCount = (novel.likeCount > 9999) ? '9999+' : (novel.likeCount || 0);
+		const totalViews = (novel.totalViews > 9999) ? '9999+' : (novel.totalViews || 0);
 		const box = document.createElement("div");
 		box.className = "searchBox";
 
@@ -58,9 +61,9 @@ function renderResult(label, pageData, keyword, tp, wp, isTitle) {
 						  ${novel.genres ? novel.genres : '-'} / ${novel.writer ? novel.writer : '미상'}
 						</p>
 			            <p class="meta-line">
-			              <i class="bi bi-heart"></i> ${novel.likeCount || 0} 
+			              <i class="bi bi-heart"></i> ${likeCount} 
 			              <i class="bi bi-star"></i> ${novel.rating || 0}
-			              <i class="bi bi-person-plus-fill"></i> ${novel.totalViews || 0}
+			              <i class="bi bi-person-plus-fill"></i> ${totalViews}
 			            </p>
 			            <p class="meta-line">
 			              ${novel.modifiedTime ? novel.modifiedTime.split('T')[0] + ' 업데이트' : ''}

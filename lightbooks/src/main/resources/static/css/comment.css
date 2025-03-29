@@ -16,8 +16,15 @@
 
 .comment-nickname {
 	font-weight: bold;
+	font-size: 13px;
+}
+.comment-text {
+	font-size: 13px;
 }
 
+#commentList p {
+  font-size: 14px;
+}
 .comment-date {
 	font-size: 0.85rem;
 	color: gray;

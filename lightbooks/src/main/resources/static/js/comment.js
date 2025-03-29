@@ -148,15 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		const comments = data.content;
 		
 		if (reset) {
-		      commentList.innerHTML = ''; // 댓글 전체 초기화
-			  renderedCommentIds.clear();
+	      commentList.innerHTML = ''; // 댓글 전체 초기화
+		  renderedCommentIds.clear();
 	  	}
 		
 		// 첫 페이지일 경우에만 기존 내용 초기화
 		if(!comments || comments.length === 0){
-			if(reset) {
-				commentList.innerHTML = '<p>아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</p>';
-			}
+			commentList.innerHTML = '<p>아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</p>';
 			return;
 		}
 		let htmlStr = '';
@@ -227,9 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 댓글 삭제
 	async function deleteComment(event) {
 		console.log(event.target);
-		
+		deleteBtn.disabled = true;
 		const check = confirm('정말 삭제할까요?');
+		
 		if(!check){
+			deleteBtn.disabled = false;
 			return;
 		}
 		const novelId = document.querySelector('input#novelId').value;
@@ -319,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// 수정할 목록들..
 		const commentId = event.currentTarget.getAttribute('data-id');
 		console.log("댓글 ID:", commentId);
+		commentId.disabled = true;
 		
 		const novelId = document.querySelector('input#novelId').value;
 		const episodeId = document.querySelector('input#episodeId').value;
@@ -330,8 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		const textarea = commentBox.querySelector('textarea.edit-textarea');
 	    const updatedText = textarea.value;
 
+		
 		if (updatedText.replace(/\s/g, '') === '') {
 		    alert('수정할 내용이 비어있습니다.');
+			saveBtn.disabled = false;
 		    return;
 		}
 		
@@ -374,6 +377,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		const userId = document.querySelector('input#userId').value;
 		console.log("버튼 클래스 적용 전:", button.classList.value);
 		
+		// 중복 요청 방지
+		if (button.dataset.processing === 'true') return;
+		button.dataset.processing = 'true';
 		
 		const url = `/novel/${novelId}/episode/${episodeId}/comment/${commentId}/like`;
 		const data = { userId }
@@ -395,6 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.log("버튼 클래스 적용 후:", button.classList.value);
 		} catch(error) {
 			console.log(error);
+		} finally {
+			button.dataset.processing = 'false';
 		}
 	};
 })
