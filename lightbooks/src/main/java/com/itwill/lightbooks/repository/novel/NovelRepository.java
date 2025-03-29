@@ -2,7 +2,6 @@ package com.itwill.lightbooks.repository.novel;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,8 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itwill.lightbooks.domain.Novel;
-import com.itwill.lightbooks.dto.NovelListItemDto;
-import com.querydsl.core.Tuple;
 
 public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQuerydsl {
 	
@@ -37,6 +34,6 @@ public interface NovelRepository extends JpaRepository<Novel, Long>, NovelQueryd
 	List<Novel> findByCreatedTimeAfter(LocalDateTime oneMonthAgo);
 	// 무료 / 유료 소설 (grade)이고, 생성일이 1개월 이내인 소설을 찾는 메서드
 	List<Novel> findByGradeAndCreatedTimeAfter(int grade,LocalDateTime oneMonthAgo);
-
+	
 
 }

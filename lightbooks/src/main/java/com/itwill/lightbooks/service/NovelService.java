@@ -156,13 +156,17 @@ public class NovelService {
 				.collect(Collectors.toList());
 		
 		// 장르 조회
-//		Map<Long, String> genreMap = novelRepo.getGenreNamesByNovelIds(novelIds);
+		Map<Long, String> genreMap = novelRepo.getGenreNamesByNovelIds(novelIds);
+		
 		
 		//소설별 총 조회수 Map 조회
 		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
 		
-		return result.map(novel -> NovelListItemDto.fromEntity(
-				novel, "", viewsMap.getOrDefault(novel.getId(), 0L)));
+	    return result.map(novel -> NovelListItemDto.fromEntity(
+	            novel,
+	            genreMap.getOrDefault(novel.getId(), "-"),
+	            viewsMap.getOrDefault(novel.getId(), 0L)
+				));
 	}
 	
 	//추가

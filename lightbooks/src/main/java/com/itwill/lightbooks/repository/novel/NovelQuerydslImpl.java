@@ -122,8 +122,32 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
                     .execute();
         }
 	}
+	
+	@Override
+	public Map<Long, String> getGenreNamesByNovelIds(List<Long> novelIds) {
+	    QNovel novel = QNovel.novel;
+	    QNGenre novelGenre = QNGenre.nGenre;
+	    QGenre genre = QGenre.genre;
 
+	    if (novelIds == null || novelIds.isEmpty()) {
+	        return Collections.emptyMap();
+	    }
 
+	    List<Tuple> result = queryFactory
+	            .select(novel.id, genre.name)
+	            .from(novel)
+	            .join(novelGenre).on(novelGenre.novel.eq(novel))
+	            .join(genre).on(novelGenre.genre.eq(genre))
+	            .where(novel.id.in(novelIds))
+	            .fetch();
+
+	    return result.stream().collect(Collectors.toMap(
+	            tuple -> tuple.get(novel.id),
+	            tuple -> tuple.get(genre.name)
+	    ));
+	}
+
+	// 각 소설 검색 기능
 	@Override
 	public Page<Novel> searchByKeyword(NovelSearchDto dto, Pageable pageable) {
 		log.info("searchByKeyword(dto={}, pageable={})", dto, pageable);
@@ -445,7 +469,4 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 	            })
 	            .toList();
 	}
-
-
-
 }
