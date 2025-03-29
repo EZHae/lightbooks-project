@@ -80,7 +80,7 @@ public class OrderController {
 			orderService.saveCoinPayment(coinPayment);
 		}
 		
-		return "/user/pay-success";
+		return "user/pay-success";
 	}
 	
 	@PostMapping("/transfer/ready")

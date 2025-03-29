@@ -37,7 +37,7 @@ public class PostController {
 		
 		model.addAttribute("post", post);
 		
-		return "/post/details";
+		return "post/details";
 	}
 	
 	@ResponseBody
