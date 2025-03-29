@@ -225,6 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 댓글 삭제
 	async function deleteComment(event) {
 		console.log(event.target);
+		const deleteBtn = event.target; 
+		
 		deleteBtn.disabled = true;
 		const check = confirm('정말 삭제할까요?');
 		
@@ -244,6 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			getAllComments(0,true);
 		} catch(error){
 			console.log(error);
+		} finally {
+			deleteBtn.disabled = false;
 		}
 		
 	}
@@ -252,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function handleEditClick(event) {
 	    const commentBox = event.target.closest('.commentBox');
 	    const commentBody = commentBox.querySelector('.commentBody');
+		
 		// 이미 작성 중이라면?
 		if(commentBody.querySelector('textarea')){
 			return;
@@ -316,10 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 댓글 업데이트
 	async function updateComment(event) {
 		console.log(event.target);
+		const updateBtn = event.target;
+		updateBtn.disabled = true;
 		// 수정할 목록들..
 		const commentId = event.currentTarget.getAttribute('data-id');
 		console.log("댓글 ID:", commentId);
-		commentId.disabled = true;
 		
 		const novelId = document.querySelector('input#novelId').value;
 		const episodeId = document.querySelector('input#episodeId').value;
@@ -334,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		if (updatedText.replace(/\s/g, '') === '') {
 		    alert('수정할 내용이 비어있습니다.');
-			saveBtn.disabled = false;
+			updateBtn.disabled = false;
 		    return;
 		}
 		
@@ -348,10 +354,20 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			alert('댓글이 수정됐습니다.');
 			
+			// 수정창 닫기 
+			const newTextHtml = `
+				<p class="comment-text">${updatedText}</p>
+			`;
+			commentBox.querySelector('.commentBody').innerHTML = newTextHtml;
+			const actions = commentBox.querySelector('.right-actions');
+			if(actions) actions.style.display = 'block'
+			
 			renderedCommentIds.clear(); // 기존 댓글 ID 캐시 초기화
 			getAllComments(0, true);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			updateBtn.disabled = false;
 		}
 	}
 	

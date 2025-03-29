@@ -8,7 +8,6 @@ let isLastPage = false;
 let isLoading = false;
 const renderedCommentIds = new Set();
 
-
 document.addEventListener('DOMContentLoaded', () => {
 	
 	getAllComments(0, true);
@@ -47,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function makeCommentElements(data, reset = false) {
 	  const commentList = document.getElementById('commentList');
 	  const comments = data.content;
-
+	  console.log("받은 댓글 목록:", data.content);
 	  if (reset) {
 	    commentList.innerHTML = '';
 	    renderedCommentIds.clear();
@@ -62,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	  let htmlStr = '';
 	  comments.forEach(comment => {
-	    if (renderedCommentIds.has(comment.id)) return;
-	    renderedCommentIds.add(comment.id);
+	    if (renderedCommentIds.has(comment.commentId)) return;
+	    renderedCommentIds.add(comment.commentId);
 
 	    htmlStr += `
 	      <div class="commentBox">
@@ -79,9 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	              : `<span class="comment-text">${comment.text}</span>`
 	          }
 	        </div>
+			<div>
+			<div class="comment-title">[${comment.episodeNum}화] - ${comment.episodeTitle}</div>
+			</div>
+			
 	        <div class="commentFooter">
 	          <div>
-	            <button class="like-button btnLike ${comment.likedByUser ? 'liked' : ''}" data-id="${comment.id}">
+	            <button class="like-button btnLike ${comment.likedByUser ? 'liked' : ''}" data-id="${comment.commentId}">
 	              ❤️ <span>${comment.likeCount}</span>
 	            </button>
 	          </div>
@@ -89,50 +92,54 @@ document.addEventListener('DOMContentLoaded', () => {
 	      </div>
 	    `;
 	  });
-	//  <span class="comment-title">[${novelTitle}] - ${episodeTitle}화</span>
 
-	  commentList.insertAdjacentHTML('beforeend', htmlStr);
+		commentList.insertAdjacentHTML('beforeend', htmlStr);
 
-	  // 좋아요
-	  const btnLikes = document.querySelectorAll('button.btnLike');
-	  btnLikes.forEach(btn => btn.addEventListener('click', handleLikeClick));
+		// 좋아요
+		const btnLikes = document.querySelectorAll('button.btnLike');
+		btnLikes.forEach(btn => btn.addEventListener('click', handleLikeClick));
 	}
 
 	// 좋아요 처리
 	async function handleLikeClick(event) {
-	  const button = event.currentTarget;
-	  const commentId = button.getAttribute('data-id');
-	  const novelId = document.querySelector('#novelId').value;
-	  const userId = document.querySelector('input#userId')?.value;
+		const button = event.currentTarget;
+		const commentId = button.getAttribute('data-id');
+		const novelId = document.querySelector('#novelId').value;
+		const userId = document.querySelector('input#userId')?.value;
 
-	  const url = `/novel/comment/${commentId}/like`;
-	  const data = { userId };
+		const url = `/novel/comment/${commentId}/like`;
+		const data = { userId };
 
-	  try {
-	    const response = await axios.post(url, data);
-	    const { likeCount, likedByUser } = response.data;
+		// 중복 요청 방지
+		if (button.dataset.processing === 'true') return;
+		button.dataset.processing = 'true';
+		try {
+			const response = await axios.post(url, data);
+			const { likeCount, likedByUser } = response.data;
 
-	    const countSpan = button.querySelector('span');
-	    countSpan.textContent = likeCount;
+			const countSpan = button.querySelector('span');
+			countSpan.textContent = likeCount;
 
-	    if (likedByUser) {
-	      button.classList.add('liked');
-	    } else {
-	      button.classList.remove('liked');
-	    }
-	  } catch (error) {
-	    console.error(error);
-	  }
+			if (likedByUser) {
+				button.classList.add('liked');
+			} else {
+				button.classList.remove('liked');
+			}
+		} catch (error) {
+			console.error(error);
+		} finally {
+			button.dataset.processing = 'false';
+		}
 	}
 
 	// 스포일러 보기
-	document.addEventListener('click', function (event) {
-	  if (event.target.classList.contains('spoiler-toggle')) {
-	    const textElem = event.target.nextElementSibling;
-	    if (textElem) {
-	      event.target.style.display = 'none';
-	      textElem.style.display = 'inline';
-	    }
-	  }
-	});	
+	document.addEventListener('click', function(event) {
+		if (event.target.classList.contains('spoiler-toggle')) {
+			const textElem = event.target.nextElementSibling;
+			if (textElem) {
+				event.target.style.display = 'none';
+				textElem.style.display = 'inline';
+			}
+		}
+	});
 });

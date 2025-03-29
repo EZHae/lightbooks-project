@@ -35,6 +35,7 @@ import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.CommentLikeDto;
 import com.itwill.lightbooks.dto.CommentLikeRequestDto;
 import com.itwill.lightbooks.dto.EpisodeListDto;
+import com.itwill.lightbooks.dto.NovelCommentResponseDto;
 import com.itwill.lightbooks.dto.NovelCreateDto;
 import com.itwill.lightbooks.dto.NovelItemDto;
 import com.itwill.lightbooks.dto.NovelListItemDto;
@@ -353,7 +354,7 @@ public class NovelController {
 	// 회차 전체의 댓글 리스트
 	@GetMapping("/{novelId}/comments")
 	@ResponseBody
-	public ResponseEntity<PagedModel<Comment>> commentList(@PathVariable(name = "novelId") Long novelId,
+	public ResponseEntity<PagedModel<NovelCommentResponseDto>> commentList(@PathVariable(name = "novelId") Long novelId,
 													   @RequestParam(name = "p", defaultValue = "0") int pageNo) {
 		log.info("comment page()");
 		log.info("getCommentList(novelId={}, pageNo={})", novelId, pageNo);
@@ -361,7 +362,7 @@ public class NovelController {
 		Novel novel = novelService.searchById(novelId);
 		log.info("novel = {}", novel);
 		
-		Page<Comment> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("likeCount").descending());
+		Page<NovelCommentResponseDto> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("likeCount").descending());
 		log.info("페이지 수 = {}", page.getTotalPages());
 		log.info("페이지 번호 = {}", page.getNumber());
 		log.info("현재 페이지의 댓글 개수 = {}", page.getNumberOfElements());

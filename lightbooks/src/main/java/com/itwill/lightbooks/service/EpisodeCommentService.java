@@ -18,12 +18,14 @@ import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.CommentUpdateDto;
 import com.itwill.lightbooks.dto.EpisodeCommentRegisterDto;
+import com.itwill.lightbooks.dto.NovelCommentResponseDto;
 import com.itwill.lightbooks.repository.comment.CommentLikeRepository;
 import com.itwill.lightbooks.repository.comment.CommentRepository;
 import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.itwill.lightbooks.repository.novel.NovelRepository;
 import com.itwill.lightbooks.repository.user.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,11 +96,11 @@ public class EpisodeCommentService {
 	
 	// 소설 상세보기 댓글 목록
 	@Transactional(readOnly = true)
-	public Page<Comment> readNovel(Long novelId, int pageNo, Sort sort) {
+	public Page<NovelCommentResponseDto> readNovel(Long novelId, int pageNo, Sort sort) {
 		log.info("read (episode Id : {}, pageNo : {}, sort : {}", novelId, pageNo, sort);
 		Pageable pageable = PageRequest.of(pageNo, 10, sort);
 		
-		Novel novel = novelRepo.findById(novelId).orElseThrow(() -> null);
+		Novel novel = novelRepo.findById(novelId).orElseThrow(() -> new EntityNotFoundException("해당 소설이 없습니다."));
 		log.info("read (episode Id: {}", novelId);
 		
 		Page<Comment> page= commentRepo.findByNovel(novel, pageable);
@@ -109,13 +111,26 @@ public class EpisodeCommentService {
 		// 현재 유저가 좋아요한 댓글 ID 리스트
 		List<Long> likedIds = commentLikeRepo.findLikedCommentIdsByUser(currentUserId);
 
-		// 각 댓글에 likedByUser 설정
-		page.getContent().forEach(comment -> {
-		    if (likedIds.contains(comment.getId())) {
-		        comment.setLikedByUser(true);
-		    }
+		return page.map(comment -> {
+			boolean liked = likedIds.contains(comment.getId());
+			
+			Episode episode = comment.getEpisode();
+			
+			return NovelCommentResponseDto.builder()
+					.commentId(comment.getId())
+					.nickname(comment.getNickname())
+					.text(comment.getText())
+					.spoiler(comment.getSpoiler())
+					.likeCount(comment.getLikeCount())
+					.likedByUser(liked)
+					.episodeTitle(episode.getTitle())
+					.episodeNum(episode.getEpisodeNum())
+					.modifiedTime(comment.getModifiedTime())
+					.userId(comment.getUser().getUserId())
+					.novelId(novelId)
+					.episodeId(episode.getId())
+		            .build();
 		});
-		return page;
 	}
 	
 	// 댓글 삭제
