@@ -74,4 +74,40 @@ document.addEventListener('DOMContentLoaded', () => {
         popupVisible = false;
         settingsPopup.setAttribute('aria-hidden', 'true');
     });
+	
+	
+	// 가로보기 
+	const btnHorizontalView = document.getElementById('btnHorizontalView');
+	btnHorizontalView.addEventListener('click', async() => {
+		const novelId = document.querySelector('#novelId').value;
+		const episodeId = document.querySelector('#episodeId').value;
+		console.log("에피소드, 노벨 아이디:",episodeId,novelId);
+		btnHorizontalView.disabled = true; 
+		try{
+			const response = await axios.get(`/novel/${novelId}/episode/${episodeId}/horizontalView`,
+				{
+				  headers: { 'Accept': 'text/html' } // Accept: text/html 헤더 추가해야 Thymeleaf fragment가 HTML로 렌더링됨
+			});
+			document.getElementById('horizontalViewContainer').innerHTML = response.data;
+			
+			document.querySelector('.container').style.display = 'none';
+			// 스와이퍼 초기화
+			var swiper = new Swiper(".mySwiper", {
+				
+				loop: false,
+			    pagination: {
+			      el: ".swiper-pagination",
+			      type: "progressbar",
+			    },
+			    navigation: {
+			      nextEl: ".swiper-button-next",
+			      prevEl: ".swiper-button-prev",
+			    },
+			  });
+		} catch(error) {
+			console.log("가로보기 불러오기 실패",error);
+		} finally {
+			btnHorizontalView.disabled = false; 
+		}
+	});
 });

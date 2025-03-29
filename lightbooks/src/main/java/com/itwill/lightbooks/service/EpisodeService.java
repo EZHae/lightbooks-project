@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itwill.lightbooks.domain.Episode;
 import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.dto.EpisodeCreateDto;
+import com.itwill.lightbooks.dto.EpisodeHorizontalViewDto;
 import com.itwill.lightbooks.dto.EpisodeListDto;
 import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.repository.episode.EpisodeRepository;
@@ -214,5 +216,26 @@ public class EpisodeService {
     public Integer getTotalViewsByNovelId(Long novelId) {
         Integer totalViews = episodeRepo.sumViewsByNovelIdExcludingNotices(novelId);
         return totalViews != null ? totalViews : 0;
+    }
+    
+ // 가로보기 가로보기
+    public List<EpisodeHorizontalViewDto> splitEpisodeContentIntoPages(Episode episode) {
+    	String content = episode.getContent();
+    	String title = episode.getTitle();
+    	Long episodeId = episode.getId();
+    	
+    	//<hr> 기준으로 페이지를 나눔
+    	String[] chunks = content.split("<hr>");
+    	List<EpisodeHorizontalViewDto> result = new ArrayList<>();
+    	
+    	for(int i = 0; i < chunks.length; i++) {
+    		result.add(EpisodeHorizontalViewDto.builder()
+    				.episodeId(episodeId)
+    				.pageNumber(i + 1)
+    				.content(chunks[i])
+    				.episodeTitle(title)
+    				.build());
+    	}
+    	return result;
     }
 }

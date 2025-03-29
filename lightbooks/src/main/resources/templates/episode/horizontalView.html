@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="horizontalView">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	<style>
+
+    .swiper {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+	</style>
+	<!-- Swiper -->
+	<div class="swiper mySwiper">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide" th:each="page : ${pages}" th:utext="${page.content}"></div>
+			<div class="swiper-slide">1</div>
+			<div class="swiper-slide">2</div>
+			<div class="swiper-slide">3</div>
+		</div>
+		
+		<div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
+		<div class="swiper-pagination"></div>
+	</div>
+	
+</th:block>

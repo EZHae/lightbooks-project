@@ -1,6 +1,7 @@
 package com.itwill.lightbooks.web;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import com.itwill.lightbooks.domain.Novel;
 import com.itwill.lightbooks.domain.User;
 import com.itwill.lightbooks.dto.EpisodeBuyDto;
 import com.itwill.lightbooks.dto.EpisodeCreateDto;
+import com.itwill.lightbooks.dto.EpisodeHorizontalViewDto;
 import com.itwill.lightbooks.dto.EpisodeUpdateDto;
 import com.itwill.lightbooks.service.BookmarkService;
 import com.itwill.lightbooks.service.EpisodeService;
@@ -316,5 +318,17 @@ public class EpisodeController {
       return ResponseEntity.ok(null);
    }
    
+   
+   // 가로보기 가로보기
+   @GetMapping("/{episodeId}/horizontalView")
+   public String horizontalView(@PathVariable Long novelId, @PathVariable Long episodeId, Model model) {
+	   Episode episode = epiService.getEpisodeById(episodeId);
+	   
+	   List<EpisodeHorizontalViewDto> page = epiService.splitEpisodeContentIntoPages(episode);
+	   
+	   model.addAttribute("episode", episode);
+	   model.addAttribute("page", page);
+	   return "episode/horizontalView :: horizontalView";
+   }
 }
 

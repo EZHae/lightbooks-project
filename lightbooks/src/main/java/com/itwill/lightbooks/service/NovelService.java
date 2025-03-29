@@ -155,6 +155,9 @@ public class NovelService {
 				.map(Novel::getId)
 				.collect(Collectors.toList());
 		
+		// 장르 조회
+//		Map<Long, String> genreMap = novelRepo.getGenreNamesByNovelIds(novelIds);
+		
 		//소설별 총 조회수 Map 조회
 		Map<Long, Long> viewsMap = episodeRepo.getTotalViewsByNovelIds(novelIds);
 		
