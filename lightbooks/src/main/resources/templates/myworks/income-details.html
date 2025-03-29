@@ -12,13 +12,13 @@
 		}
 	</style>
 	
-	<body>
+	<body class="myworks-page">
 		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		<th:block th:replace="~{layout/myworks-fragments :: myworksHeader}"></th:block>
 
 		<main>
 			<span id="novelId" class="d-none" th:text="${novelId}"></span>
-			<div class="container-sm w-75 mt-5">
+			<div class="container-sm w-75 mt-5 pt-4">
 				<ul class="nav nav-tabs">
 					<li class="nav-item">
 						<a class="bg-light nav-link nav-menu-item fs-5 active" href="#" data-menuname="sale">판매 수익</a>
