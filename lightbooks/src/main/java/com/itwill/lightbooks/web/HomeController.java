@@ -124,6 +124,11 @@ public class HomeController {
        log.info("error_page()");
     }
     
+    @GetMapping("/error/403")
+    public void error403() {
+    	
+    }
+    
    
     // ======================================== 데이터 비동기 / case 처리 ========================================
     // 비동기 api 작성

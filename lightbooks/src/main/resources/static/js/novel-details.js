@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			.then(data => {
 				
 				console.log("API 응답 데이터:", data);
-				averageRatingSpan.textContent = data.avgRating.toFixed(1)
 		})
 		.catch(error => console.error("별점 데이터를 가져오지 못했습니다."));
 	}
@@ -136,11 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		try{
 			const response = await axios.post(`/api/${novelId}/rating`, reqBody , {withCredentials: true});
 			console.log("별점 저장 완료: " , response.data);
-			
-			
+			alert("별점을 등록했습니다! 😊");
+						
 			// 별점 준 뒤 버튼 색상 업데이트
 			checkUserRating(novelId, userId);
-			
 			
 			// 모달 닫기
 			const ratingModal = bootstrap.Modal.getInstance(document.getElementById('ratingModal'));
@@ -177,12 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			const ratingButton = document.getElementById('openRatingBtn');
 			
 			if(hasRated) { // 사용자가 별점을 남겼으면 버튼 색상을 바꾸는 곳
-				ratingButton.classList.remove('btn-outline-warning');
-				ratingButton.classList.add('btn-warning');
-				ratingButton.style.color = "white"; // 글자 색상을 흰색으로 변경
+				ratingIcon.classList.remove("bi-star");
+				ratingIcon.classList.add("bi-star-fill");
+				ratingIcon.style.color = "gold";
 			} else {
-				ratingButton.classList.remove('btn-warning');
-				ratingButton.classList.add('btn-outline-warning');			
+				ratingIcon.classList.remove("bi-star-fill");
+				ratingIcon.classList.add("bi-star");
+				ratingIcon.style.color = "gray";	
 			}
 			
 		} catch (error){
@@ -196,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	btnLike.addEventListener('click', async function() {
 		const btnLike = document.getElementById("btnLike");
 		const likeCountSpan = document.getElementById("likeCount");
+		const likeIcon = document.getElementById("likeIcon");
 		
 		console.log("현재 버튼 : ", btnLike, likeCountSpan)
 		
@@ -230,13 +230,23 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.log("좋아요 개수:", likeCount);
 			
 			// 좋아요 상태 업데이트
-			btnLike.classList.remove("btn-danger", "btn-outline-danger");
-			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger");
-		if (likeCountSpan) {
-        likeCountSpan.textContent = likeCount;
-		} else {
-			console.error("좋아요 개수를 표시할 요소를 찾을 수 없습니다!");
-		}
+			likeIcon.classList.remove("bi-heart", "bi-heart-fill");
+			likeIcon.classList.add(liked ? "bi-heart-fill" : "bi-heart");
+			likeIcon.style.color = liked ? "red" : "gray";
+			
+			
+			// 알림 메시지
+			if (liked) {
+				alert("좋아요를 눌렀습니다! ❤️");
+			} else {
+				alert("좋아요를 취소했습니다.");
+			}
+
+			// 애니메이션
+			likeIcon.classList.add("heart-pop");
+			setTimeout(() => {
+				likeIcon.classList.remove("heart-pop");
+			}, 300);
 		
 		} catch (error) {
 			console.error("좋아요 처리 중 오류", error);
@@ -255,15 +265,15 @@ document.addEventListener('DOMContentLoaded', () => {
 			const likeCount = response.data?.likeCount ?? 0;
 			
 			const btnLike = document.querySelector("button#btnLike")
-			
+			const likeIcon = document.getElementById("likeIcon"); 
 			if(!btnLike) return;
 			
 			btnLike.classList.remove("btn-danger", "btn-outline-danger")
 			btnLike.classList.add(liked ? "btn-danger" : "btn-outline-danger")
 			
-			if(likeCountSpan) {
-				likeCountSpan.textContent = likeCount;
-			}
+			likeIcon.classList.remove("bi-heart", "bi-heart-fill");
+			likeIcon.classList.add(liked ? "bi-heart-fill" : "bi-heart");
+			likeIcon.style.color = liked ? "red" : "gray";
 		} catch (error) {
 			console.error("좋아요 개수를 불러오지 못했습니다.");
 		} finally {

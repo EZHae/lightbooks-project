@@ -29,8 +29,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Entity
-@Table(name = "COIN_PAYMENT")
-public class CoinPayment {
+@Table(name = "COIN_PAYMENT_INCOME")
+public class CoinPaymentIncome {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,34 +38,21 @@ public class CoinPayment {
 	
 	@Column(name = "user_id")
 	private Long userId;
+	
+	@Column(name = "from_user_id")
+	private Long fromUserId;
+	
 	private int type;
 	
-	@JsonIgnore
-	@ToString.Exclude
-	@ManyToOne
-	@JoinColumn(name = "novel_id")
-	private Novel novel;
+	@Column(name = "novel_id")
+	private Long novelId;
 	
-//	@JsonIgnore
-//	@ToString.Exclude
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "episode_id", nullable = false)
-//	private Episode episode;
-	
-	@Column(name = "episode_id")
-	private Long episodeId;
+	@Column(name = "episode_num")
+	private Long episodeNum;
 	
 	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
 	private Long coin;
-	private Long cash;
-	
-	@Column(name = "donation_msg")
-	private String donationMsg;
-	
-	@Setter
-	@Transient
-	private Integer episodeNum;
 	
 	@Setter
 	@Transient

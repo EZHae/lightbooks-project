@@ -25,4 +25,6 @@ public class NovelResponseDto {
 	private List<String> genres;
 	private BigDecimal rating;
 	
+	private Long totalViews; // 회차 총 조회수
+	
 }

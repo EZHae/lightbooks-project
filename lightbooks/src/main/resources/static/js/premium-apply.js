@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			.then(response => {
 				console.log(response);
 				alert('신청 완료');
-				window.location.href = `/novel/my-works?id=${userId}`;
+				window.location.href = `/myworks/mynovel?id=${userId}`;
 			}).catch(error => {
 				console.log(error);
 			});

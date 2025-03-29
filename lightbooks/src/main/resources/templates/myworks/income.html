@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 수익 관리')}"></head>
+	
+	<style>
+	</style>
+	
+	<body>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
+		<th:block th:replace="~{layout/myworks-fragments :: myworksHeader}"></th:block>
+		
+		<main class="mt-5">
+			<div class="container-sm">
+				<div class="d-flex flex-row flex-wrap row row-cols-2" id="contentSection"></div>
+			</div>
+			
+            <div id="pagination">
+                <ul class="pagination justify-content-center" id="pagination">
+
+                </ul>
+            </div>
+		</main>
+		
+		<th:block th:replace="~{layout/fragments :: footer}"></th:block>
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/myworks-income.js}"></script>
+	</body>
+</html>
