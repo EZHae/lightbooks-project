@@ -317,7 +317,7 @@ public class NovelController {
     	model.addAttribute("canApply", canApply);
     	model.addAttribute("totalViews", totalViewsMap);
     	
-		return "/novel/premium";
+		return "novel/premium";
 	}
     
     // 해당 소설이 신청 조건을 만족 하는 지 확인

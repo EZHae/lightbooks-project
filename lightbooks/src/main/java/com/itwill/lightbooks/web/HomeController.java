@@ -243,15 +243,15 @@ public class HomeController {
 			}
 			case 6 -> {
 				// 무료 무협
-				return basePath +"martialArts";
+				return basePath +"martialarts";
 			}
 			case 7 -> {
 				// 무료 로판
-				return basePath +"romanceFantasy";
+				return basePath +"romancefantasy";
 			}
 			case 8 -> {
 				// 무료 현판
-				return basePath +"modernFantasy";
+				return basePath +"modernfantasy";
 			}
 			case 9 -> {
 				// 무료 드라마
@@ -271,11 +271,11 @@ public class HomeController {
          }
          case 2 -> {
             // 베스트
-            return "recommend/screen/recommendBest";
+            return "recommend/screen/recommendbest";
          }
          case 3 -> {
             // 오늘신작
-            return"recommend/screen/recommendNew";
+            return"recommend/screen/recommendnew";
          }
          default -> {
             return "error/404";
