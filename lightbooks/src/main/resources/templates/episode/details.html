@@ -74,12 +74,13 @@
              color: #333333; /* 본문 텍스트 색상 */
          }
          
+
          /* 뷰어 설정 버튼 */
          .viewer-settings-icon {
              position: fixed;
              bottom: 20px;
              right: 20px;
-             background-color: #f8f9fa;
+             background-color: #e9ecef;
              border: 1px solid #ced4da;
              border-radius: 50%;
              width: 50px;
@@ -199,6 +200,20 @@
              color: #000000; /* 항상 검정 텍스트 유지 */
              border: 1px solid #ced4da;
          }
+         
+         /* 모달창 스타일 */
+         .modal-content, .modal-header, .modal-body, .modal-footer {
+            color: #000000; /* 모달창 텍스트 검정색 */
+         }
+
+         .dark-mode .modal-content, .dark-mode .modal-header, .dark-mode .modal-body, .dark-mode .modal-footer{
+            color: #ffffff; /* 다크모드일 때 모달창 텍스트 흰색 */
+         }
+         
+		         /* 다크 모드 스타일 */
+		.dark-mode .dark-mode-link {
+		    color: white !important;
+		}
                      
         </style>
     </head>
@@ -217,15 +232,15 @@
                 </a>
             </div>
             <div style="display: flex; align-items: center; gap: 10px; font-size: 1.2rem;">
-			    <button style="background-color: white; border: none; color: black;">
-				    가로보기
-				</button>
-				<span style="color: black;">│</span>
-			    <a id="commentButton" class="button" style="margin-right: 10px; font-size: 1.2rem; text-decoration: none; color: black;" 
-				   th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">
-				   &nbsp;<i class="bi bi-chat"></i>&nbsp;댓글
-				</a>
-			</div>
+             <button style="background-color: white; border: none; color: black;">
+                가로보기
+            </button>
+            <span style="color: black;">│</span>
+             <a id="commentButton" class="button" style="margin-right: 10px; font-size: 1.2rem; text-decoration: none; color: black;" 
+               th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">
+               &nbsp;<i class="bi bi-chat"></i>&nbsp;댓글
+            </a>
+         </div>
         </div>
 
         <!-- 본문 -->
@@ -267,11 +282,11 @@
                 <br>
                 <br>
                 <div>
-				    <a style="float: right; margin-right: 0; text-decoration: none; color: black; font-size: 17px;" 
-				       th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}">
-				       <i class="bi bi-caret-left-fill"></i>뒤로가기
-				    </a>
-				</div>
+                <a style="float: right; margin-right: 0; text-decoration: none; color: black; font-size: 17px;" 
+                   th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}" class="dark-mode-link">
+                   <i class="bi bi-caret-left-fill"></i>뒤로가기
+                </a>
+            </div>
             </div>
         </div>
 
@@ -294,13 +309,13 @@
             <div class="modal-dialog">
                <div class="modal-content">
                   <div class="modal-header">
-                     <h5 class="modal-title" id="modalTitle">회차 구매</h5>
+                     <h5 class="modal-title"  style="color: #000000;" id="modalTitle">회차 구매</h5>
                      <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                      <div
-                        style="display: flex; align-items: center; gap: 10px; text-align: left;">
+                        style="display: flex; align-items: center; gap: 10px; text-align: left; color: #000000;">
                         <span> 모든 작품 이용권 <span id="remainingGlobalTicket"> <strong
                               th:text="${globalTicketCount}"></strong>
                         </span>개
@@ -341,9 +356,11 @@
                         </div>
                      </div>
       
-                     <div>
-                        <a th:href="@{/coinshop}" th:text="'> 코인 충전하러가기'"></a>
-                     </div>
+                     <div style="margin-top: 18px;">
+                   <a th:href="@{/coinshop}" style="color: #000000; text-decoration: none;">
+                       <i class="bi bi-caret-right-fill"></i>코인 충전하러가기
+                   </a>
+               </div>
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary"
@@ -377,3 +394,5 @@
         <script th:src="@{/js/episode-details.js}"></script>
     </body>
 </html>
+
+

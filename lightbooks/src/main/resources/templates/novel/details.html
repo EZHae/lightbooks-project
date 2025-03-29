@@ -25,9 +25,10 @@
 							<div class="novel-content">
 								<!-- 타이틀 -->
 								<span class="d-none" id="novelUserId" th:text="*{userId}"></span>
-								<span class="d-none" id="novelId" th:text="*{id}"></span> <span
-									id="inputNovelTitle" th:text="*{title}"></span> <span
-									id="novelwriter" th:text="*{writer}"></span>
+								<span class="d-none" id="novelId" th:text="*{id}"></span> 
+								<span id="inputNovelTitle" th:text="*{title}"></span> 
+								
+								<span id="novelwriter" th:text="*{writer}"></span>
 		
 								<div class="novel-item">
 									<i class="bi bi-heart"></i> <span
@@ -35,13 +36,14 @@
 										th:title="${novel.likeCount}"></span> <i class="bi bi-star"></i>
 									<span
 										th:text="${#numbers.formatDecimal(novel.rating, 1, 1)} ?: '0.0'"
-										th:title="${novel.rating}">0.0</span> <br> <i
-										class="bi bi-person-plus-fill"></i>
+										th:title="${novel.rating}">0.0</span> 
 									<!-- 조회수 추가! -->
+										 <i	class="bi bi-person-plus-fill"></i>
 									<span
 										th:text="${totalViews != null ? (totalViews > 9999 ? '9999+' : totalViews) : 0}"
-										th:title="${totalViews}"></span>
+										th:title="${totalViews}"></span> </br>
 								</div>
+									<span class="novelDays" th:text="|연재 : ${novel.days}|"></span>
 							</div>
 							
 							<!-- 좋아요 별점 버튼들 -->

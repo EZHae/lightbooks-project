@@ -214,15 +214,20 @@ body {
 
 
 #novelwriter {
-  font-size: 12px;
+  font-size: 13px;
   color: gray;
 }
 
 .novel-item {
-  font-size: 12px;
+  font-size: 13px;
   color: gray;
+  margin-top: 5px;
 }
-
+span.novelDays{
+	font-size: 13px;
+	color:gray;
+	margin-top: 5px;
+}
 
 .right-section .card {
   min-width: 280px;
