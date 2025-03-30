@@ -9,4 +9,6 @@ import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 public interface CoinPaymentWaitingRepository extends JpaRepository<CoinPaymentWaiting, Long> {
 
 	Page<CoinPaymentWaiting> findByUserIdAndType(Long userId, int type, Pageable pageable);
+	
+	Page<CoinPaymentWaiting> findByCon(int con, Pageable pageable);
 }

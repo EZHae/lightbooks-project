@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 회원가입')}"></head>
+	<style>
+		.profile-active {
+			outline: 3px solid #007bff !important;
+		}
+	</style>
 	<body>
 		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
@@ -49,26 +54,21 @@
                         <input id="email" class="form-control" type="email" name="email" maxlength="20" required>
                         <div id="checkEmailResult" class="check-result"></div>
                     </div>
-                    <!-- 철거 예정 -->
                     <div class="mt-2">
                         <label for="imgSrc" class="form-label">프로필</label>
-                        <input id="imgSrc" class="form-control" type="text" name="imgSrc" value="value" readonly required>
-                        <div id="checkEmailResult" class="check-result"></div>
+                        <div class="text-center">
+							<img class="profile-img rounded-circle border m-1 profile-active" th:src="@{/images/profiles/profile1.png}" data-set-src="/images/profiles/profile1.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile2.png}" data-set-src="/images/profiles/profile2.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile3.png}" data-set-src="/images/profiles/profile3.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile4.png}" data-set-src="/images/profiles/profile4.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile5.png}" data-set-src="/images/profiles/profile5.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile6.png}" data-set-src="/images/profiles/profile6.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile7.png}" data-set-src="/images/profiles/profile7.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile8.png}" data-set-src="/images/profiles/profile8.png">
+	                        <img class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile9.png}" data-set-src="/images/profiles/profile9.png">
+                        </div>
+                        <input id="imgSrc" class="d-none" type="text" name="imgSrc" value="/images/profiles/profile1.png" readonly required>
                     </div>                 
-                    <div class="mt-2 row">
-	                    <div class="col-3">
-	                    	<div>
-	                    		<!-- TODO: 이미지 미리보기 영역 -->
-	                    	</div>
-	                    </div>
-	                    <div class="col-9">
-	                    	<div>
-	                    		<!-- 
-	                    		<input class="form-control form-control-sm" type="file" name="imgSrc" id="imgSrc" accept="image/jpg, image/jpeg, image/png">
-	                    		 -->
-	                    	</div>
-	                    </div>
-                   </div>
                     <div class="mt-2">
                         <input type="submit" id="btnSignUp" class="btn btn-success form-control disabled" value="가입">
                     </div>

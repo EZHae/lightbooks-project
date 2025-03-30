@@ -30,11 +30,35 @@ public class AdminService {
 	private final NovelGradeRequestRepository novelGradeRequestRepo;
 	
 	
-	public List<CoinPaymentWaiting> searchAllCoinPaymentWaiting() {
-		List<CoinPaymentWaiting> waitings = coinPaymentWaitingRepo.findAll();
+	public Page<CoinPaymentWaiting> searchAllCoinPaymentWaiting(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+		Page<CoinPaymentWaiting> result = coinPaymentWaitingRepo.findAll(pageable);
+		if (!result.getContent().isEmpty()) {
+			result.getContent().forEach(item -> {
+				if (item.getUser() != null) {
+					item.setUserLoginId(item.getUser().getLoginId());
+					item.setUserUsername(item.getUser().getUsername());
+				}
+			});
+		}
 		
-		return waitings;
+		return result;
 	}
+	
+	public Page<CoinPaymentWaiting> searchCoinPaymentWaitingByCon(int page, int size, int con) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
+		Page<CoinPaymentWaiting> result = coinPaymentWaitingRepo.findByCon(con, pageable);
+		if (!result.getContent().isEmpty()) {
+			result.getContent().forEach(item -> {
+				if (item.getUser() != null) {
+					item.setUserLoginId(item.getUser().getLoginId());
+					item.setUserUsername(item.getUser().getUsername());
+				}
+			});
+		}
+		
+		return result;
+	}	
 	
 	public CoinPaymentWaiting searchCoinPaymentWaitingById(Long id) {
 		CoinPaymentWaiting coinPaymentWaiting = coinPaymentWaitingRepo.findById(id).orElseThrow();

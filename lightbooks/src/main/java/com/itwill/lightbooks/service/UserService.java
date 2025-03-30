@@ -23,6 +23,7 @@ import com.itwill.lightbooks.domain.UserWallet;
 import com.itwill.lightbooks.dto.NotificationFragmentDto;
 import com.itwill.lightbooks.dto.PaymentRequestDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
+import com.itwill.lightbooks.dto.UserUpdateImgSrcDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentRepository;
@@ -164,6 +165,14 @@ public class UserService implements UserDetailsService {
 		
 		String encodedNewPassword = passwordEncoder.encode(dto.getNewPassword());
 		user.updatePassword(encodedNewPassword);
+		
+		userRepo.save(user);
+	}
+	
+	public void updateImgSrc(UserUpdateImgSrcDto dto) {
+		User user = userRepo.findById(dto.getId()).orElseThrow();
+		
+		user.updateImgSrc(dto.getImgSrc());
 		
 		userRepo.save(user);
 	}

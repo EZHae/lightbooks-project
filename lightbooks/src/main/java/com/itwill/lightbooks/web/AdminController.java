@@ -2,6 +2,7 @@ package com.itwill.lightbooks.web;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -43,10 +44,7 @@ public class AdminController {
 
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'")  // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/waitingpayment")
-	public String waitingpayment(Model model) {
-		
-		List<CoinPaymentWaiting> waitings = adminService.searchAllCoinPaymentWaiting();
-		model.addAttribute("waitings", waitings);
+	public String waitingpayment() {
 		
 		return "admin/waiting-payment";
 	}
@@ -159,4 +157,33 @@ public class AdminController {
 		
 		return "redirect:/post/notice/details?id=" + dto.getId();
 	}
+	
+//    @ResponseBody
+//    @GetMapping("/waitingpayment/read")
+//    public ResponseEntity<Page<CoinPaymentWaiting>> readWaitingPayment(
+//    	    @RequestParam(name = "page", defaultValue = "0") int page,
+//    	    @RequestParam(name = "size", defaultValue = "20") int size) {
+//    	
+//    	Page<CoinPaymentWaiting> result = adminService.searchAllCoinPaymentWaiting(page, size);
+//    	
+//    	return ResponseEntity.ok(result);
+//    }
+    
+    @ResponseBody
+    @GetMapping("/waitingpayment/read/con")
+    public ResponseEntity<Page<CoinPaymentWaiting>> readWaitingPayment(
+    	    @RequestParam(name = "page", defaultValue = "0") int page,
+    	    @RequestParam(name = "size", defaultValue = "20") int size,
+    	    @RequestParam(name = "con", defaultValue = "2") int con) {
+    	
+    	Page<CoinPaymentWaiting> result;
+    	
+    	if (con == 2) {
+    		result = adminService.searchAllCoinPaymentWaiting(page, size);
+    	} else {
+    		result = adminService.searchCoinPaymentWaitingByCon(page, size, con);	
+    	}
+    	
+    	return ResponseEntity.ok(result);
+    }
 }
