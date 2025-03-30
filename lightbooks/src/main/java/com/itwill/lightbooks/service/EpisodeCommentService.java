@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -96,7 +97,7 @@ public class EpisodeCommentService {
 	
 	// 소설 상세보기 댓글 목록
 	@Transactional(readOnly = true)
-	public Page<NovelCommentResponseDto> readNovel(Long novelId, int pageNo, Sort sort) {
+	public Page<NovelCommentResponseDto> readNovel(Long novelId, int pageNo, Sort sort,Long currentUserId) {
 		log.info("read (episode Id : {}, pageNo : {}, sort : {}", novelId, pageNo, sort);
 		Pageable pageable = PageRequest.of(pageNo, 10, sort);
 		
@@ -105,9 +106,6 @@ public class EpisodeCommentService {
 		
 		Page<Comment> page= commentRepo.findByNovel(novel, pageable);
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Long currentUserId = ((User) auth.getPrincipal()).getUserId();
-       
 		// 현재 유저가 좋아요한 댓글 ID 리스트
 		List<Long> likedIds = commentLikeRepo.findLikedCommentIdsByUser(currentUserId);
 
@@ -203,5 +201,11 @@ public class EpisodeCommentService {
 		
 		return null;
 	}
-	
+
+	public List<Long> findLikedCommentIds(Long currentUserId, List<Long> commentIds) {
+	    if (commentIds == null || commentIds.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+	    return commentLikeRepo.findLikedCommentIdsByUserAndCommentIds(currentUserId, commentIds);
+	}
 }

@@ -5,11 +5,18 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 	const btnLike = document.getElementById("btnLike");
+	if (!btnLike) return; 
+	
 	const novelId = btnLike.dataset.novelId;
 	const userId = btnLike.dataset.userId;
 	const likeCountSpan = document.getElementById("likeCount");
 	console.log("로그인 유저 아이디: ",userId);
-
+	
+	if(userId === null || !userId || userId === "0"){
+		alert('로그인이 필요합니다')
+		return;
+	}
+	
 	// 좋아요, 별점 새로 불러오기
 	fetchRating();
 	checkUserRating(novelId, userId);

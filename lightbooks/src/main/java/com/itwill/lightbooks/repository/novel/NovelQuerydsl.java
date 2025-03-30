@@ -1,6 +1,7 @@
 package com.itwill.lightbooks.repository.novel;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,8 @@ public interface NovelQuerydsl {
 	void updateNovel(Long novelId, String title, String intro, String coverSrc, Integer ageLimit, Integer state, List<String> days, Integer genreId);
 	
 	Page<Novel> searchByKeyword(NovelSearchDto dto, Pageable pageable);
+	
+	Map<Long, String> getGenreNamesByNovelIds(List<Long> novelIds); // 소설 검색
 	
 	// 메인 페이지
 	List<NovelListItemDto> findRandomBestNovels(int count);

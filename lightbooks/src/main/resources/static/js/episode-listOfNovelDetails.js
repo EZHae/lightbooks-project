@@ -47,7 +47,12 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
      
      const episodeId = element.dataset.episodeId;
      const novelId = element.dataset.novelId;
-     const userId = document.querySelector('input#userId').value;
+	 const userId = document.querySelector('input#userId');
+	 if(!userId || userId === "0" || userId === "") {
+		alert('로그인이 필요합니다.')
+		return;
+	 }
+     
 	 console.log("userId", userId);
 	 
 	 if (!element || !element.dataset) {
@@ -60,6 +65,11 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
 	     }
 
      const updateAccessTime = () => {
+		const userId = document.querySelector('input#userId').value;
+		if(!userId || userId === "0" || userId === "") {
+				alert('로그인이 필요합니다.')
+				return;
+			 }
          axios.post(`/user/episode/${episodeId}/access?userId=${userId}`)
               .then(response => {
                    console.log("access_time 업데이트 성공:", response.data);
@@ -68,8 +78,9 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
                    console.error("access_time 업데이트 실패:", error);
                });
          };
-      
-		 if (isOwner || category === "0" || category === "1") {
+		 
+		 const isLoggedIn = userId && userId !== "0" && userId !== "";
+		 if (isOwner || category === "0" || category === "1" && isLoggedIn) {
 		     console.log("공지거나 무료회차 또는 작성자 또는 구매한 경우입니다. 상세 페이지로 이동합니다.");
 
 		     if (category !== "0") { // 공지가 아닌 경우에만 updateAccessTime() 호출!!!!!근데 이거때문인가 뭔가 유료?무료?회차 시간 업뎃 갑자기 안되던데 확인하기

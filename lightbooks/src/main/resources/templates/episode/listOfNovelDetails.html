@@ -15,7 +15,7 @@
    </head>
    <body>
    
-  		 <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
+  		 <input type="hidden" id="userId" th:value="${currentUserId}"/>
       <!-- AJAX 업데이트 대상 영역 -->
       <div id="episodeListContainer">
          <th:block th:fragment="episodeListOfNovelDetails">
@@ -54,21 +54,22 @@
                         th:data-episode-id="${episode.id}" 
                         th:data-novel-id="${episode.novelId}"
                         th:data-episode-num="${episode.episodeNum}"   
-                        th:data-is-owner="${novel.userId eq #authentication.principal.id}">
+                        th:data-is-owner="${isOwner}">
                          <td>
                              <div class="mb-2">
                                 <span class="episode-number" th:if="${episode.category == 1 || episode.category == 2}" 
                                    th:text="${episode.episodeNum} + '화 '"></span>
+                                   
                                  <!-- 회차 제목: 전체 페이지 이동 -->
-                                 <a class="episode-title episode-item"  
-                           th:href="@{/novel/{novelId}/episode/{episodeId}(novelId=${episode.novelId}, episodeId=${episode.id})}" 
+                                 <a class="episode-title episode-item"
+                           th:href="${currentUserId != null} ? @{/novel/{novelId}/episode/{episodeId}(novelId=${episode.novelId}, episodeId=${episode.id})} : ''" 
                            th:data-category="${episode.category}" 
                            th:data-title="${episode.title}"
                            th:data-episode-id="${episode.id}"
                            th:data-novel-id="${episode.novelId}"
                            th:data-episode-num="${episode.episodeNum}" 
                            th:text="${episode.title}" 
-                           data-is-owner="${novel.userId eq #authentication.principal.id}"
+                           data-is-owner="${isOwner}"
                            style="font-weight: bold;">
                         </a><!-- 지우지마세요 -->
 
@@ -91,7 +92,7 @@
                                      </span>
                                  </span>
                                  <!-- 수정/삭제 버튼은 소설 작성자만 보임 -->
-                                 <div th:if="${novel.userId eq #authentication.principal.id}">
+                                 <div th:if="${isOwner}">
                                     <span style="float: right; margin-left: 10px;">
                                         <!-- 수정 버튼: 전체 페이지 이동 -->
                                         <a class="btn btn-primary btn-sm"

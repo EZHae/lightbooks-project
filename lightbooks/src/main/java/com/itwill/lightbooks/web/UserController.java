@@ -119,7 +119,7 @@ public class UserController {
     public String coinPayment(@RequestParam(name = "id") Long id) {
     	log.info("coinPayment(id={})", id);
     	
-    	return "/user/coin-payment";
+    	return "user/coin-payment";
     }
     
     @PreAuthorize("isAuthenticated() and principal.id == #id")
@@ -127,7 +127,7 @@ public class UserController {
     public String mileagePayment(@RequestParam(name = "id") Long id) {
     	log.info("mileagePayment(id={})", id);
     	
-    	return "/user/mileage-payment";
+    	return "user/mileage-payment";
     }
     
     @PreAuthorize("isAuthenticated() and principal.id == #id")

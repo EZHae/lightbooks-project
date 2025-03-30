@@ -65,7 +65,7 @@ public class MyworksController {
     	model.addAttribute("novelId", novelId);
     	model.addAttribute("novelTitle", novelTitle);
     	
-    	return "/myworks/income-details";
+    	return "myworks/income-details";
     }
     
     @ResponseBody
