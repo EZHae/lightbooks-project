@@ -321,6 +321,25 @@ document.addEventListener('DOMContentLoaded', () => {
 		case '/images/profiles/profile9.png' : 
 			document.querySelector('img#profile9').classList.add('profile-active');
 			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile10').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile11').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile12').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile13').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile14').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile15').classList.add('profile-active');
+			break;
+			
 		default :
 			break;
 	}
