@@ -48,16 +48,28 @@
 							
 							<!-- 좋아요 별점 버튼들 -->
 							<div class="btnLikeWithRating">
-								<button id="btnLike" th:data-novel-id="*{id}" th:data-user-id="${#authentication.principal != null ? #authentication.principal.id : 0}"
+								<button id="btnLike" th:if="${currentUserId != null}" th:data-novel-id="*{id}" th:data-user-id="${currentUserId}"
 									class="btn p-0 border-0 bg-transparent">
 									<i class="bi bi-heart" id="likeIcon" style="font-size: 26px;"></i>
 								</button>
 								
+								<!-- 비 로로그인시 -->
+								<button th:if="${currentUserId == null}" class="btn p-0 border-0 bg-transparent" 
+									onclick="alert('로그인이 필요합니다')">
+									<i class="bi bi-heart" style="font-size: 26px;"></i>
+								</button>
+								
 								<!-- 별점 버튼 -->
-								<button id="openRatingBtn" class="btn p-0 border-0 bg-transparent ms-3"
+								<button id="openRatingBtn"th:if="${currentUserId != null}"  class="btn p-0 border-0 bg-transparent ms-3"
 									data-bs-toggle="modal" data-bs-target="#ratingModal">
 									<i class="bi bi-star" id="ratingIcon" style="font-size: 26px;"></i>
 								</button>
+								<!-- 비 로로그인시 -->
+								<button class="btn p-0 border-0 bg-transparent ms-3"
+									th:if="${currentUserId == null}" onclick="alert('로그인이 필요합니다')">
+									<i class="bi bi-star" id="ratingIcon" style="font-size: 26px;"></i>
+								</button>
+								
 			
 								<!-- 별점 기능 -->
 								<!-- Modal -->
@@ -67,8 +79,7 @@
 										<div class="modal-content">
 											<div class="modal-header">
 												<h1 class="modal-title fs-5 text-center">
-													<i class="bi bi-star-fill text-warning"></i> 별점 등록 <i
-														class="bi bi-star-fill text-warning"></i>
+													<i class="bi bi-star-fill text-warning"></i> 별점 등록 <i class="bi bi-star-fill text-warning"></i>
 												</h1>
 												<button type="button" class="btn-close" data-bs-dismiss="modal"
 													aria-label="Close"></button>
@@ -98,7 +109,7 @@
 								<i class="bi bi-cash-coin"></i> <span>작품후원</span>
 							</button>	
 							
-							<div th:if="*{userId eq #authentication.principal.id}" class="btnUserModify">
+							<div th:if="${isOwner}" class="btnUserModify">
 								<div class="btnNovelModify">
 									<a th:href="@{/novel/modify/{id}(id=${novel.id})}">작품 수정</a>
 								</div>
@@ -121,9 +132,8 @@
 						<div class="comment-section">
 							<div class="comment-list" id="commentList"></div>
 			
-							<input type="hidden" id="novelId" th:value="${novel.id}" /> <input
-								type="hidden" id="userId"
-								th:value="${#authentication.principal.id}" />
+							<input type="hidden" id="novelId" th:value="${novel.id}" />
+							<input type="hidden" id="userId" th:value="${currentUserId != null ? currentUserId : 0}" />
 						</div>
 					</div>
 				</div>

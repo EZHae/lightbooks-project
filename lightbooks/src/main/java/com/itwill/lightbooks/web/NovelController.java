@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.web;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,19 +97,24 @@ public class NovelController {
        log.info("소설 상세정보 페이지: {}",id);
        
        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-       if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
-           throw new IllegalStateException("로그인이 필요합니다."); // 로그인되지 않은 사용자 처리
+       Long currentUserId = null;
+       
+       if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+           // 현재 로그인된 사용자 ID 가져오기
+           User currentUser = (User) auth.getPrincipal(); // User 엔터티로 캐스팅
+           currentUserId = currentUser.getUserId();
+           
+           // 작성자 여부 확인
+           boolean isOwner = novelService.isUserOwnerOfNovel(id, currentUserId);
+           model.addAttribute("isOwner", isOwner); // 작성자 여부를 모델에 추가
+           // 이용권 수 조회
+           model.addAttribute("globalTicketCount",  ticketService.getGlobalTicketCount(auth));
+           model.addAttribute("novelTicketCount", ticketService.getNovelTicketCount(auth, id));
+       } else {
+    	   // 비로그인상태
+    	   currentUserId = null;
        }
-
-       // 현재 로그인된 사용자 ID 가져오기
-       User currentUser = (User) auth.getPrincipal(); // User 엔터티로 캐스팅
-       Long currentUserId = currentUser.getUserId();
-
-       // 작성자 여부 확인
-       boolean isOwner = novelService.isUserOwnerOfNovel(id, currentUserId);
-       model.addAttribute("isOwner", isOwner); // 작성자 여부를 모델에 추가
-
+       model.addAttribute("currentUserId", currentUserId);
        
        Novel novel = novelService.searchById(id);
        log.info("nove id = {}",novel);
@@ -147,13 +153,6 @@ public class NovelController {
         model.addAttribute("sort", sortStr.toString()); // 현재 정렬 방식 (문자열)
         model.addAttribute("firstEpisodeId", firstEpisodeId); // 첫 번째 에피소드의 ID
         model.addAttribute("novelId", id);
-    
-        // 이용권 수 조회
-        Long globalTicketCount = ticketService.getGlobalTicketCount(auth);
-        Long novelTicketCount = ticketService.getNovelTicketCount(auth, id);
-
-        model.addAttribute("globalTicketCount", globalTicketCount);
-        model.addAttribute("novelTicketCount", novelTicketCount);
         
         //소설 조회수 보여주기
         Integer totalViews = episodeService.getTotalViewsByNovelId(id);
@@ -354,22 +353,44 @@ public class NovelController {
 	// 회차 전체의 댓글 리스트
 	@GetMapping("/{novelId}/comments")
 	@ResponseBody
-	public ResponseEntity<PagedModel<NovelCommentResponseDto>> commentList(@PathVariable(name = "novelId") Long novelId,
+	public ResponseEntity<Map<String, Object>> commentList(@PathVariable(name = "novelId") Long novelId,
 													   @RequestParam(name = "p", defaultValue = "0") int pageNo) {
 		log.info("comment page()");
 		log.info("getCommentList(novelId={}, pageNo={})", novelId, pageNo);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Long currentUserId = null;
+
+		if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+			// 현재 로그인된 사용자 ID 가져오기
+			User currentUser = (User) auth.getPrincipal(); // User 엔터티로 캐스팅
+			currentUserId = currentUser.getUserId();
+
+		} 
 		
 		Novel novel = novelService.searchById(novelId);
 		log.info("novel = {}", novel);
 		
-		Page<NovelCommentResponseDto> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("likeCount").descending());
+		// 댓글 페이지
+		Page<NovelCommentResponseDto> page = episodeCommentService.readNovel(novelId, pageNo, Sort.by("likeCount").descending(), currentUserId);
 		log.info("페이지 수 = {}", page.getTotalPages());
 		log.info("페이지 번호 = {}", page.getNumber());
 		log.info("현재 페이지의 댓글 개수 = {}", page.getNumberOfElements());
 		
        // 로그인 유저가 좋아요 누른 댓글 ID 목록
+	    List<Long> likedIds = (currentUserId != null)
+	            ? episodeCommentService.findLikedCommentIds(currentUserId,
+	                  page.getContent().stream().map(NovelCommentResponseDto::getCommentId).collect(Collectors.toList()))
+	            : Collections.emptyList();
+	    
+	    // 응답 JSON 구성
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("comments", page.getContent());
+	    response.put("currentPage", page.getNumber());
+	    response.put("totalPages", page.getTotalPages());
+	    response.put("likedCommentIds", likedIds);
+
 		
-		return ResponseEntity.ok(new PagedModel<>(page));
+		return ResponseEntity.ok(response);
 	}
 	
 	// 댓글 좋아요/취소

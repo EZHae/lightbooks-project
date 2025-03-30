@@ -27,15 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	  const uri = `/novel/${novelId}/comments?p=${pageNo}`;
 
 	  try {
-	    const { data } = await axios.get(uri);
-	    console.log(data);
-
-	    currentPageNo = data.page.number;
-	    if (data.page && data.page.totalPages <= currentPageNo + 1) {
+	    const response = await axios.get(uri);
+		const data = response.data;
+		
+		const comments = data.comments;
+		const likedIds = data.likedCommentIds;
+		
+	    currentPageNo = data.currentPage;
+		
+	    if (data.totalPages <= currentPageNo + 1) {
 	      isLastPage = true;
 	    }
 
-	    makeCommentElements(data, reset);
+	    makeCommentElements(comments, likedIds, reset);
 	  } catch (error) {
 	    console.error("댓글 불러오기 실패", error);
 	  } finally {
@@ -43,10 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	  }
 	}
 
-	function makeCommentElements(data, reset = false) {
+	function makeCommentElements(comments, reset = false) {
 	  const commentList = document.getElementById('commentList');
-	  const comments = data.content;
-	  console.log("받은 댓글 목록:", data.content);
+	  
 	  if (reset) {
 	    commentList.innerHTML = '';
 	    renderedCommentIds.clear();
@@ -63,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  comments.forEach(comment => {
 	    if (renderedCommentIds.has(comment.commentId)) return;
 	    renderedCommentIds.add(comment.commentId);
-
+	
 	    htmlStr += `
 	      <div class="commentBox">
 	        <div class="commentHeader">
@@ -107,6 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		const novelId = document.querySelector('#novelId').value;
 		const userId = document.querySelector('input#userId')?.value;
 
+		if (!userId || userId === "0" || userId === "") {
+			alert("로그인이 필요합니다.");
+			return;
+		}
+		
 		const url = `/novel/comment/${commentId}/like`;
 		const data = { userId };
 

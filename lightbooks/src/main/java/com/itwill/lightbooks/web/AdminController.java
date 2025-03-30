@@ -48,7 +48,7 @@ public class AdminController {
 		List<CoinPaymentWaiting> waitings = adminService.searchAllCoinPaymentWaiting();
 		model.addAttribute("waitings", waitings);
 		
-		return "/admin/waiting-payment";
+		return "admin/waiting-payment";
 	}
 	
 	@ResponseBody
@@ -77,7 +77,7 @@ public class AdminController {
 		
 		List<NovelGradeRequest> gradeReqs = adminService.searchAllNovelGradeRequests();
 		model.addAttribute("gradeReqs", gradeReqs);
-		return "/admin/premium-request";
+		return "admin/premium-request";
 	}
 	
 	// 유료/무료 신청 확인 시
@@ -107,7 +107,7 @@ public class AdminController {
 	public String postCreate() {
 		log.info("postCreate()");
 		
-		return "/post/create";
+		return "post/create";
 	}
 	
 	@PostMapping("/post/create")
@@ -148,7 +148,7 @@ public class AdminController {
 		
 		model.addAttribute("post", post);
 		
-		return "/post/update";
+		return "post/update";
 	}
 	
 	@PostMapping("/post/update")
