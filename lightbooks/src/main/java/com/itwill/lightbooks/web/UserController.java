@@ -41,6 +41,7 @@ import com.itwill.lightbooks.dto.PurchasedNovelBookmarkDto;
 import com.itwill.lightbooks.dto.RecentlyWatchedEpisodeDto;
 import com.itwill.lightbooks.dto.TicketReadDto;
 import com.itwill.lightbooks.dto.UserSignUpDto;
+import com.itwill.lightbooks.dto.UserUpdateImgSrcDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.service.BookmarkService;
@@ -102,6 +103,14 @@ public class UserController {
     public String updatePassword(UserUpdatePasswordDto dto) {
     	
     	userService.updatePassword(dto);
+    	
+    	return "redirect:/user/signout";
+    }
+    
+    @PostMapping("updateImgSrc")
+    public String updateImgSrc(UserUpdateImgSrcDto dto) {
+    	
+    	userService.updateImgSrc(dto);
     	
     	return "redirect:/user/signout";
     }

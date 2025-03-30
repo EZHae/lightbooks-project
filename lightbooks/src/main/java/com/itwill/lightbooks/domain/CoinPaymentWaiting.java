@@ -15,12 +15,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
@@ -66,4 +68,12 @@ public class CoinPaymentWaiting {
 	           ", createdTime=" + createdTime + 
 	           ", con=" + con + ")";
 	}
+	
+	@Setter
+	@Transient
+	private String userLoginId;
+	
+	@Setter
+	@Transient
+	private String userUsername;
 }

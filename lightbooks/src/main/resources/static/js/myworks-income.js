@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		const contentSection = document.querySelector('div#contentSection');
 		
 		if (contentData.length === 0) {
-			contentSection.outerHTML =
+			contentSection.innerHTML =
 			`
 				<div class="d-flex justify-content-center">
 					<span class="fs-5 fw-bold">수익이 발생한 작품이 없습니다.</span>

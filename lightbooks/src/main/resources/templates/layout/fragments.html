@@ -291,13 +291,14 @@
                             aria-expanded="false"
                             data-bs-auto-close="outside"
                         >
-                            <img th:src="@{/images/profile_icon_example.jpg}" alt="Profile" class="profile-img me-2"
+                            <img th:src="@{${#authentication.principal.imgSrc}}" alt="Profile" class="profile-img me-2"
                             	style="width: 30px; height: 30px;" />
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="profileDropdown">
                             <li class="px-3 py-2">
                                 <div class="d-flex align-items-center">
-                                    <img th:src="@{/images/profile_icon_example.jpg}" alt="Profile" class="profile-img" />
+                                    <img th:src="@{${#authentication.principal.imgSrc}}" alt="Profile" class="profile-img"
+                                    	style="width: 50px; height: 50px;" />
                                     <div class="ms-3">
                                         <h6 class="mb-0" id="authNickname" sec:authentication="principal.nickname"></h6>
                                         <span class="d-none" id="userId" sec:authentication="principal.id"></span>

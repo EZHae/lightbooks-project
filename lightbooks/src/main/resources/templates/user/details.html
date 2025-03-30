@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 회원 정보')}"></head>
+	
+	<style>
+		.profile-active {
+			outline: 3px solid #007bff !important;
+		}
+	</style>
+	
 	<body>
 		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
@@ -50,6 +57,9 @@
                         </button>
                         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updatePasswordModal">
                             비밀번호 변경
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateImgSrcModal">
+                            이미지 변경
                         </button>
                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
                             회원 탈퇴
@@ -125,26 +135,58 @@
                                 <div class="row">
                                     <div class="col-3">현재<br>비밀번호</div>
                                     <div class="col-9">
-                                        <input id="oldPassword" class="form-control" type="text" name="oldPassword" maxlength="20" required>
+                                        <input id="oldPassword" class="form-control" type="password" name="oldPassword" maxlength="20" required>
                                         <div id="checkOldPasswordResult"></div>
                                     </div>
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-3">변경할<br>비밀번호</div>
                                     <div class="col-9">
-                                        <input id="newPassword" class="form-control" type="text" name="newPassword" maxlength="20" required>
+                                        <input id="newPassword" class="form-control" type="password" name="newPassword" maxlength="20" required>
                                     </div>
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-3">비밀번호<br>확인</div>
                                     <div class="col-9">
-                                        <input id="newPasswordCheck" class="form-control" type="text" name="newPasswordCheck" maxlength="20" required>
+                                        <input id="newPasswordCheck" class="form-control" type="password" name="newPasswordCheck" maxlength="20" required>
                                         <div id="checkPasswordResult"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-2">
                                 <input id="btnUpdatePassword" type="submit" class="btn btn-primary form-control disabled" value="변경">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 프로필 이미지 변경 모달-->
+        <div class="modal fade" id="updateImgSrcModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">프로필 이미지 변경</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" th:object="${user}">
+                        <form method="post" th:action="@{/user/updateImgSrc}">
+                        	<input id="id" name="id" class="d-none" th:value="*{id}">
+	                        <div class="text-center">
+								<img id="profile1" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile1.png}" data-set-src="/images/profiles/profile1.png">
+		                        <img id="profile2" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile2.png}" data-set-src="/images/profiles/profile2.png">
+		                        <img id="profile3" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile3.png}" data-set-src="/images/profiles/profile3.png">
+		                        <img id="profile4" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile4.png}" data-set-src="/images/profiles/profile4.png">
+		                        <img id="profile5" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile5.png}" data-set-src="/images/profiles/profile5.png">
+		                        <img id="profile6" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile6.png}" data-set-src="/images/profiles/profile6.png">
+		                        <img id="profile7" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile7.png}" data-set-src="/images/profiles/profile7.png">
+		                        <img id="profile8" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile8.png}" data-set-src="/images/profiles/profile8.png">
+		                        <img id="profile9" class="profile-img rounded-circle border m-1" th:src="@{/images/profiles/profile9.png}" data-set-src="/images/profiles/profile9.png">
+	                        </div>
+	                        <input id="imgSrc" class="" type="text" name="imgSrc" th:value="*{imgSrc}" readonly required>
+                            <div class="mt-2">
+                                <input id="btnUpdateImgSrc" type="submit" class="btn btn-primary form-control" value="변경" onclick="alert('프로필 이미지가 변경되었습니다. 다시 로그인해주세요.')">
                             </div>
                         </form>
                     </div>
