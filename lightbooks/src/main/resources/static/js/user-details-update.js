@@ -288,6 +288,52 @@ document.addEventListener('DOMContentLoaded', () => {
 		alert('비밀번호가 변경되었습니다. 다시 로그인해주세요');
 		disableClicks()
 	});
+	
+	
+	// 이미지 변경
+	let inputImgSrc = document.querySelector('input#imgSrc');
+	console.log(inputImgSrc.value);
+	switch (inputImgSrc.value) {
+		case '/images/profiles/profile1.png' : 
+			document.querySelector('img#profile1').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile2.png' : 
+			document.querySelector('img#profile2').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile3.png' : 
+			document.querySelector('img#profile3').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile4.png' : 
+			document.querySelector('img#profile4').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile5.png' : 
+			document.querySelector('img#profile5').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile6.png' : 
+			document.querySelector('img#profile6').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile7.png' : 
+			document.querySelector('img#profile7').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile8.png' : 
+			document.querySelector('img#profile8').classList.add('profile-active');
+			break;
+		case '/images/profiles/profile9.png' : 
+			document.querySelector('img#profile9').classList.add('profile-active');
+			break;
+		default :
+			break;
+	}
+	
+	const imgs = document.querySelectorAll('img.profile-img');
+	imgs.forEach(img => {
+		img.addEventListener('click', (event) => {
+			imgs.forEach(img => img.classList.remove('profile-active'));
+			img.classList.add('profile-active');
+			document.querySelector('input#imgSrc').value = event.target.dataset.setSrc;
+			console.log(document.querySelector('input#imgSrc').value);
+		});
+	});
 
 
 	// DB에 반영되는 사이 사용자가 아무동작 못하게 투명벽 설치
@@ -306,4 +352,49 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 		document.body.appendChild(blocker);
 	}
+	
+	// ============ 모달 ============
+	const navbar = document.querySelector('.navbar');
+	const modalEl = document.querySelectorAll('.modal');
+	const navCollapse = document.getElementById('navbarSupportedContent');
+	// collapse 토글 버튼 이벤트 감지
+	const toggler = document.querySelector('.navbar-toggler');
+
+	toggler.addEventListener('click', () => {
+		navbar.style.position = 'sticky';
+		navbar.style.zIndex = '1200';
+	});
+
+	modalEl.forEach(item => {
+		item.addEventListener('show.bs.modal', () => {
+		  // collapse가 열려 있으면 닫고 숨김
+		  if (navCollapse.classList.contains('show')) {
+		    const collapseInstance = bootstrap.Collapse.getInstance(navCollapse);
+		    if (collapseInstance) {
+		      collapseInstance.hide(); // Bootstrap 방식으로 닫기
+		    }
+		  }
+		  
+		  navbar.style.position = 'static';
+		  navbar.style.zIndex = '1';
+		});
+
+		// 모달 닫힐 때 다시 복구
+		item.addEventListener('hidden.bs.modal', () => {
+			navbar.style.position = 'sticky';
+			navbar.style.zIndex = '1200'
+		});
+		
+	});
+
+
+	// 스크롤 이벤트 리스너 추가
+	window.addEventListener('scroll', () => {
+	  // 스크롤이 10px 이상 내렸다면
+	  if (window.scrollY > 10) {
+	    navbar.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.05)'; // 그림자 효과 추가
+	  } else {
+	    navbar.style.boxShadow = 'none'; // 스크롤이 맨 위로 올라오면 그림자 없앰
+	  }
+	});
 });

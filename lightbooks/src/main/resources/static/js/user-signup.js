@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		if (loginId.trim() === '') {
 			divLoginIdResult.innerHTML = '아이디를 입력해주세요.'
+			divLoginIdResult.classList.value = 'text-danger';
 			isCheckLoginId = true;
 			changeButtonState()
 			return;
@@ -22,8 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			if (isCheckLoginId === false) {
 				divLoginIdResult.innerHTML = '사용가능한 아이디입니다.';
+				divLoginIdResult.classList.value = 'text-success';
 			} else {
 				divLoginIdResult.innerHTML = '중복된 아이디입니다.';
+				divLoginIdResult.classList.value = 'text-danger';
 			}
 			changeButtonState();
 		}).catch(error => {
@@ -40,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		if (nickname.trim() === '') {
 			divNicknameResult.innerHTML = '닉네임을 입력해주세요.'
+			divNicknameResult.classList.value = 'text-danger';
 			isCheckNickname = true;
 			changeButtonState()
 			return;
@@ -52,8 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			if (isCheckNickname === false) {
 				divNicknameResult.innerHTML = '사용가능한 닉네임입니다.';
+				divNicknameResult.classList.value = 'text-success';
 			} else {
 				divNicknameResult.innerHTML = '중복된 닉네임입니다.';
+				divNicknameResult.classList.value = 'text-danger';
 			}
 			changeButtonState();
 		}).catch(error => {
@@ -84,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (numbers.length < 10) {
             // 최소 10자리가 되어야 유효한 번호로 판단
             divPhonenumberResult.textContent = '올바른 전화번호 입력하세요';
+			divPhonenumberResult.classList.value = 'text-danger';
 			isCheckPhonenumber = true;
 			changeButtonState()
             input.value = '';  // 잘못된 번호는 입력값을 비우기
@@ -107,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (numbers.length > 0) {
             // 번호 패턴이 아니면 경고 메시지
             divPhonenumberResult.textContent = '올바른 전화번호 입력하세요';
+			divPhonenumberResult.classList.value = 'text-danger';
 			isCheckPhonenumber = true;
 			changeButtonState()
             input.value = '';  // 잘못된 번호는 입력값을 비우기
@@ -118,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		let phonenumber = input.value;
 		if (phonenumber.trim() === '') {
 			divPhonenumberResult.innerHTML = '전화번호를 입력해주세요.'
+			divPhonenumberResult.classList.value = 'text-danger';
 			isCheckPhonenumber = true;
 			changeButtonState()
 			return;
@@ -130,8 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			if (isCheckPhonenumber === false) {
 				divPhonenumberResult.innerHTML = '사용가능한 전화번호입니다.';
+				divPhonenumberResult.classList.value = 'text-success';
 			} else {
 				divPhonenumberResult.innerHTML = '중복된 전화번호입니다.';
+				divPhonenumberResult.classList.value = 'text-danger';
 			}
 			changeButtonState();
 		}).catch(error => {
@@ -149,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		if (email.trim() === '') {
 			divEmailResult.innerHTML = '이메일을 입력해주세요.'
+			divEmailResult.classList.value = 'text-danger';
 			isCheckEmail = true;
 			changeButtonState()
 			return;
@@ -161,8 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			if (isCheckEmail === false) {
 				divEmailResult.innerHTML = '사용가능한 이메일입니다.';
+				divEmailResult.classList.value = 'text-success';
 			} else {
 				divEmailResult.innerHTML = '중복된 이메일입니다.';
+				divEmailResult.classList.value = 'text-danger';
 			}
 			changeButtonState();
 		}).catch(error => {
@@ -181,6 +195,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	    option.textContent = year;
 	    selectYear.appendChild(option);
 	}
+	
+	const imgs = document.querySelectorAll('img.profile-img');
+	imgs.forEach(img => {
+		img.addEventListener('click', (event) => {
+			imgs.forEach(img => img.classList.remove('profile-active'));
+			img.classList.add('profile-active');
+			document.querySelector('input#imgSrc').value = event.target.dataset.setSrc;
+			console.log(document.querySelector('input#imgSrc').value);
+		});
+	});
 	
 	
 	// 버튼 활성화 상태 변경
