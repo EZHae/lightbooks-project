@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// 댓글 등록 함수
 	async function registerComment() {
-		
 		// 댓글에 등록될 유저 아이디
 		const userId = document.querySelector('input#userId').value;
 		// 댓글이 등록될 소설 아이디
@@ -392,6 +391,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		const episodeId = document.querySelector('#episodeId').value;
 		const userId = document.querySelector('input#userId').value;
 		console.log("버튼 클래스 적용 전:", button.classList.value);
+		
+		if (!userId || userId === "0" || userId === "") {
+			alert("로그인이 필요합니다.");
+			return;
+		}
 		
 		// 중복 요청 방지
 		if (button.dataset.processing === 'true') return;
