@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	        }
 
 	        data.content.forEach(item => {
-				let trimmedIntro = item.novelIntro.length > 19 // 최대 글자수 지정.
-				        ? item.novelIntro.substring(0, 19) + "..."
+				let trimmedIntro = item.novelIntro.length > 17 // 최대 글자수 지정.
+				        ? item.novelIntro.substring(0, 17) + "..."
 				        : item.novelIntro;
 				
 	            let itemHtml = `
