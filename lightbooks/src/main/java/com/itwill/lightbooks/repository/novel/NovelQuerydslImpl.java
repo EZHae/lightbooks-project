@@ -21,7 +21,6 @@ import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.repository.episode.EpisodeRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;

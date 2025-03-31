@@ -121,7 +121,7 @@ public class HomeController {
     
     @GetMapping("/error")
     public void error() {
-       log.info("error_page()");
+    	
     }
     
     @GetMapping("/error/403")
