@@ -13,6 +13,7 @@ import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 import com.itwill.lightbooks.dto.NovelSearchGradeDto;
+import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentRepository;
 import com.itwill.lightbooks.repository.coinpayment.CoinPaymentWaitingRepository;
 import com.itwill.lightbooks.repository.novel.NovelGradeRequestRepository;
@@ -72,18 +73,26 @@ public class AdminService {
 	 * 데이터가 많아질 경우에 대비해 페이징, 검색 추가를 고려
 	 */
 	// 모든 신청 내역 리스트
-	public List<NovelGradeRequest> searchAllNovelGradeRequests() {
-		List<NovelGradeRequest> gradeRequests = novelGradeRequestRepo.findAll();
-		return gradeRequests;
+	@Transactional(readOnly = true)
+	public Page<PremiumRequestDto> searchAllNovelGradeRequests(int page, int size) {
+		Page<NovelGradeRequest> result = novelGradeRequestRepo.findAllWithUserAndNovel(page, size);
+		return result.map(PremiumRequestDto::new);
+	}
+	
+	// Status 상태로 필터된 것
+	@Transactional(readOnly = true)
+	public Page<PremiumRequestDto> searchNovelGradeRequestsByCon(int page, int size, int status) {
+		Page<NovelGradeRequest> result = novelGradeRequestRepo.findByStatusWithUserAndNovel(status, page, size);
+		return result.map(PremiumRequestDto::new);
 	}
 	
 	// 키워드로 검색하는 내역을 리스트로 반환
-	public Page<NovelGradeRequest> searchAllNovelGradeRequestByKeyword(NovelSearchGradeDto dto, Sort sort) {
-		Pageable pageable = PageRequest.of(dto.getP(), 10, sort);
-		Page<NovelGradeRequest> gradeRequests = novelGradeRequestRepo.searchByKeyword(dto, pageable);
-		
-		return gradeRequests;
-	}
+//	public Page<NovelGradeRequest> searchAllNovelGradeRequestByKeyword(NovelSearchGradeDto dto, Sort sort) {
+//		Pageable pageable = PageRequest.of(dto.getP(), 10, sort);
+//		Page<NovelGradeRequest> gradeRequests = novelGradeRequestRepo.searchByKeyword(dto, pageable);
+//		
+//		return gradeRequests;
+//	}
 	
 	// 아이디와 소설아이디로 신청한 목록 1개를 조회
 	@Transactional

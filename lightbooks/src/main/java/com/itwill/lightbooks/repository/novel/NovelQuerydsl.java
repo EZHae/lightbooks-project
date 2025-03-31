@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.itwill.lightbooks.domain.Novel;
+import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.dto.NovelListItemDto;
 import com.itwill.lightbooks.dto.NovelSearchDto;
 
