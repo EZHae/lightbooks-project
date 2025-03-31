@@ -23,9 +23,12 @@ function updateButtonStates() { //지우면 안됨!!!!!!!!!!!!!!
         novelButton.style.pointerEvents = novelTicketCount === 0 ? "none" : "auto";
         novelButton.style.opacity = novelTicketCount === 0 ? "0.5" : "1";
 
-        coinButton.classList.toggle("disabled", coinCount === 0);
-        coinButton.style.pointerEvents = coinCount === 0 ? "none" : "auto";
-        coinButton.style.opacity = coinCount === 0 ? "0.5" : "1";
+		//코인이 소설의 가격보다 작을때 버튼 비활성화
+		coinButton.classList.toggle("disabled", coinCount === 0 || coinCount < 5);
+		coinButton.style.pointerEvents = coinCount === 0 || coinCount < 5 ? "none" : "auto";
+		coinButton.style.opacity = coinCount === 0 || coinCount < 5 ? "0.5" : "1";
+		
+
     }
 
 // 3. episode-item 클릭 처리 (에피소드 제목, 이전/다음 화 버튼)
@@ -191,7 +194,7 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
                         console.log(novelId);
                         const episodeId = element.dataset.episodeId;
                         console.log(episodeId);
-                        const coin = Number(-100);
+                        const coin = Number(-5);
                         console.log(coin);
 
                         if (!userId || !novelId || !episodeId) {

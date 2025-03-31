@@ -3,6 +3,10 @@
 	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 프리미엄 요청')}"></head>
 	
 	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+	
 		th, td {
 			text-align: center;
 		}
@@ -10,7 +14,7 @@
 	<body>
 		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
-		<main class="container-md">
+		<main class="container-md mt-3">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
 					<a class="bg-light nav-link nav-menu-item fs-5 active" href="#" data-status="3">전체 보기</a>
@@ -25,8 +29,8 @@
 					<a class="nav-link nav-menu-item fs-5" href="#" data-status="2">거절 목록</a>
 				</li>
 			</ul>
-			<div class="d-flex justify-content-center">
-				<table class="table table-bordered table-striped table-hover table-responsive">
+			<div class="bg-light border-start border-end border-bottom table-responsive p-3">
+				<table class="table table-bordered table-striped table-hover">
 					<thead class="table-dark">
 						<tr>
 							<th>아이디</th>

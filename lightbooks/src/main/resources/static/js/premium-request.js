@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function disableClicks() {
 		let blocker = document.createElement("div");
 		blocker.id = "blocker";
-	
+
 		// CSS 스타일 동적으로 추가
 		blocker.style.position = "fixed";
 		blocker.style.top = "0";
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		blocker.style.height = "100vh";
 		blocker.style.background = "rgba(0, 0, 0, 0)";
 		blocker.style.zIndex = "9999";
-	
+
 		document.body.appendChild(blocker);
 	}
 	
