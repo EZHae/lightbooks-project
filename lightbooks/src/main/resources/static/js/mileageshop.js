@@ -1,8 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
 	console.log('mileageshop.js');
 	
+	const ticketExchangeModal = new bootstrap.Modal(document.querySelector("div#ticketExchangeModal")); // 모달 객체 생성
+	
 	const btnSelectGlobalTicket = document.querySelector('a#selectGlobalTicket');
 	btnSelectGlobalTicket.addEventListener('click', (event) => {
+
+		if (!document.querySelector('span#userId')) {
+			alert('로그인이 필요합니다.');
+			return;
+		}
+		
 		let nowMileage = document.querySelector('strong#nowMileage').textContent;
 		console.log(nowMileage);
 		
@@ -27,6 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
 				console.log(error);
 			});
 		}
+	});
+	
+	const btnSelecNovelTicket = document.querySelector('a#selecNovelTicket');
+	btnSelecNovelTicket.addEventListener('click', () => {
+		if (!document.querySelector('span#userId')) {
+			alert('로그인이 필요합니다.');
+			return;
+		}
+		ticketExchangeModal.show();
 	});
 	
 	let inputSearch = document.querySelector('input#inputSearch');
