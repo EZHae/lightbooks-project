@@ -73,12 +73,13 @@
                           <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
                      </div>
          
-                     <div class="form-group mt-3">
-                         <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
-                         <textarea id="content" th:field="*{content}" rows="14" class="form-control" required
-                                   placeholder="최대 20000자까지 작성 가능합니다" maxlength="20000"></textarea>
-                          <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></div>
-                     </div>
+                     <div class="form-group mt-3" style="position: relative;">
+					    <label for="content" class="form-label">내용 <span class="text-danger">*</span></label>
+					    <div id="characterCount" style="position: absolute; top: 0; right: 0; font-size: 0.9em; color: gray;">0/20000</div>
+					    <textarea id="content" th:field="*{content}" rows="14" class="form-control" required
+					              placeholder="최대 20000자까지 작성 가능합니다" maxlength="20000"></textarea>
+					    <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></div>
+					</div>
          
                      <div>
                          <input id="modifyBtn" class="btn btn-success form-control mt-2" type="submit" value="수정완료" />
@@ -90,5 +91,6 @@
 	  <th:block th:replace="~{layout/fragments :: footer}"></th:block>
       <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
       <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
+      <script th:src="@{/js/episode-modify.js}"></script>
    </body>
 </html>
