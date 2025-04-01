@@ -163,16 +163,13 @@
          
          /* 이전화, 다음화 */
          .btn-secondary {
-             color: #ffffff !important;
-             background-color: #66b2ff; 
+             color: #000000 !important;
              border: none;
-             font-size: 17px;
+             font-size: 20px;
+             text-decoration: none; /* 밑줄 제거 */
+             
          }
-         
-         .btn-secondary:hover {
-             background-color: #007bff; 
-         }
-         
+        
          /* 수정 버튼 */
          #modifybutton {
             background-color: #6c757d; /* 회색 배경 */
@@ -256,7 +253,7 @@
 		        <!-- 이전 화 버튼 -->
 		        <a th:if="${previousEpisodeId != null && episode.category != 0}"
 		            th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${previousEpisodeId})}"
-		            class="btn btn-secondary episode-item previous-episode"
+		            class="btn-secondary episode-item previous-episode"
 		            th:data-is-free="${previousEpisodeIsFree}" 
 		            th:data-is-purchased="${previousEpisodeIsPurchased}"
 		            th:data-category="${previousEpisode.category}"
@@ -264,11 +261,12 @@
 		            th:data-episode-num="${previousEpisode != null ? previousEpisode.episodeNum : null}"
 		            th:data-novel-id="${episode.novel.id}"
 		            th:data-is-owner="${novel.userId eq #authentication.principal.id}"
-		            >이전 화</a>
+		            ><i class="bi bi-caret-left-fill"></i>이전화</a>
+		            <span style="margin-left:2px;"></span>
 		        <!-- 다음 화 버튼 -->
 		        <a th:if="${nextEpisodeId != null && episode.category != 0}"
 		            th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
-		            class="btn btn-secondary episode-item next-episode" 
+		            class="btn-secondary episode-item next-episode" 
 		            th:data-is-free="${nextEpisodeIsFree}"
 		            th:data-is-purchased="${nextEpisodeIsPurchased}"
 		            th:data-category="${nextEpisode.category}"
@@ -276,7 +274,7 @@
 		            th:data-episode-num="${nextEpisode != null ? nextEpisode.episodeNum : null}"
 		            th:data-novel-id="${episode.novel.id}"
 		            th:data-is-owner="${novel.userId eq #authentication.principal.id}"
-		            >다음 화</a>
+		            >다음화<i class="bi bi-caret-right-fill"></i></a>
 		    </div>
 		</div>
         
