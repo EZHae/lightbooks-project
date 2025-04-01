@@ -219,23 +219,43 @@ public class EpisodeService {
     }
     
  // 가로보기 가로보기
-    public List<EpisodeHorizontalViewDto> splitEpisodeContentIntoPages(Episode episode) {
+    public List<List<EpisodeHorizontalViewDto>> splitEpisodeContentIntoPages(Episode episode) {
     	String content = episode.getContent();
     	String title = episode.getTitle();
     	Long episodeId = episode.getId();
     	
-    	//<hr> 기준으로 페이지를 나눔
-    	String[] chunks = content.split("<hr>");
-    	List<EpisodeHorizontalViewDto> result = new ArrayList<>();
+    	//한 페이지에 들어갈 글자 수 설정
+    	int pageSize = 500;
     	
-    	for(int i = 0; i < chunks.length; i++) {
-    		result.add(EpisodeHorizontalViewDto.builder()
+    	// 잘린 페이지를 저장할 	리스트
+    	List<EpisodeHorizontalViewDto> pages = new ArrayList<>();
+    	
+    	for(int i = 0; i < content.length(); i += pageSize) {
+    		int end = Math.min(i + pageSize, content.length());
+    		String chunk = content.substring(i, end);
+    		log.info("페이지 분할 chunk = {}", chunk);
+    			
+    		pages.add(EpisodeHorizontalViewDto.builder()
     				.episodeId(episodeId)
-    				.pageNumber(i + 1)
-    				.content(chunks[i])
-    				.episodeTitle(title)
+    				.pageNumber((i/pageSize) + 1) // 페이지 1번부터 시작
+    				.content(chunk)					// 회차 페이지 내용
+    				.episodeTitle(title)			// 회차 제목
     				.build());
     	}
-    	return result;
+    	
+    	// pages 리스트를 2개씩 묶어서 doublePages로 구성
+    	List<List<EpisodeHorizontalViewDto>> doublePages = new ArrayList<>();
+    	for(int i = 0; i < pages.size(); i += 2) {
+    		List<EpisodeHorizontalViewDto> pair = new ArrayList<>();
+    		pair.add(pages.get(i));						//왼쪽 페이지
+    		
+    		if(i + 1 < pages.size()) {
+    			pair.add(pages.get(i + 1));				// 오른쪽 페이지
+    		}
+    		doublePages.add(pair);						// 2쪽짜리 한 쌍
+    	}
+    	
+    	// 결과 반환 (2페이지씩 구성된 리스트)
+    	return doublePages;
     }
 }

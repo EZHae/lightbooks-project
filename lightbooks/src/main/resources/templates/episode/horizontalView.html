@@ -1,39 +1,108 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
 <th:block th:fragment="horizontalView">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+	 <!-- 스와이퍼 -->
+	<link
+	  rel="stylesheet"
+	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+	/>
 	<style>
+	
+	html, body {
+	  margin: 0;
+	  padding: 0;
+	  overflow: hidden; /* ✅ 스크롤 완전 차단 */
+	  height: 100%;
+	}
+	#horizontalViewContainer {
+	  display: block;
+	  width: 100%;
+	  height: 100vh;
+	  margin: 0;
+	  padding: 0;
+	    
+	  }
+  .swiper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  }
+  .swiper-slide {
+  	box-sizing: border-box; 
+    background: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  .double-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    padding: 30px;
+    box-sizing: border-box;
+	}
+	  .page {
+	    flex: 1;                  /* 양쪽 동일 비율 */
+	    height: 100%;             /* 꽉 채우기 */
+	    padding: 30px;
+	    text-align: left;
+	    font-size: 18px;
+	    
+	    display: block;
+	  }
 
-    .swiper {
-      width: 100%;
-      height: 100vh;
-      position: relative;
-    }
+  .dark-mode .swiper-slide {
+    background-color: #121212;
+    color: white;
+  }
 
-    .swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  .swiper-button-next,
+  .swiper-button-prev {
+    z-index: 1000;
+    color: black;
+  }
 
+  .page p {
+    margin-bottom: 16px;
+  }
 	</style>
 	<!-- Swiper -->
 	<div class="swiper mySwiper">
 		<div class="swiper-wrapper">
-			<div class="swiper-slide" th:each="page : ${pages}" th:utext="${page.content}"></div>
-			<div class="swiper-slide">1</div>
-			<div class="swiper-slide">2</div>
-			<div class="swiper-slide">3</div>
+			<!-- Thymeleaf로 리스트를 2개씩 묶음 -->
+			<div class="swiper-slide" th:each="pair, iterStat  : ${doublePages}"> 
+				<!-- 양쪽 페이지처럼 보여주는 flex 박스 -->
+				<div class="double-page">
+					
+					<div class="page left">
+					
+						<div th:if="${iterStat.index == 0}">
+							<div class="episode-title-main font-size: 40px;" th:text="${episode.novel.title}">소설 제목</div>
+			                <div class="episode-title-sub font-size: 30px;" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></div>
+			                <div class="episode-stage-sub font-size: 20px;" th:text="${episode.title}"></div>
+			                <hr style="margin: 20px 0;" />
+						</div>
+						<!-- 각각 왼쪽/오른쪽 페이지 역할 -->
+						<div  th:utext="${pair[0].content}"></div>
+					
+					</div>
+				
+				
+					<!-- 짝수가 아닐 경우 마지막 오른쪽 페이지가 없을 수도 있으니 조건 처리 -->
+					<div class="page right" th:if="${pair.size() > 1}" th:utext="${pair[1].content}"></div>
+					<div class="page right" th:if="${pair.size() == 1}"></div>
+				</div>
+			</div>
 		</div>
-		
 		<div class="swiper-button-next"></div>
 		<div class="swiper-button-prev"></div>
 		<div class="swiper-pagination"></div>
 	</div>
-	
+        <!-- 스와이퍼 -->
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </th:block>
