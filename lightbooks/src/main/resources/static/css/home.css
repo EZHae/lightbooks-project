@@ -186,7 +186,7 @@ span.font {
 	text-decoration: none;
 }
 .novel-card-title{
-	display: block;
+	display: inline-block;
 	max-width: 140px;
 	color: black;
 	font-weight: bold;
