@@ -15,11 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			alert('로그인이 필요합니다.');
 			return;
 		}
-		const novelUserId = document.querySelector('span#novelUserId').textContent;
-		if (novelUserId == document.querySelector('span#userId').textContent) {
-			alert('본인 소설에는 후원을 할 수 없습니다.');
-			return;
-		}
 		novelId = document.querySelector('span#novelId').textContent;
 		userId = document.querySelector('span#userId').textContent;
 		novelTitle = document.querySelector('span#inputNovelTitle').textContent;
@@ -78,6 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 				
 				btnDonation.addEventListener('click', () => {
+					const novelUserId = document.querySelector('span#novelUserId').textContent;
+					if (novelUserId == document.querySelector('span#userId').textContent) {
+						alert('본인 소설에는 후원을 할 수 없습니다.');
+						return;
+					}
 					let result = confirm(`"${novelWriter}"작가의 "${novelTitle}"작품에\n"${inputCoin}" 코인을 후원하시겠습니까?`);
 					if (result) {
 						disableClicks();
