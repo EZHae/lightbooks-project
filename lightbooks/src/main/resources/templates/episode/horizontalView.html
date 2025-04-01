@@ -43,7 +43,6 @@ html, body {
 .page {
 	flex: 1;
 	overflow: hidden;
-	background-color: #fff;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
@@ -92,7 +91,6 @@ html, body {
 
 .episode-title-sub {
 	font-size: 20px;
-	color: #666;
 }
 
 .episode-stage-sub {
@@ -104,10 +102,7 @@ html, body {
 	color: black;
 }
 
-.dark-mode .swiper-slide {
-	background-color: #121212;
-	color: white;
-}
+
 
 .title-header {
 	margin-bottom: 20px;
@@ -115,7 +110,7 @@ html, body {
 }
 
 .episode-title-main {
-	font-size: 30px; /* ✅ 큼직하게 강조 */
+	font-size: 30px;
 	font-weight: bold;
 	margin-bottom: 10px;
 }
@@ -123,7 +118,6 @@ html, body {
 .episode-title-sub {
 	font-size: 22px;
 	margin-bottom: 6px;
-	color: #666;
 }
 
 .episode-stage-sub {
@@ -137,6 +131,18 @@ html, body {
   right: 50px;
 }
 
+/* 다크모드 */
+.dark-mode .page,
+.dark-mode .page-content,
+.dark-mode .text-body {
+	background-color: #121212 !important;
+	color: #ffffff !important;
+}
+
+.dark-mode .swiper-button-next::after,
+.dark-mode .swiper-button-prev::after {
+	color: #ffffff !important;
+}
 </style>
 	<!-- Swiper -->
 	<div class="swiper mySwiper">

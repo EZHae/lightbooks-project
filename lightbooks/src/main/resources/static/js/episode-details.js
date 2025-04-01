@@ -99,11 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				horizontalContainer.innerHTML = response.data;
 				horizontalContainer.style.display = 'block';
 				horizontalContainer.style.height = '100vh';
-
 				verticalContainer.style.display = 'none';
+				
+				let lastClickedNav = null;
+				document.querySelector('.swiper-button-next').addEventListener('click', () => {
+					lastClickedNav = 'next';
+				});
+				document.querySelector('.swiper-button-prev').addEventListener('click', () => {
+					lastClickedNav = 'perv';
+				})
 				//  Swiper 초기화는 렌더링 이후에
 				setTimeout(() => {
-					new Swiper(".mySwiper", {
+					let swiper = new Swiper(".mySwiper", {
 						loop: false,
 						speed: 0,
 						pagination: {
@@ -116,8 +123,20 @@ document.addEventListener('DOMContentLoaded', () => {
 						},
 						keyboard: {
 					    	enabled: true, // 키보드 방향키는 여전히 사용 가능
-					 	}	
+					 	},	
+						on: { //트리거 설정 
+							slideChange: function(){
+								const isLast = swiper.isEnd; // 마지막 슬라이드인가?
+								
+								// 마지막 슬라이드에서 오른쪽 화살표 누른 경우만
+								if(isLast && this.clickedNav === 'next') {
+									const nextBtn = document.getElementById('btnNextEpisode');
+									if(nextBtn) nextBtn.click(); // 다음화 버튼 클릭 시뮬레이션
+								}
+							}
+						}
 					});
+					
 					console.log("스와이퍼 초기화 완료!");
 
 					// 문장 단위 <p> 감싸기
