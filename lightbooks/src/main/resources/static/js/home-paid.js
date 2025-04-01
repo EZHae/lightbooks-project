@@ -154,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
 						<i class="bi bi-person-plus-fill"></i> ${totalViews}
 					</a>
 				`;
-				
+				document.querySelectorAll('.novel-card-title').forEach(el => {
+				  el.setAttribute('title', el.textContent);
+				});
 				container.appendChild(card);
 			});
 		}

@@ -148,17 +148,20 @@ document.addEventListener('DOMContentLoaded', () => {
 							</span>
 							<img class="novelImgs" src="${novel.coverSrc}" loading="lazy" alt="${novel.title}">
 						</div>
-						<span class="novel-card-title">${novel.title}</span><br/>
+						<span class="novel-card-title" >${novel.title}</span><br/>
 						<span class="novel-card-writer">${novel.writer} · ${novel.genres}</span><br/>
 						<i class="bi bi-heart"></i> ${likeCount}
 						<i class="bi bi-star"></i> ${novel.rating || 0}
 						<i class="bi bi-person-plus-fill"></i> ${totalViews}
 					</a>
 				`;
-				
+				document.querySelectorAll('.novel-card-title').forEach(el => {
+				  el.setAttribute('title', el.textContent);
+				});
 				container.appendChild(card);
 			});
 		}
+		
 		// 장르별 소설 공통 함수
 			function renderGenreNovels(genreMap, containerId) {
 				const container = document.getElementById(containerId);

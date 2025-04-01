@@ -152,7 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					
 				</a>
 			`;
-			
+			document.querySelectorAll('.novel-card-title').forEach(el => {
+			  el.setAttribute('title', el.textContent);
+			});
 			container.appendChild(card);
 		});
 	}
