@@ -30,7 +30,7 @@ body {
   background: white;
   margin-bottom: 24px;
   align-items: stretch; /* 세 영역을 개별 기준으로 정렬하게 함 */
-min-width: 1160px;
+  min-width: 1160px;	
 }
 
 .novelContent {
