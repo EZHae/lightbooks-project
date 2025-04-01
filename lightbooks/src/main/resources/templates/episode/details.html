@@ -238,24 +238,47 @@
        
        <input type="hidden" id="episodeId" th:value="${episode.id}"><!-- 가로보기 -->
         <!-- 상단 메뉴바 -->
-        <div class="global-menu-bar">
-            <div style="font-size: 1.2rem; margin: 0;">
-                <a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}" style="text-decoration: none; color: inherit;">
-                    <i class="bi bi-house"></i> <span th:text="${episode.novel.title}">소설 제목</span>
-                </a>
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px; font-size: 1.2rem;">
-             <button id="btnHorizontalView" style="background-color: white; border: none; color: black;">
-                가로보기
-            </button>
-<!--             <button id="btnBackToVerticalView">세로보기로 돌아가기</button> -->
-            <span style="color: black;">│</span>
-             <a id="commentButton" class="button" style="margin-right: 10px; font-size: 1.2rem; text-decoration: none; color: black;" 
-               th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">
-               &nbsp;<i class="bi bi-chat"></i>&nbsp;댓글
-            </a>
-         </div>
-        </div>
+		<div class="global-menu-bar">
+		    <div style="font-size: 1.2rem; margin: 0;">
+		        <a th:href="@{/novel/{novelId}(novelId=${episode.novel.id})}" style="text-decoration: none; color: inherit;">
+		            <i class="bi bi-house"></i> <span th:text="${episode.novel.title}">소설 제목</span>
+		        </a>
+		    </div>
+		    <div style="display: flex; align-items: center; gap: 10px; font-size: 1.2rem;">
+		        <button id="btnHorizontalView" style="background-color: white; border: none; color: black;">
+		            가로보기
+		        </button>
+		        <span style="color: black;">│</span>
+		        <a id="commentButton" class="button" style="margin-right: 10px; font-size: 1.2rem; text-decoration: none; color: black;" 
+		           th:href="@{/novel/{novelId}/episode/{id}/comment(novelId=${episode.novel.id}, id=${episode.id})}">
+		           &nbsp;<i class="bi bi-chat"></i>&nbsp;댓글
+		        </a>
+		        <!-- 이전 화 버튼 -->
+		        <a th:if="${previousEpisodeId != null && episode.category != 0}"
+		            th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${previousEpisodeId})}"
+		            class="btn btn-secondary episode-item previous-episode"
+		            th:data-is-free="${previousEpisodeIsFree}" 
+		            th:data-is-purchased="${previousEpisodeIsPurchased}"
+		            th:data-category="${previousEpisode.category}"
+		            th:data-episode-id="${previousEpisodeId}"
+		            th:data-episode-num="${previousEpisode != null ? previousEpisode.episodeNum : null}"
+		            th:data-novel-id="${episode.novel.id}"
+		            th:data-is-owner="${novel.userId eq #authentication.principal.id}"
+		            >이전 화</a>
+		        <!-- 다음 화 버튼 -->
+		        <a th:if="${nextEpisodeId != null && episode.category != 0}"
+		            th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
+		            class="btn btn-secondary episode-item next-episode" 
+		            th:data-is-free="${nextEpisodeIsFree}"
+		            th:data-is-purchased="${nextEpisodeIsPurchased}"
+		            th:data-category="${nextEpisode.category}"
+		            th:data-episode-id="${nextEpisodeId}"
+		            th:data-episode-num="${nextEpisode != null ? nextEpisode.episodeNum : null}"
+		            th:data-novel-id="${episode.novel.id}"
+		            th:data-is-owner="${novel.userId eq #authentication.principal.id}"
+		            >다음 화</a>
+		    </div>
+		</div>
         
         <div id="horizontalViewContainer" style="display: none;" class="mt-3">
         <!-- 가로보기 나올 본문 -->
@@ -269,7 +292,7 @@
                 <div class="episode-stage-sub font-size: 20px;" th:text="${episode.title}"></div>
                 <hr>
                 <div class="episode-content" th:utext="${episode.content}"></div>
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+              <!-- <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                     <a th:if="${previousEpisodeId != null && episode.category != 0}"
                         th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${previousEpisodeId})}"
                         class="btn btn-secondary episode-item previous-episode"
@@ -281,7 +304,7 @@
                         th:data-novel-id="${episode.novel.id}"
                         th:data-is-owner="${novel.userId eq #authentication.principal.id}"
                         >이전 화</a><!-- 수정본임 수정본임 지우지마세요 -->
-                    <a th:if="${nextEpisodeId != null && episode.category != 0}"
+                <!--  <a th:if="${nextEpisodeId != null && episode.category != 0}"
                         th:href="@{/novel/{novelId}/episode/{id}(novelId=${episode.novel.id}, id=${nextEpisodeId})}"
                         class="btn btn-secondary episode-item next-episode" 
                         th:data-is-free="${nextEpisodeIsFree}"
@@ -292,8 +315,8 @@
                         th:data-novel-id="${episode.novel.id}"
                         th:data-is-owner="${novel.userId eq #authentication.principal.id}"
                         >다음 화</a><!-- 지우지마세요 -->
-                </div>
-                <div th:if="${episode.novel.userId eq #authentication.principal.id}">
+           <!--     </div>-->                 
+           		<div th:if="${episode.novel.userId eq #authentication.principal.id}">
                     <a id ="modifybutton" class="btn btn-primary mt-2" style="float: right; margin-right: 0;" th:href="@{/novel/{novelId}/episode/{id}/modify(novelId=${episode.novel.id}, id=${episode.id})}">&nbsp;&nbsp;수정&nbsp;&nbsp;</a>
                 </div>
                 <br>
