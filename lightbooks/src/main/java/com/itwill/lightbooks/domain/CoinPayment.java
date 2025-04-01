@@ -46,6 +46,9 @@ public class CoinPayment {
 	@JoinColumn(name = "novel_id")
 	private Novel novel;
 	
+	@Column(name = "novel_title")
+	private String novelTitle;
+	
 //	@JsonIgnore
 //	@ToString.Exclude
 //	@ManyToOne(fetch = FetchType.LAZY)
@@ -55,6 +58,9 @@ public class CoinPayment {
 	@Column(name = "episode_id")
 	private Long episodeId;
 	
+	@Column(name = "episode_num")
+	private Integer episodeNum;
+	
 	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
 	private Long coin;
@@ -62,14 +68,6 @@ public class CoinPayment {
 	
 	@Column(name = "donation_msg")
 	private String donationMsg;
-	
-	@Setter
-	@Transient
-	private Integer episodeNum;
-	
-	@Setter
-	@Transient
-	private String novelTitle;
 	
 	@Setter
 	@Transient

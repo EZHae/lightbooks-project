@@ -11,6 +11,7 @@ public class PaymentRequestDto {
 
 	private Long userId;
 	private Long novelId;
+	private String novelTitle;
 	private String itemName;
 	private Long coin;
 	private Long cash;

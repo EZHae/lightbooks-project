@@ -45,9 +45,9 @@ public class OrderService {
     private final String SECRET_KEY = "DEV_SECRET_KEY DEVEE3295B3CF7D02C946B4565AD192895823EB5";
     private final String CONTENT_TYPE = "application/json";
     private final String CID = "TC0ONETIME"; // 테스트 CID
-    private final String APPROVAL_URL = "http://localhost:8080/order/kakaopay/approve"; // 결제 완료
-    private final String CANCEL_URL = "http://localhost:8080/order/kakaopay/cancel";
-    private final String FAIL_URL = "http://localhost:8080/order/kakaopay/fail";
+    private String APPROVAL_URL = "http://35.230.97.96:8080/order/kakaopay/approve"; // 결제 완료
+    private String CANCEL_URL = "http://35.230.97.96:8080/order/kakaopay/cancel";
+    private String FAIL_URL = "http://35.230.97.96:8080/order/kakaopay/fail";
     
     public CoinReadyResponse payReady(PaymentRequestDto dto, String partnerOrderId) {
     	log.info("payReady(PaymentRequestDto={})", dto);
@@ -112,7 +112,9 @@ public class OrderService {
     			.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
     			.episodeId(dto.getEpisodeId())
     			.coin(dto.getCoin())
-    			.type(1).build();
+    			.type(1)
+    			.novelTitle(dto.getNovelTitle())
+    			.episodeNum(dto.getEpisodeNum()).build();
     	
     	CoinPayment savedCoinPayment = coinPaymentRepo.save(coinpayment);
     	
@@ -129,17 +131,6 @@ public class OrderService {
     public Page<CoinPayment> readCoinPaymentByUserId(Long userId, int page, int size, int type) {
     	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
     	Page<CoinPayment> result = coinPaymentRepo.findByUserIdAndType(userId, type, pageable);
-        result.getContent().forEach(coinPayment -> {
-        	if (coinPayment.getEpisodeId() != null) {
-        		Integer episodeNum = epiRepo.findById(coinPayment.getEpisodeId()).orElseThrow().getEpisodeNum();
-        		coinPayment.setEpisodeNum(episodeNum);
-        	}
-        	if (coinPayment.getNovel() != null) {
-        		coinPayment.setNovelTitle(coinPayment.getNovel().getTitle());
-        	}
-        	
-//        	coinPayment.setEpisodeNum(epiRepo.findById(coinPayment.getEpisodeId()).orElseThrow().getEpisodeNum());
-        });
     	
     	return result;
     }
@@ -157,7 +148,9 @@ public class OrderService {
     			.ticketId(ticketId)
     			.userId(dto.getUserId())
     			.novelId(dto.getNovelId())
-    			.episodeId(dto.getEpisodeId()).build();
+    			.episodeId(dto.getEpisodeId())
+    			.novelTitle(dto.getNovelTitle())
+    			.episodeNum(dto.getEpisodeNum()).build();
     	
     	TicketPayment savedTicketPayment = ticketPaymentRepo.save(ticketPayment);
     	

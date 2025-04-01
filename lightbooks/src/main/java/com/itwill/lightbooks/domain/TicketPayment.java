@@ -41,17 +41,15 @@ public class TicketPayment {
 	@Column(name = "novel_id")
 	private Long novelId;
 	
+	@Column(name = "novel_title")
+	private String novelTitle;
+	
 	@Column(name = "episode_id")
 	private Long episodeId;
 	
+	@Column(name = "episode_Num")
+	private Integer episodeNum;
+	
 	@Column(name = "created_time", nullable = false, updatable = false, insertable = false)
 	private LocalDateTime createdTime;
-	
-	@Setter
-	@Transient
-	private String episodeNum;
-	
-	@Setter
-	@Transient
-	private String novelTitle;
 }

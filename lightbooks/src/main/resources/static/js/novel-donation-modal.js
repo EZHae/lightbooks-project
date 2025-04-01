@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							</div>
 						`;
 						const coin = -Number(inputCoin);
-						const data = {userId, novelId, coin};
+						const data = {userId, novelId, novelTitle , coin};
 						console.log(data);
 						axios.post(`/user/donation`, data).then(response => {
 							window.location.reload();

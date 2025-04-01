@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						console.log(response);
 						alert('처리되었습니다.');
 						getCoinWatingPayment(currentPage, 20);
+						removeBlocker();
 					}).catch(error => {
 						console.error(error);
 					})
@@ -226,6 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		blocker.style.zIndex = "9999";
 	
 		document.body.appendChild(blocker);
+	}
+	
+	// 투명벽 제거 함수
+	function removeBlocker() {
+	    let blocker = document.getElementById("blocker");
+	    if (blocker) {
+	        blocker.remove();
+	    }
 	}
 	
 	function formatDateTime(dateTimeString) {

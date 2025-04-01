@@ -9,6 +9,8 @@ public class EpisodeBuyDto {
 	private Long userId;
 	private Long novelId;
 	private Long episodeId;
+	private String novelTitle;
+	private Integer episodeNum;
 	
 	// COIN_PAYMENT 테이블 insert에 필요한 값
 	// COIN_PAYMENT 테이블에서도 userId, novelId, episodeId 씀
