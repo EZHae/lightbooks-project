@@ -32,6 +32,15 @@ function validateEpisodeNum(input) {
     }
 }
 
+//회차 글 작성시 글자 수 실시간 보여주기
+function updateCharacterCount() {
+        const textarea = document.getElementById('content');
+        const countDisplay = document.getElementById('characterCount');
+        const currentLength = textarea.value.length;
+        const maxLength = textarea.getAttribute('maxlength');
+        countDisplay.textContent = `${currentLength}/${maxLength}`;
+    }
+
 // 상태 변수 추가!
 let isSubmitting = false;
 

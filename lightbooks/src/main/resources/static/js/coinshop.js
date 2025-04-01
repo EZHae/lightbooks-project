@@ -1,6 +1,3 @@
-/**
- * 
- */
 document.addEventListener('DOMContentLoaded', () => {
 	console.log('coinshop.js');
 	
@@ -12,6 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	const btnSelectProducts = document.querySelectorAll('a#selectProduct');
 	btnSelectProducts.forEach(btn => {
 		btn.addEventListener('click', () => {
+			
+			const coinBuyModal = new bootstrap.Modal(document.querySelector("div#coinBuyModal")); // 모달 객체 생성
+			
+			if (!document.querySelector('span#userId')) {
+				alert('로그인이 필요합니다.');
+				return;
+			}
+			
+			coinBuyModal.show(); // 로그인한 경우에만 모달 띄우기
+			
 			let selectedCoinValue = btn.dataset.coin;
 			let selectedPriceValue = btn.dataset.price;
 			
