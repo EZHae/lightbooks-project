@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,15 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwill.lightbooks.domain.ChatMessage;
 import com.itwill.lightbooks.domain.CoinPayment;
 import com.itwill.lightbooks.domain.CoinPaymentWaiting;
 import com.itwill.lightbooks.domain.NovelGradeRequest;
 import com.itwill.lightbooks.domain.Post;
+import com.itwill.lightbooks.dto.ChatRoomWithIsReadDto;
 import com.itwill.lightbooks.dto.PostCreateDto;
 import com.itwill.lightbooks.dto.PostUpdateDto;
 import com.itwill.lightbooks.dto.PostUpdateHighlightDto;
 import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.service.AdminService;
+import com.itwill.lightbooks.service.ChatService;
 import com.itwill.lightbooks.service.NovelService;
 import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.PostService;
@@ -42,6 +44,7 @@ public class AdminController {
 	private final OrderService orderService;
 	private final NovelService novelService;
 	private final PostService postService;
+	private final ChatService chatService;
 
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'")  // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/waitingpayment")
@@ -184,6 +187,30 @@ public class AdminController {
     	return ResponseEntity.ok(result);
     }
     
+	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
+	@GetMapping("/chat")
+	public String chat() {
+		log.info("chat");
+		
+		return "admin/chat";
+	}
+	
+	@ResponseBody
+	@GetMapping("/chat/read/chatroomlist")
+	public ResponseEntity<List<ChatRoomWithIsReadDto>> readChatRoomList() {
+		List<ChatRoomWithIsReadDto> result = chatService.readChatRoomList();
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@ResponseBody
+	@GetMapping("chat/read/chatmessage")
+	public ResponseEntity<List<ChatMessage>> readChatMessageByChatRoomId(@RequestParam(name = "chatRoomId") Long chatRoomId) {
+		List<ChatMessage> result = chatService.readChatMessageByChatRoomId(chatRoomId);
+		
+		return ResponseEntity.ok(result);
+	}
+
     @ResponseBody
     @GetMapping("/premiumrequest/read/status")
     public ResponseEntity<Page<PremiumRequestDto>> readPremiumWatingList(

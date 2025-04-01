@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 채팅 문의')}"></head>
+	
+	<style>
+		.admin-chat-box {
+			width: 100%; /* 부모 너비를 100%로 설정 */
+			max-width: 1200px; /* 최대 너비를 1200px로 설정 */
+			max-height: 800px;
+			margin: 0 auto; /* 부모 div를 가운데 정렬 */
+			display: flex; /* flexbox로 자식 요소들을 가로로 배치 */
+			justify-content: center; /* 자식 요소들 가운데 정렬 */
+		}
+
+		.chatBoxSection {
+			width: 300px;
+			height: 800px;
+			max-height: 800px;
+			overflow-y: auto;
+		}
+
+		.chatMessageSection {
+			width: 900px;
+			height: 800px;
+			max-height: 800px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.admin-chat-body {
+			flex-grow: 1;
+			overflow-y: auto;
+		    display: flex; /* flex 적용 */
+		    flex-direction: column; /* 세로 정렬 */
+		}
+
+		.inputBox {
+			display: flex;
+			width: 100%;
+		}
+		
+		.chatRoomItem {
+			padding: 10px;
+			cursor: pointer;
+		}
+		.chatRoomItem:hover {
+			background: #dee2e6;
+		}
+		.adminChatMessageItem {
+		    display: flex;
+		    flex-direction: column;
+		    max-width: 60%;
+		    padding: 10px;
+		    margin: 5px;
+		    border-radius: 10px;
+		    word-wrap: break-word;
+		}
+		/* 유저가 보낸 메세지 */
+		.adminChatMessageItem.user {
+		    align-self: flex-start;
+		    background-color: #aed6fe;
+		}
+		/* 어드민이 보낸 메세지 */
+		.adminChatMessageItem.admin {
+		    align-self: flex-end;
+		    background-color: #fef0cc;
+		}
+	</style>
+	<body>
+		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
+		
+		<main>
+			<div class="admin-chat-box">
+				<!-- flex 컨테이너로 채팅 박스와 메시지 영역을 가로로 배치 -->
+				<div class="border border-black pt-0">
+					<div class="p-0 m-0">
+						<button id="btnReloadRoom" class="d-none form-control btn btn-outline-primary border-0 border-bottom rounded-0">새 메세지, 채팅방을 확인해주세요.</button>
+					</div>
+					<!-- 좌측 채팅박스 내용 -->
+					<div class="chatBoxSection" id="adminChatBox">
+						<div class="spinner-border text-center" role="status">
+							<span class="visually-hidden"></span>
+						</div>
+						<span>채팅방 불러오는중...</span>
+					</div>
+					
+
+				</div>
+				<div class="chatMessageSection border border-black p-0">
+					<div id="chatData"></div>
+					<div class="border-bottom text-center pt-2 pb-2">
+						<span id="chatRoomName" class="fs-4 text-primary fw-bold fst-italic"></span>
+					</div>
+					<div class="admin-chat-body" id="admin-chat-body">
+						<!-- 채팅 내용 표시 영역 -->
+					</div>
+					<div class="input-group inputBox">
+					    <input class="form-control rounded-0" type="search" name="message" id="admin-message" placeholder="메세지" readonly/>
+					    <button class="btn btn-outline-primary rounded-0 disabled" id="admin-btnSendMessage" type="submit">
+					        <i class="bi bi-send"></i>
+					    </button>
+					</div>
+				</div>
+			</div>
+		</main>
+		
+        <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
+        <th:block th:replace="~{layout/fragments :: axiosJS}"></th:block>
+        <script th:src="@{/js/admin-chat.js}"></script>
+	</body>
+</html>
