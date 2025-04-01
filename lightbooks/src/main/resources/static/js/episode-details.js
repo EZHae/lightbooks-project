@@ -87,12 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		btnHorizontalView.disabled = true;
 		try {
-			if(isHorizontal){
 				const response = await axios.get(`/novel/${novelId}/episode/${episodeId}/horizontalView`,
 				{
 					headers: { 'Accept': 'text/html' } // Accept: text/html 헤더 추가해야 Thymeleaf fragment가 HTML로 렌더링됨
 				});
-			} 
 			const container = document.getElementById('horizontalViewContainer');
 			container.innerHTML = response.data;
 
