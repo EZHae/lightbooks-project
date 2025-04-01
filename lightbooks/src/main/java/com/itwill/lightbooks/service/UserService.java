@@ -254,7 +254,8 @@ public class UserService implements UserDetailsService {
 				.userId(dto.getUserId())
 				.type(3)
 				.novel(novelRepo.findById(dto.getNovelId()).orElseThrow())
-				.coin(dto.getCoin()).build();
+				.coin(dto.getCoin())
+				.novelTitle(dto.getNovelTitle()).build();
 		coinPaymentRepo.save(coinPayment);
 	}
 	public List<Object[]> test(Long novelId) {

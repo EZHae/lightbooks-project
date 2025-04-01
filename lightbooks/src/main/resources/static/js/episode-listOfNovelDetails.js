@@ -196,13 +196,14 @@ function handleEpisodePurchase(element) { //지우면 안됨!!!!!!!!!!!!!
                         console.log(episodeId);
                         const coin = Number(-5);
                         console.log(coin);
+						const novelTitle = inputNovelTitle;
 
                         if (!userId || !novelId || !episodeId) {
                            console.error("필수 정보(userId, novelId, episodeId)가 누락되었습니다.");
                            return;
                         }
 
-                        const data = { userId, novelId, episodeId, type, coin };
+                        const data = { userId, novelId, episodeId, type, coin, novelTitle, episodeNum };
 
                         // 버튼 광클릭시 중복 구매 방지
                         btn.disabled = true;

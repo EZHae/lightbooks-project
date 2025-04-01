@@ -109,18 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		buyList.forEach(item => {
-			/*<td class="col-1">${item.episodeId}</td> */
-			let title;
-				(item.novel !== null) ? title = item.novelTitle : '-';
-			let episodeNum;
-				(item.episodeNum !== null) ? episodeNum = item.episodeNum : '-';
 			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 구매</td>
-					<td class="col-5">${title}</td>
-					<td class="col-1">${episodeNum}</td>
+					<td class="col-5">${item.novelTitle}</td>
+					<td class="col-1">${item.episodeNum}</td>
 					<td class="col-2 text-danger">${Math.abs(item.coin)}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>
@@ -186,14 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		let html = '';
 		donationList.forEach(item => {
-			let title;
-				(item.novel !== null) ? title = item.novelTitle : '-';
 			let formatCreatedTime = formatDateTime(item.createdTime);
 			html += 
 			`
 				<tr class="row">
 					<td class="col-1 ts-6" style="font-size: 12px;">작품 후원</td>
-					<td class="col-6">${title}</td>
+					<td class="col-6">${item.novelTitle}</td>
 					<td class="col-2 text-danger">${Math.abs(item.coin)}</td>
 					<td class="col-3">${formatCreatedTime}</td>
 				</tr>

@@ -97,20 +97,6 @@ public class TicketService {
     public Page<TicketPayment> readTicketPaymenByUserId(Long userId, int page, int size, int type) {
     	Pageable pageable = PageRequest.of(page, size, Sort.by("createdTime").descending());
     	Page<TicketPayment> result = ticketPaymentRepo.findByUserId(userId, pageable);
-        result.getContent().forEach(ticketPayment -> {
-        	if (epiRepo.findById(ticketPayment.getEpisodeId()).isPresent()) {
-        		ticketPayment.setEpisodeNum(epiRepo.findById(ticketPayment.getEpisodeId()).orElseThrow().getEpisodeNum().toString());
-        	} else {
-        		ticketPayment.setEpisodeNum("알 수 없음");
-        	}
-        	
-        	if (novelRepo.findById(ticketPayment.getNovelId()).isPresent()) {
-        		ticketPayment.setNovelTitle(novelRepo.findById(ticketPayment.getNovelId()).orElseThrow().getTitle());
-        	} else {
-        		ticketPayment.setNovelTitle("알 수 없음");
-        	}
-        	
-        });
     	
     	return result;
     }
