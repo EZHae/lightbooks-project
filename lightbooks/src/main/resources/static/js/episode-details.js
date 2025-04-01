@@ -78,8 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	// 가로보기 
 	const btnHorizontalView = document.getElementById('btnHorizontalView');
+	const horizontalContainer = document.getElementById('horizontalViewContainer');
+	const verticalContainer = document.getElementById('verticalContainer');
 	let isHorizontal = false;
-	
+
 	btnHorizontalView.addEventListener('click', async () => {
 		const novelId = document.querySelector('#novelId').value;
 		const episodeId = document.querySelector('#episodeId').value;
@@ -87,23 +89,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		btnHorizontalView.disabled = true;
 		try {
+			if (!isHorizontal) {
+				//가로보기 
 				const response = await axios.get(`/novel/${novelId}/episode/${episodeId}/horizontalView`,
-				{
-					headers: { 'Accept': 'text/html' } // Accept: text/html 헤더 추가해야 Thymeleaf fragment가 HTML로 렌더링됨
+					{
+						headers: { 'Accept': 'text/html' } // Accept: text/html 헤더 추가해야 Thymeleaf fragment가 HTML로 렌더링됨
+					});
+				
+				horizontalContainer.innerHTML = response.data;
+				horizontalContainer.style.display = 'block';
+				horizontalContainer.style.height = '100vh';
+				verticalContainer.style.display = 'none';
+				
+				let lastClickedNav = null;
+				document.querySelector('.swiper-button-next').addEventListener('click', () => {
+					lastClickedNav = 'next';
 				});
-			const container = document.getElementById('horizontalViewContainer');
-			container.innerHTML = response.data;
-
-			container.style.display = 'block';
-			container.style.height = '100vh';
-
-			if (verticalContainer) verticalContainer.style.display = 'none';
-			
-			//  Swiper 초기화는 렌더링 이후에
-			setTimeout(() => {
-				if (document.querySelector(".mySwiper")) {
-					new Swiper(".mySwiper", {
+				document.querySelector('.swiper-button-prev').addEventListener('click', () => {
+					lastClickedNav = 'perv';
+				})
+				//  Swiper 초기화는 렌더링 이후에
+				setTimeout(() => {
+					let swiper = new Swiper(".mySwiper", {
 						loop: false,
+						speed: 0,
 						pagination: {
 							el: ".swiper-pagination",
 							type: "progressbar",
@@ -112,35 +121,40 @@ document.addEventListener('DOMContentLoaded', () => {
 							nextEl: ".swiper-button-next",
 							prevEl: ".swiper-button-prev",
 						},
+						keyboard: {
+					    	enabled: true, // 키보드 방향키는 여전히 사용 가능
+					 	},	
+						on: { //트리거 설정 
+							slideChange: function(){
+								const isLast = swiper.isEnd; // 마지막 슬라이드인가?
+								
+								// 마지막 슬라이드에서 오른쪽 화살표 누른 경우만
+								if(isLast && this.clickedNav === 'next') {
+									const nextBtn = document.getElementById('btnNextEpisode');
+									if(nextBtn) nextBtn.click(); // 다음화 버튼 클릭 시뮬레이션
+								}
+							}
+						}
 					});
+					
 					console.log("스와이퍼 초기화 완료!");
-					btnHorizontalView.textContent = '세로보기';
-			      	isHorizontal = true;
-					// 문장 단위 <p> 감싸기
-					document.querySelectorAll('.page').forEach((el) => {
-					  const sentences = el.innerHTML.split(/(?<=\.)\s+/); // 마침표 뒤 공백 기준으로 문장 분리
-					  const wrapped = sentences.map(s => `<p>${s.trim()}</p>`).join('');
-					  el.innerHTML = wrapped;
-					});
-					
-					 btnHorizontalView.textContent = '세로보기';
-					isHorizontal = true;
-					
-				} else {
-					container.innerHTML = '';
-					  container.style.display = 'none';
-					  verticalContainer.style.display = 'block';
 
-					  btnHorizontalView.textContent = '가로보기';
-					  isHorizontal = false;
-				}
-			}, 100); // 살짝 늦게 실행
+					// 문장 단위 <p> 감싸기
+
+					btnHorizontalView.textContent = '세로보기';
+					isHorizontal = true;
+				}, 100); // 살짝 늦게 실행
+			} else {
+				horizontalContainer.innerHTML = '';
+				horizontalContainer.style.display = 'none';
+				verticalContainer.style.display = 'block';
+				btnHorizontalView.textContent = '가로보기';
+				isHorizontal = false;
+			}
 		} catch (error) {
 			console.log("가로보기 불러오기 실패", error);
 		} finally {
 			btnHorizontalView.disabled = false;
 		}
 	});
-	
-	
 });

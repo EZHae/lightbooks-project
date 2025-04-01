@@ -16,4 +16,6 @@ public class EpisodeHorizontalViewDto {
     private Integer episodeNum;
     private String novelTitle;
     private Integer pageNumber;     // 가로보기 페이지 번호 (1, 2, 3...)
+    private String coverSrc;
 }
+	

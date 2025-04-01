@@ -223,25 +223,58 @@ public class EpisodeService {
     	String content = episode.getContent();
     	String title = episode.getTitle();
     	Long episodeId = episode.getId();
+    	String[] sentences = content.split("(?<=[.!?])\\s+"); 
     	
-    	//한 페이지에 들어갈 글자 수 설정
-    	int pageSize = 500;
-    	
-    	// 잘린 페이지를 저장할 	리스트
+    	// 잘린 페이지를 저장할 리스트
     	List<EpisodeHorizontalViewDto> pages = new ArrayList<>();
     	
-    	for(int i = 0; i < content.length(); i += pageSize) {
-    		int end = Math.min(i + pageSize, content.length());
-    		String chunk = content.substring(i, end);
-    		log.info("페이지 분할 chunk = {}", chunk);
-    			
-    		pages.add(EpisodeHorizontalViewDto.builder()
-    				.episodeId(episodeId)
-    				.pageNumber((i/pageSize) + 1) // 페이지 1번부터 시작
-    				.content(chunk)					// 회차 페이지 내용
-    				.episodeTitle(title)			// 회차 제목
-    				.build());
-    	}
+    	// 첫번째 페이지 이미지 그리기
+    	pages.add(EpisodeHorizontalViewDto.builder()
+    			.episodeId(episodeId)
+    			.episodeTitle(title)
+    			.content(null)
+    			.episodeNum(episode.getEpisodeNum())
+    			.novelTitle(episode.getNovel().getTitle())
+    			.pageNumber(0)
+    			.coverSrc(episode.getNovel().getCoverSrc())
+    			.build());  
+    	
+    	
+    	
+    	//한 페이지에 들어갈 글자 수 설정
+    	int currentLines = 0;
+    	int pageNumber = 1;
+    	StringBuilder currentPage = new StringBuilder();
+    	int maxLines = (pageNumber == 1) ? 13 : 14; // 한 페이지에 들어갈 줄 수 추정치
+    	
+    	// 첫 페이지에 타이틀과 소제목 넣을 페이지 길이
+		for (String sentence : sentences) {
+			int estimatedLines = (int)Math.ceil(sentence.length() / 40.0);  // 글자 수로 줄 수 대략 추정
+			currentLines += estimatedLines;
+			
+			currentPage.append("<p>").append(sentence.trim()).append("</p>");
+			
+			if(currentLines >= (pageNumber == 1 ? maxLines - 2 : maxLines)) {
+				pages.add(EpisodeHorizontalViewDto.builder()
+	    				.episodeId(episodeId)
+	    				.pageNumber(pageNumber++)
+	    				.content(currentPage.toString()) //  감싼 HTML 넣기
+	    				.episodeTitle(title) 
+	    				.build());
+				currentPage.setLength(0);
+				currentLines = 0;
+			}
+		}
+		
+		// 마지막 남은 문장
+		if(currentPage.length() > 0) {
+			pages.add(EpisodeHorizontalViewDto.builder()
+					.episodeId(episodeId)
+					.pageNumber(pageNumber)
+					.episodeTitle(title)
+					.content(currentPage.toString())
+					.build());
+		}
     	
     	// pages 리스트를 2개씩 묶어서 doublePages로 구성
     	List<List<EpisodeHorizontalViewDto>> doublePages = new ArrayList<>();

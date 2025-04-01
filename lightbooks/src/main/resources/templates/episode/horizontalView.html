@@ -1,108 +1,195 @@
 <th:block th:fragment="horizontalView">
 
-	 <!-- 스와이퍼 -->
-	<link
-	  rel="stylesheet"
-	  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-	/>
+	<!-- 스와이퍼 -->
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<style>
-	
-	html, body {
-	  margin: 0;
-	  padding: 0;
-	  overflow: hidden; /* ✅ 스크롤 완전 차단 */
-	  height: 100%;
-	}
-	#horizontalViewContainer {
-	  display: block;
-	  width: 100%;
-	  height: 100vh;
-	  margin: 0;
-	  padding: 0;
-	    
-	  }
-  .swiper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  }
-  .swiper-slide {
-  	box-sizing: border-box; 
-    background: #fff;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-  }
-  .double-page {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    max-width: 1200px;
-    padding: 30px;
-    box-sizing: border-box;
-	}
-	  .page {
-	    flex: 1;                  /* 양쪽 동일 비율 */
-	    height: 100%;             /* 꽉 채우기 */
-	    padding: 30px;
-	    text-align: left;
-	    font-size: 18px;
-	    
-	    display: block;
-	  }
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
 
-  .dark-mode .swiper-slide {
-    background-color: #121212;
-    color: white;
-  }
+.swiper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+}
 
-  .swiper-button-next,
-  .swiper-button-prev {
-    z-index: 1000;
-    color: black;
-  }
+.swiper-slide {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+}
 
-  .page p {
-    margin-bottom: 16px;
-  }
-	</style>
+.double-page {
+	display: flex;
+	justify-content: center;
+	gap: 30px;
+	max-width: 1200px;
+	max-height: 900px;
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	padding: 20px;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.page {
+	flex: 1;
+	overflow: hidden;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+}
+
+.page-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	overflow: hidden;
+	height: 100%;
+	padding: 20px 10px;
+	margin-top: 20px;
+}
+
+.text-body {
+	font-size: 18px;
+	line-height: 1.7;
+	word-break: keep-all;
+	white-space: pre-line;
+	overflow: hidden;
+}
+
+.cover-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.cover-page img {
+	width: 300px;
+	height: 450px;
+	object-fit: cover;
+}
+
+.title-header {
+	margin-bottom: 20px;
+}
+
+.episode-title-main {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.episode-title-sub {
+	font-size: 20px;
+}
+
+.episode-stage-sub {
+	font-size: 18px;
+}
+
+.swiper-button-next, .swiper-button-prev {
+	z-index: 1000;
+	color: black;
+}
+
+
+
+.title-header {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+.episode-title-main {
+	font-size: 30px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.episode-title-sub {
+	font-size: 22px;
+	margin-bottom: 6px;
+}
+
+.episode-stage-sub {
+	font-size: 18px;
+}
+/* 화살표를 페이지 안쪽으로 */
+.swiper-button-prev {
+  left: 50px; 
+}
+.swiper-button-next {
+  right: 50px;
+}
+
+/* 다크모드 */
+.dark-mode .page,
+.dark-mode .page-content,
+.dark-mode .text-body {
+	background-color: #121212 !important;
+	color: #ffffff !important;
+}
+
+.dark-mode .swiper-button-next::after,
+.dark-mode .swiper-button-prev::after {
+	color: #ffffff !important;
+}
+</style>
 	<!-- Swiper -->
 	<div class="swiper mySwiper">
 		<div class="swiper-wrapper">
 			<!-- Thymeleaf로 리스트를 2개씩 묶음 -->
-			<div class="swiper-slide" th:each="pair, iterStat  : ${doublePages}"> 
+			<div class="swiper-slide" th:each="pair, iterStat  : ${doublePages}">
 				<!-- 양쪽 페이지처럼 보여주는 flex 박스 -->
 				<div class="double-page">
-					
+
 					<div class="page left">
-					
-						<div th:if="${iterStat.index == 0}">
-							<div class="episode-title-main font-size: 40px;" th:text="${episode.novel.title}">소설 제목</div>
-			                <div class="episode-title-sub font-size: 30px;" th:if="${episode.category == 1 || episode.category == 2}" th:text="${episode.episodeNum} + '화'"></div>
-			                <div class="episode-stage-sub font-size: 20px;" th:text="${episode.title}"></div>
-			                <hr style="margin: 20px 0;" />
+						<div class="page-content">
+
+							<div class="cover-page" th:if="${pair[0].coverSrc != null}">
+								<img th:src="@{${pair[0].coverSrc}}" />
+							</div>
+							<!-- 각각 왼쪽/오른쪽 페이지 역할 -->
+							<div class="text-body" th:utext="${pair[0].content}"></div>
 						</div>
-						<!-- 각각 왼쪽/오른쪽 페이지 역할 -->
-						<div  th:utext="${pair[0].content}"></div>
-					
 					</div>
-				
-				
-					<!-- 짝수가 아닐 경우 마지막 오른쪽 페이지가 없을 수도 있으니 조건 처리 -->
-					<div class="page right" th:if="${pair.size() > 1}" th:utext="${pair[1].content}"></div>
-					<div class="page right" th:if="${pair.size() == 1}"></div>
+
+
+					<div class="page right">
+						<!-- 제목/소제목 + 본문은 커버 다음 페이지에서 보여줌 -->
+						<div class="page-content" th:if="${pair.size() > 1}">
+							<div th:if="${pair[1].pageNumber == 1}" class="title-header">
+								<div class="episode-title-main" th:text="${episode.novel.title}">소설
+									제목</div>
+								<div class="episode-title-sub "
+									th:if="${episode.category == 1 || episode.category == 2}"
+									th:text="${episode.episodeNum} + '화'"></div>
+								<div class="episode-stage-sub" th:text="${episode.title}"></div>
+								<hr />
+							</div>
+							<div class="text-body" th:utext="${pair[1].content}"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="swiper-button-next"></div>
-		<div class="swiper-button-prev"></div>
-		<div class="swiper-pagination"></div>
 	</div>
-        <!-- 스와이퍼 -->
-	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+	<div class="swiper-button-next"></div>
+	<div class="swiper-button-prev"></div>
+	<div class="swiper-pagination"></div>
+	</div>
+	<!-- 스와이퍼 -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </th:block>
