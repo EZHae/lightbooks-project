@@ -213,7 +213,7 @@ body {
 }
 
 
-#novelwriter {
+#novelwriter, #novelGenres {
   font-size: 13px;
   color: gray;
 }

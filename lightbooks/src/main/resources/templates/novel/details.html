@@ -28,7 +28,11 @@
 								<span class="d-none" id="novelId" th:text="*{id}"></span> 
 								<span id="inputNovelTitle" th:text="*{title}"></span> 
 								
-								<span id="novelwriter" th:text="*{writer}"></span>
+								<span id="novelwriter" th:text="*{writer}"></span> 
+								</br>
+								<span class="" id="novelGenres">웹소설 ·
+									<span th:text="*{novelGenre[0].genre.name}"></span>
+								</span>
 		
 								<div class="novel-item">
 									<i class="bi bi-heart"></i> <span
