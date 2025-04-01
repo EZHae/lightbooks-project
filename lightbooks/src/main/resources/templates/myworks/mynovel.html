@@ -9,6 +9,9 @@
 			<div class="wrapper">
 				<div class="container">
 					<div class="novelList">
+						<div th:if="${novels == null or #lists.isEmpty(novels)}">
+						<span class="fs-5 fw-bold">내 작품이 없습니다. 작품을 작성하세요!</span>
+					</div>
 						<div th:each="novel : ${novels}" th:object="${novel}">
 							<div class="my-novel" >
 								<div class="novelCoverImg">
