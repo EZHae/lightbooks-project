@@ -1,5 +1,6 @@
 package com.itwill.lightbooks.web;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -324,10 +325,13 @@ public class EpisodeController {
    public String horizontalView(@PathVariable Long novelId, @PathVariable Long episodeId, Model model) {
 	   Episode episode = epiService.getEpisodeById(episodeId);
 	   
-	   List<EpisodeHorizontalViewDto> page = epiService.splitEpisodeContentIntoPages(episode);
+	   List<List<EpisodeHorizontalViewDto>> doublePages  = epiService.splitEpisodeContentIntoPages(episode);
+	   
 	   
 	   model.addAttribute("episode", episode);
-	   model.addAttribute("page", page);
+	   model.addAttribute("doublePages", doublePages);
+	   
+	   log.info("가로보기 doublePages 사이즈 = {}", doublePages.size());
 	   return "episode/horizontalView :: horizontalView";
    }
 }

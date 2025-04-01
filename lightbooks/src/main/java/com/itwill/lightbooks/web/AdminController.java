@@ -24,6 +24,7 @@ import com.itwill.lightbooks.dto.ChatRoomWithIsReadDto;
 import com.itwill.lightbooks.dto.PostCreateDto;
 import com.itwill.lightbooks.dto.PostUpdateDto;
 import com.itwill.lightbooks.dto.PostUpdateHighlightDto;
+import com.itwill.lightbooks.dto.PremiumRequestDto;
 import com.itwill.lightbooks.service.AdminService;
 import com.itwill.lightbooks.service.ChatService;
 import com.itwill.lightbooks.service.NovelService;
@@ -74,13 +75,9 @@ public class AdminController {
 	// 유료/무료 전환 프리미엄 페이지
 	@PreAuthorize("isAuthenticated() and principal.loginId == 'admin'") // 로그인된 계정의 login_id가 admin일 때만 접근 가능
 	@GetMapping("/premiumrequest")
-	public String premiumrequest(Model model) {
-		
-		List<NovelGradeRequest> gradeReqs = adminService.searchAllNovelGradeRequests();
-		model.addAttribute("gradeReqs", gradeReqs);
+	public String premiumrequest() {
 		return "admin/premium-request";
 	}
-	
 	// 유료/무료 신청 확인 시
 	@PostMapping("/premiumrequest/check")
 	public ResponseEntity<?> premiumCheck(@RequestParam(name = "id") Long id) {
@@ -92,7 +89,7 @@ public class AdminController {
 		
 		return ResponseEntity.ok(null);
 	}
-	
+	// 유료/무료 신청 취소 시
 	@PostMapping("/premiumrequest/cancle")
 	public ResponseEntity<?> premiumCancle(@RequestParam(name = "id") Long id) {
 		NovelGradeRequest gradeReq = adminService.searchNovelGradeRequestById(id);
@@ -213,4 +210,21 @@ public class AdminController {
 		
 		return ResponseEntity.ok(result);
 	}
+
+    @ResponseBody
+    @GetMapping("/premiumrequest/read/status")
+    public ResponseEntity<Page<PremiumRequestDto>> readPremiumWatingList(
+    		@RequestParam(name = "page", defaultValue = "0") int page,
+    	    @RequestParam(name = "size", defaultValue = "20") int size,
+    	    @RequestParam(name = "status", defaultValue = "3") int status) {
+    	
+    	Page<PremiumRequestDto> result;
+    	
+    	if(status == 3) {
+    		result = adminService.searchAllNovelGradeRequests(page, size);
+    	} else {
+    		result = adminService.searchNovelGradeRequestsByCon(page, size, status);
+    	}
+		return ResponseEntity.ok(result);
+    }
 }

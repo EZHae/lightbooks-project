@@ -78,36 +78,69 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	// 가로보기 
 	const btnHorizontalView = document.getElementById('btnHorizontalView');
-	btnHorizontalView.addEventListener('click', async() => {
+	let isHorizontal = false;
+	
+	btnHorizontalView.addEventListener('click', async () => {
 		const novelId = document.querySelector('#novelId').value;
 		const episodeId = document.querySelector('#episodeId').value;
-		console.log("에피소드, 노벨 아이디:",episodeId,novelId);
-		btnHorizontalView.disabled = true; 
-		try{
-			const response = await axios.get(`/novel/${novelId}/episode/${episodeId}/horizontalView`,
+		console.log("에피소드, 노벨 아이디:", episodeId, novelId);
+
+		btnHorizontalView.disabled = true;
+		try {
+				const response = await axios.get(`/novel/${novelId}/episode/${episodeId}/horizontalView`,
 				{
-				  headers: { 'Accept': 'text/html' } // Accept: text/html 헤더 추가해야 Thymeleaf fragment가 HTML로 렌더링됨
-			});
-			document.getElementById('horizontalViewContainer').innerHTML = response.data;
+					headers: { 'Accept': 'text/html' } // Accept: text/html 헤더 추가해야 Thymeleaf fragment가 HTML로 렌더링됨
+				});
+			const container = document.getElementById('horizontalViewContainer');
+			container.innerHTML = response.data;
+
+			container.style.display = 'block';
+			container.style.height = '100vh';
+
+			if (verticalContainer) verticalContainer.style.display = 'none';
 			
-			document.querySelector('.container').style.display = 'none';
-			// 스와이퍼 초기화
-			var swiper = new Swiper(".mySwiper", {
-				
-				loop: false,
-			    pagination: {
-			      el: ".swiper-pagination",
-			      type: "progressbar",
-			    },
-			    navigation: {
-			      nextEl: ".swiper-button-next",
-			      prevEl: ".swiper-button-prev",
-			    },
-			  });
-		} catch(error) {
-			console.log("가로보기 불러오기 실패",error);
+			//  Swiper 초기화는 렌더링 이후에
+			setTimeout(() => {
+				if (document.querySelector(".mySwiper")) {
+					new Swiper(".mySwiper", {
+						loop: false,
+						pagination: {
+							el: ".swiper-pagination",
+							type: "progressbar",
+						},
+						navigation: {
+							nextEl: ".swiper-button-next",
+							prevEl: ".swiper-button-prev",
+						},
+					});
+					console.log("스와이퍼 초기화 완료!");
+					btnHorizontalView.textContent = '세로보기';
+			      	isHorizontal = true;
+					// 문장 단위 <p> 감싸기
+					document.querySelectorAll('.page').forEach((el) => {
+					  const sentences = el.innerHTML.split(/(?<=\.)\s+/); // 마침표 뒤 공백 기준으로 문장 분리
+					  const wrapped = sentences.map(s => `<p>${s.trim()}</p>`).join('');
+					  el.innerHTML = wrapped;
+					});
+					
+					 btnHorizontalView.textContent = '세로보기';
+					isHorizontal = true;
+					
+				} else {
+					container.innerHTML = '';
+					  container.style.display = 'none';
+					  verticalContainer.style.display = 'block';
+
+					  btnHorizontalView.textContent = '가로보기';
+					  isHorizontal = false;
+				}
+			}, 100); // 살짝 늦게 실행
+		} catch (error) {
+			console.log("가로보기 불러오기 실패", error);
 		} finally {
-			btnHorizontalView.disabled = false; 
+			btnHorizontalView.disabled = false;
 		}
 	});
+	
+	
 });

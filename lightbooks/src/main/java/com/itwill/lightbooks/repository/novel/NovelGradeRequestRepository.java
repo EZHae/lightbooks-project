@@ -3,6 +3,8 @@ package com.itwill.lightbooks.repository.novel;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.itwill.lightbooks.domain.NovelGradeRequest;
@@ -12,4 +14,7 @@ public interface NovelGradeRequestRepository extends JpaRepository<NovelGradeReq
 	List<NovelGradeRequest> findByUserId(Long userId);
 
 	Optional<NovelGradeRequest> findByUserIdAndNovelId(Long currentUserId, Long novelId);
+
+	Page<NovelGradeRequest> findByStatus(int status ,Pageable pageable);
+	
 }

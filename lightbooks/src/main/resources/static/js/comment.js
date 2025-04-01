@@ -111,7 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		    alert('댓글 내용은 반드시 입력해야 합니다.');
 		    return;
 		}
-	    
+		btnRegisterComment.disabled = true;
+		
+		
 	    // Ajax 요청에서 Request Body에 포함시켜서 전송할 데이터
 	    const reqBody = {novelId, episodeId, userId, text, nickname, spoiler};
 	    
@@ -134,7 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	        
 	    } catch (error) {
 	        console.log(error);
-	    }
+	    } finally {
+			btnRegisterComment.disabled = false;
+		}
 	}
 	
 	// 댓글 목록을 만들어주는 이벤튼	

@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:replace="~{layout/fragments :: htmlHead('insert title')}"></head>
+	<head th:replace="~{layout/fragments :: htmlHead('라잇북스 : : 프리미엄 요청')}"></head>
 	
 	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+	
 		th, td {
 			text-align: center;
 		}
@@ -10,9 +14,23 @@
 	<body>
 		<th:block th:replace="~{layout/fragments :: pageHeader}"></th:block>
 		
-		<main class="container-md">
-			<div class="d-flex justify-content-center">
-				<table class="table table-bordered table-striped table-hover table-responsive">
+		<main class="container-md mt-3">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="bg-light nav-link nav-menu-item fs-5 active" href="#" data-status="3">전체 보기</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link nav-menu-item fs-5" href="#" data-status="0">대기 목록</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link nav-menu-item fs-5" href="#" data-status="1">완료 목록</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link nav-menu-item fs-5" href="#" data-status="2">거절 목록</a>
+				</li>
+			</ul>
+			<div class="bg-light border-start border-end border-bottom table-responsive p-3">
+				<table class="table table-bordered table-striped table-hover">
 					<thead class="table-dark">
 						<tr>
 							<th>아이디</th>
@@ -25,29 +43,17 @@
 							<th>확인</th>
 						</tr>
 					</thead>
-					<tbody th:each="gradeReq : ${gradeReqs}" th:object="${gradeReq}">
-						<tr>
-							<td th:text="*{id}"></td>
-							<td th:text="*{user.loginId}"></td>
-							<td th:text="*{user.username}"></td>
-							<td th:text="*{novel.title}"></td>
-							<td th:text="*{type == 0 ? '무료 신청' : '유료 신청'}"></td>
-							<td th:text="*{createdTime}"></td>
-							<td th:text="*{status == 0 ? '대기 중' : (status == 1 ? '완료' : '거절')}"></td>
-							<td class="text-center">
-								<!-- 상태가 0 이면 확인 버튼 -->
-								<button th:if="*{status == 0}" th:attr="data-id=*{id}" id="btnCheck" class="btn btn-primary btn-sm">확인</button>
-								
-								<!-- 상태가 0 이면 거절 버튼 -->
-								<button th:if="*{status == 0}" th:attr="data-id=*{id}" id="btnCancleCheck" class="btn btn-danger btn-sm">거절</button>
-								
-								<span th:if="*{status == 1}" class="text-success">완료</span>
-								<span th:if="*{status == 2}" class="text-danger">거절</span>
-							</td>
-						</tr>
+					<tbody id="premiumContent">
+					
+					<!-- 자바스크립트 -->
 					</tbody>
 				</table>
 			</div>
+			<div id="pagination" class="mt-3">
+                <ul class="pagination justify-content-center" id="pagination">
+
+                </ul>
+            </div>
 		</main>
 		
         <th:block th:replace="~{layout/fragments :: bootstrapJS}"></th:block>
