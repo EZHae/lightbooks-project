@@ -97,26 +97,16 @@
                                 placeholder="제목을 입력하세요" />
                      </div>
          
-<div class="form-group mt-3" style="position: relative;">
-    <label for="content" class="form-label">
-        내용 <span class="text-danger">*</span>
-    </label>
-    <div id="characterCount" style="position: absolute; top: 0; right: 0; font-size: 0.9em; color: gray;">
-        0/20000
-    </div>
-    <textarea id="content" name="content" th:value="*{content}" rows="14" class="form-control" required
-              placeholder="최대 20000자까지 작성 가능합니다" maxlength="20000" oninput="updateCharacterCount()"></textarea>
-</div>
-
-<script>
-    function updateCharacterCount() {
-        const textarea = document.getElementById('content');
-        const countDisplay = document.getElementById('characterCount');
-        const currentLength = textarea.value.length;
-        const maxLength = textarea.getAttribute('maxlength');
-        countDisplay.textContent = `${currentLength}/${maxLength}`;
-    }
-</script>
+					<div class="form-group mt-3" style="position: relative;">
+					    <label for="content" class="form-label">
+					        내용 <span class="text-danger">*</span>
+					    </label>
+					    <div id="characterCount" style="position: absolute; top: 0; right: 0; font-size: 0.9em; color: gray;">
+					        0/20000
+					    </div>
+					    <textarea id="content" name="content" th:value="*{content}" rows="14" class="form-control" required
+					              placeholder="최대 20000자까지 작성 가능합니다" maxlength="20000" oninput="updateCharacterCount()"></textarea>
+					</div>
 
          
                   <!-- 
