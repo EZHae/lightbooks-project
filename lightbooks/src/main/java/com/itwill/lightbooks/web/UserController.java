@@ -45,6 +45,7 @@ import com.itwill.lightbooks.dto.UserUpdateImgSrcDto;
 import com.itwill.lightbooks.dto.UserUpdatePasswordDto;
 import com.itwill.lightbooks.dto.UserUpdateProfileDto;
 import com.itwill.lightbooks.service.BookmarkService;
+import com.itwill.lightbooks.service.ChatService;
 import com.itwill.lightbooks.service.OrderService;
 import com.itwill.lightbooks.service.TicketService;
 import com.itwill.lightbooks.service.UserService;
@@ -64,6 +65,7 @@ public class UserController {
 	private final TicketService ticketService;
 	private final BookmarkService bookmarkService;
 	private final JdbcTemplate jdbcTemplate;//추가(통계 관련)
+	private final ChatService chatService;
     
     @GetMapping("/signup")
     public void signup() {
@@ -564,5 +566,21 @@ public class UserController {
     	List<Object[]> result = userService.test(novelId);
     	
     	return ResponseEntity.ok(result);
+    }
+    
+    @ResponseBody
+    @GetMapping("/chatroom/check")
+    public ResponseEntity<Boolean> checkChatRoom(@RequestParam(name = "id") Long id) {
+    	Boolean result = chatService.checkChatRoomById(id);
+    	
+    	return ResponseEntity.ok(result);
+    }
+    
+    @ResponseBody
+    @PostMapping("/chatroom/create")
+    public ResponseEntity<?> createChatRoom(@RequestParam(name = "userId") Long userId, @RequestParam(name = "loginId") String loginId) {
+    	chatService.createChatRoom(userId, loginId);
+    	
+    	return ResponseEntity.ok(null);
     }
 }

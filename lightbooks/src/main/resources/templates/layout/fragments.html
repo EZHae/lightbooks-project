@@ -170,6 +170,59 @@
 					margin-bottom: 2px;
 				}
 				
+				.chat-box {
+				    position: fixed;
+				    bottom: 20px;
+				    right: 20px;
+				    width: 300px;
+				    height: 400px;
+				    background: white;
+				    border: 1px solid #ddd;
+				    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+				    border-radius: 8px;
+				    display: flex;
+				    flex-direction: column;
+				}
+				
+				.chat-header {
+				    padding: 10px;
+				    background: #007bff;
+				    color: white;
+				    display: flex;
+				    justify-content: space-between;
+				    align-items: center;
+				}
+				
+				.chat-body {
+				    flex-grow: 1;
+				    overflow-y: auto;
+				    display: flex; /* flex 적용 */
+		    		flex-direction: column; /* 세로 정렬 */
+				}
+				
+				.chatMessageItem {
+				    display: flex;
+				    flex-direction: column;
+				    max-width: 60%;
+				    padding: 10px;
+				    margin: 5px;
+				    border-radius: 10px;
+				    word-wrap: break-word;
+				    font-size: 0.8rem
+				}
+				.chatMessageItem .messageContent {
+					font-size: 1rem;
+				}
+				/* 유저가 보낸 메세지 */
+				.chatMessageItem.user {
+				    align-self: flex-end;
+				    background-color: #fef0cc;
+				}
+				/* 어드민이 보낸 메세지 */
+				.chatMessageItem.admin {
+				    align-self: flex-start;
+				    background-color: #aed6fe;
+				}
 				
             </style>
             <div class="container-fluid">
@@ -221,7 +274,7 @@
 							<ul class="dropdown-menu">
 								<li><a class="dropdown-item" th:href="@{/admin/waitingpayment}">결제 대기</a></li>
 								<li><a class="dropdown-item" th:href="@{/admin/premiumrequest}">프리미엄 요청</a></li>
-								<li><a class="dropdown-item" href="#">Something else here</a></li>
+								<li><a class="dropdown-item" th:href="@{/admin/chat}">채팅 문의</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -302,6 +355,7 @@
                                     <div class="ms-3">
                                         <h6 class="mb-0" id="authNickname" sec:authentication="principal.nickname"></h6>
                                         <span class="d-none" id="userId" sec:authentication="principal.id"></span>
+                                        <span class="d-none" id="userLoginId" sec:authentication="principal.loginId"></span>
                                         <a class="text-decoration-none" th:href="@{/user/details(id=${#authentication.principal.id})}">
                                             <small class="text-muted">내 정보</small>
                                         </a>
@@ -369,9 +423,9 @@
                                         </a>
                                     </div>
                                     <div class="col-4">
-                                        <a class="text-decoration-none" th:href="@{#}">
+                                        <a id="chatLink" class="text-decoration-none" th:href="@{#}">
                                             <i class="bi bi-telephone fs-2"></i> <br>
-                                            <span class="text-black">고객센터</span>
+                                            <span class="text-black">채팅 문의</span>
                                         </a>
                                     </div>
                                 </div>
@@ -414,8 +468,33 @@
                 </div>
             </div>
             
+            <div id="chatBox" class="chat-box d-none">
+			    <div class="chat-header">
+			        <span>채팅 문의</span>
+			        <button id="closeChat" class="btn-close"></button>
+			    </div>
+			    <div>
+			    	<button id="btnReloadMessage" class="form-control btn btn-sm btn-outline-primary rounded-0">지난 대화 불러오기</button>
+			    </div>
+			    <div id="chat-body" class="chat-body">
+			        <!-- 채팅 메시지 -->
+			    </div>
+				<div class="input-group">
+				    <input class="form-control" type="search" name="message" id="message" placeholder="메세지" />
+				    <button class="btn btn-outline-primary" id="btnSendMessage" type="submit">
+				        <i class="bi bi-send"></i>
+				    </button>
+				</div>
+			</div>
+            
             <span id="errorMessage" class="d-none" th:text="${session.errorMessage}"></span>
-            <script th:src="@{/js/fragments.js}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+			<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+			<script th:src="@{/js/fragments.js}"></script>
+			<th:block sec:authorize="isAuthenticated() and principal.loginId != 'admin'">
+				<script th:src="@{/js/fragments-chat.js}"></script>
+			</th:block>
+			
         </nav>
 		<footer class="footer" th:fragment="footer">
 			<p class="footer-logo">© 2025 LightBooks. All Rights Reserved.</p>
