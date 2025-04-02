@@ -104,7 +104,7 @@ public class EpisodeCommentService {
 		Novel novel = novelRepo.findById(novelId).orElseThrow(() -> new EntityNotFoundException("해당 소설이 없습니다."));
 		log.info("read (episode Id: {}", novelId);
 		
-		Page<Comment> page= commentRepo.findByNovel(novel, pageable);
+		Page<Comment> page= commentRepo.findByNovelAndEpisodeEpisodeNumNotNull(novel, pageable);
 		
 		// 현재 유저가 좋아요한 댓글 ID 리스트
 		List<Long> likedIds = commentLikeRepo.findLikedCommentIdsByUser(currentUserId);

@@ -14,7 +14,7 @@ import com.itwill.lightbooks.domain.Novel;
 public interface CommentRepository extends JpaRepository<Comment, Long>{
 
 	// 소설에 댓글 목록 페이징
-	Page<Comment> findByNovel(Novel novel, Pageable pageable);
+	Page<Comment> findByNovelAndEpisodeEpisodeNumNotNull(Novel novel, Pageable pageable);
 	// 회차에 댓글 목록 페이징
 	Page<Comment> findByEpisode(Episode episode, Pageable pageable);
 	
