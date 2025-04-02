@@ -337,7 +337,7 @@ public class NovelQuerydslImpl extends QuerydslRepositorySupport
 				.leftJoin(novel.novelGenre, nGenre).fetchJoin()
 		        .leftJoin(nGenre.genre, genre).fetchJoin()
 		        .where(novel.grade.eq(grade))
-		        .orderBy(novel.likeCount.desc(), novel.rating.desc(), novel.createdTime.desc())
+		        .orderBy(novel.createdTime.desc())
 		        .limit(limit)
 		        .fetch();
 		

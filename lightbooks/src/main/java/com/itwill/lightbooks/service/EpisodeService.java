@@ -245,7 +245,7 @@ public class EpisodeService {
     	int currentLines = 0;
     	int pageNumber = 1;
     	StringBuilder currentPage = new StringBuilder();
-    	int maxLines = (pageNumber == 1) ? 13 : 14; // 한 페이지에 들어갈 줄 수 추정치
+    	int maxLines = (pageNumber == 1) ? 10 : 11; // 한 페이지에 들어갈 줄 수 추정치
     	
     	// 첫 페이지에 타이틀과 소제목 넣을 페이지 길이
 		for (String sentence : sentences) {
