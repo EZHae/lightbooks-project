@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	    if (data.totalPages <= currentPageNo + 1) {
 	      isLastPage = true;
 	    }
-
+		console.log('현재 페이지:', currentPageNo);
+		console.log('전체 페이지:', data.totalPages);
 	    makeCommentElements(comments, likedIds, reset);
 	  } catch (error) {
 	    console.error("댓글 불러오기 실패", error);
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	  }
 	}
 
-	function makeCommentElements(comments, reset = false) {
+	function makeCommentElements(comments, likedIds = [], reset = false) {
 	  const commentList = document.getElementById('commentList');
 	  
 	  if (reset) {
