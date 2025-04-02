@@ -166,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	        btnRatingSubmit.disabled = false;
 	        btnRatingSubmit.textContent = "확인";
 			
+			location.reload();
+			
 		}
 	});
 	
@@ -260,6 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		} finally {
 			window.isProcessing = false;
 			btnLike.disabled = false;
+			
+			location.reload();
     	}
 	});
 	
@@ -286,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		} finally {
 			window.isProcessing = false;
 			btnLike.disabled = false;
+			
 		}
 	}
 });
